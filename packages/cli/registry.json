@@ -1,0 +1,702 @@
+{
+  "components": [
+    {
+      "name": "button",
+      "description": "Dark-only pressable button with primary, secondary, ghost, destructive, and text variants.",
+      "category": "ui",
+      "files": [
+        {
+          "path": "ui/button.tsx",
+          "content": "import React from 'react';\nimport {\n  Pressable,\n  Text,\n  ActivityIndicator,\n  type ViewStyle,\n  type GestureResponderEvent,\n} from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\n\ntype ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'destructive' | 'text';\ntype ButtonSize = 'sm' | 'md' | 'lg';\n\ninterface ButtonProps {\n  title: string;\n  onPress: (e: GestureResponderEvent) => void;\n  variant?: ButtonVariant;\n  size?: ButtonSize;\n  loading?: boolean;\n  disabled?: boolean;\n  fullWidth?: boolean;\n  icon?: keyof typeof Ionicons.glyphMap;\n  iconPosition?: 'left' | 'right';\n  accessibilityLabel?: string;\n  className?: string;\n}\n\nconst variantStyles: Record<ButtonVariant, { container: string; text: string }> = {\n  primary: {\n    container: 'bg-accent',\n    text: 'text-white',\n  },\n  secondary: {\n    container: 'bg-transparent border border-borderStrong',\n    text: 'text-textPrimary',\n  },\n  ghost: {\n    container: 'bg-transparent',\n    text: 'text-textSecondary',\n  },\n  destructive: {\n    container: 'bg-error',\n    text: 'text-white',\n  },\n  text: {\n    container: 'bg-transparent',\n    text: 'text-accent',\n  },\n};\n\nconst sizeStyles: Record<ButtonSize, { container: string; text: string; iconSize: number }> = {\n  sm: { container: 'h-[36px] px-3 rounded-md', text: 'text-[13px]', iconSize: 16 },\n  md: { container: 'h-[48px] px-5 rounded-lg', text: 'text-[15px]', iconSize: 18 },\n  lg: { container: 'h-[56px] px-6 rounded-xl', text: 'text-[16px]', iconSize: 20 },\n};\n\nexport function Button({\n  title,\n  onPress,\n  variant = 'primary',\n  size = 'md',\n  loading = false,\n  disabled = false,\n  fullWidth = true,\n  icon,\n  iconPosition = 'left',\n  accessibilityLabel,\n  className,\n}: ButtonProps) {\n  const v = variantStyles[variant];\n  const s = sizeStyles[size];\n  const isDisabled = disabled || loading;\n\n  return (\n    <Pressable\n      onPress={onPress}\n      disabled={isDisabled}\n      accessibilityLabel={accessibilityLabel ?? title}\n      accessibilityRole=\"button\"\n      accessibilityState={{ disabled: isDisabled }}\n      className={cn(\n        'flex-row items-center justify-center',\n        s.container,\n        v.container,\n        fullWidth ? 'w-full' : 'self-start',\n        isDisabled && 'opacity-50',\n        className,\n      )}\n      style={({ pressed }: { pressed: boolean }): ViewStyle => ({\n        opacity: pressed && !isDisabled ? 0.92 : 1,\n      })}\n    >\n      {loading ? (\n        <ActivityIndicator\n          size=\"small\"\n          color={variant === 'primary' || variant === 'destructive' ? '#FFFFFF' : '#6366F1'}\n        />\n      ) : (\n        <>\n          {icon && iconPosition === 'left' ? (\n            <Ionicons\n              name={icon}\n              size={s.iconSize}\n              color={variant === 'primary' || variant === 'destructive' ? '#FFFFFF' : '#A0A0A0'}\n              style={{ marginRight: 8 }}\n            />\n          ) : null}\n          <Text className={cn('font-semibold', s.text, v.text)}>\n            {title}\n          </Text>\n          {icon && iconPosition === 'right' ? (\n            <Ionicons\n              name={icon}\n              size={s.iconSize}\n              color={variant === 'primary' || variant === 'destructive' ? '#FFFFFF' : '#A0A0A0'}\n              style={{ marginLeft: 8 }}\n            />\n          ) : null}\n        </>\n      )}\n    </Pressable>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "input",
+      "description": "Dark-only text input with label, error, leading icon, and password visibility toggle.",
+      "category": "ui",
+      "files": [
+        {
+          "path": "ui/input.tsx",
+          "content": "import React from 'react';\nimport { View, TextInput, Text, Pressable, type KeyboardTypeOptions } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\nimport { colors } from '../lib/theme';\n\ntype InputVariant = 'standard' | 'password' | 'search' | 'currency';\n\ninterface InputProps {\n  label?: string;\n  value: string;\n  onChangeText: (text: string) => void;\n  placeholder?: string;\n  error?: string;\n  helperText?: string;\n  variant?: InputVariant;\n  leftIcon?: keyof typeof Ionicons.glyphMap;\n  rightIcon?: keyof typeof Ionicons.glyphMap;\n  onRightIconPress?: () => void;\n  keyboardType?: KeyboardTypeOptions;\n  autoFocus?: boolean;\n  currencySymbol?: string;\n  accessibilityLabel?: string;\n  editable?: boolean;\n  multiline?: boolean;\n  numberOfLines?: number;\n  className?: string;\n}\n\nexport function Input({\n  label,\n  value,\n  onChangeText,\n  placeholder,\n  error,\n  helperText,\n  variant = 'standard',\n  leftIcon,\n  rightIcon,\n  onRightIconPress,\n  keyboardType,\n  autoFocus = false,\n  currencySymbol = '$',\n  accessibilityLabel,\n  editable = true,\n  multiline = false,\n  numberOfLines,\n  className,\n}: InputProps) {\n  const [focused, setFocused] = React.useState(false);\n  const [passwordVisible, setPasswordVisible] = React.useState(false);\n\n  const isPassword = variant === 'password';\n  const isSearch = variant === 'search';\n  const isCurrency = variant === 'currency';\n\n  const resolvedSecure = isPassword ? !passwordVisible : undefined;\n  const resolvedKeyboard: KeyboardTypeType =\n    isCurrency ? 'numeric' : (keyboardType ?? 'default');\n\n  const resolvedLeftIcon = (isSearch ? 'search-outline' : leftIcon) as keyof typeof Ionicons.glyphMap | undefined;\n  const resolvedRightIcon = (isSearch ? 'camera-outline' : rightIcon) as keyof typeof Ionicons.glyphMap | undefined;\n\n  function handleChangeText(text: string) {\n    if (isCurrency) {\n      const digits = text.replace(/\\D/g, '');\n      onChangeText(digits);\n    } else {\n      onChangeText(text);\n    }\n  }\n\n  const baseContainer = isSearch\n    ? 'h-[44px] rounded-full'\n    : 'h-[52px] rounded-lg';\n\n  const borderStyle = error\n    ? 'border border-error'\n    : focused\n      ? 'border border-accent'\n      : 'border border-border';\n\n  return (\n    <View className={cn('w-full', className)}>\n      {label ? (\n        <Text className=\"text-[14px] font-medium text-textSecondary mb-1.5\">\n          {label}\n        </Text>\n      ) : null}\n\n      <View\n        className={cn(\n          'flex-row items-center px-4 bg-bgElevated',\n          baseContainer,\n          borderStyle,\n        )}\n      >\n        {isCurrency ? (\n          <Text className=\"text-[14px] text-textPrimary mr-1 font-medium\">\n            {currencySymbol}\n          </Text>\n        ) : null}\n\n        {resolvedLeftIcon ? (\n          <Ionicons\n            name={resolvedLeftIcon}\n            size={20}\n            color={colors.textTertiary}\n            style={{ marginRight: 8 }}\n          />\n        ) : null}\n\n        <TextInput\n          value={isCurrency ? value.replace(/\\B(?=(\\d{3})+(?!\\d))/g, ',') : value}\n          onChangeText={handleChangeText}\n          placeholder={placeholder}\n          placeholderTextColor={colors.textTertiary}\n          secureTextEntry={resolvedSecure}\n          keyboardType={resolvedKeyboard}\n          autoFocus={autoFocus}\n          editable={editable}\n          multiline={multiline}\n          numberOfLines={numberOfLines}\n          onFocus={() => setFocused(true)}\n          onBlur={() => setFocused(false)}\n          accessibilityLabel={accessibilityLabel ?? label ?? placeholder}\n          className=\"flex-1 text-[15px] text-textPrimary\"\n          style={{ outlineStyle: 'none' }}\n        />\n\n        {isPassword ? (\n          <Pressable\n            onPress={() => setPasswordVisible((p) => !p)}\n            accessibilityLabel={passwordVisible ? 'Hide password' : 'Show password'}\n            hitSlop={8}\n          >\n            <Ionicons\n              name={passwordVisible ? 'eye-off-outline' : 'eye-outline'}\n              size={22}\n              color={colors.textTertiary}\n            />\n          </Pressable>\n        ) : null}\n\n        {!isPassword && resolvedRightIcon ? (\n          <Pressable\n            onPress={onRightIconPress}\n            accessibilityLabel={`${String(resolvedRightIcon)} button`}\n            hitSlop={8}\n            disabled={!onRightIconPress}\n          >\n            <Ionicons\n              name={resolvedRightIcon}\n              size={22}\n              color={colors.textTertiary}\n            />\n          </Pressable>\n        ) : null}\n      </View>\n\n      {error ? (\n        <Text className=\"text-error text-[12px] mt-1.5\">{error}</Text>\n      ) : null}\n      {!error && helperText ? (\n        <Text className=\"text-textTertiary text-[12px] mt-1.5\">{helperText}</Text>\n      ) : null}\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "badge",
+      "description": "Compact status badge with solid, outline, and subtle variants.",
+      "category": "ui",
+      "files": [
+        {
+          "path": "ui/badge.tsx",
+          "content": "import React from 'react';\nimport { View, Text } from 'react-native';\nimport { cn } from '../lib/utils';\n\ntype BadgeVariant = 'accent' | 'success' | 'warning' | 'error' | 'info' | 'neutral';\n\ninterface BadgeProps {\n  label: string;\n  variant?: BadgeVariant;\n  className?: string;\n}\n\nconst variantStyles: Record<BadgeVariant, { bg: string; text: string }> = {\n  accent: { bg: 'bg-accent/15', text: 'text-accent' },\n  success: { bg: 'bg-success/15', text: 'text-success' },\n  warning: { bg: 'bg-warning/15', text: 'text-warning' },\n  error: { bg: 'bg-error/15', text: 'text-error' },\n  info: { bg: 'bg-info/15', text: 'text-info' },\n  neutral: { bg: 'bg-bgHover', text: 'text-textSecondary' },\n};\n\nexport function Badge({ label, variant = 'neutral', className }: BadgeProps) {\n  const s = variantStyles[variant];\n\n  return (\n    <View className={cn('self-start px-2 py-0.5 rounded', s.bg, className)}>\n      <Text className={cn('text-[11px] font-semibold', s.text)}>\n        {label}\n      </Text>\n    </View>\n  );\n}\n"
+        }
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "avatar",
+      "description": "Circular avatar with image, fallback initials, and online status dot.",
+      "category": "ui",
+      "files": [
+        {
+          "path": "ui/avatar.tsx",
+          "content": "import React from 'react';\nimport { View, Text } from 'react-native';\nimport { Image } from 'expo-image';\nimport { cn } from '../lib/utils';\n\ntype AvatarSize = 'sm' | 'md' | 'lg' | 'xl';\n\ninterface AvatarProps {\n  source?: string;\n  name?: string;\n  size?: AvatarSize;\n  className?: string;\n}\n\nconst sizeMap: Record<AvatarSize, { dim: number; text: string }> = {\n  sm: { dim: 28, text: 'text-[11px]' },\n  md: { dim: 36, text: 'text-[13px]' },\n  lg: { dim: 48, text: 'text-[16px]' },\n  xl: { dim: 64, text: 'text-[20px]' },\n};\n\nfunction getInitials(name?: string): string {\n  if (!name) return '?';\n  return name\n    .split(' ')\n    .map((n) => n[0])\n    .join('')\n    .toUpperCase()\n    .slice(0, 2);\n}\n\nexport function Avatar({ source, name, size = 'md', className }: AvatarProps) {\n  const s = sizeMap[size];\n\n  if (source) {\n    return (\n      <Image\n        source={{ uri: source }}\n        className={cn('rounded-full bg-bgHover', className)}\n        style={{ width: s.dim, height: s.dim }}\n        contentFit=\"cover\"\n        transition={200}\n      />\n    );\n  }\n\n  return (\n    <View\n      className={cn(\n        'rounded-full bg-accent/20 items-center justify-center',\n        className,\n      )}\n      style={{ width: s.dim, height: s.dim }}\n    >\n      <Text className={cn('font-semibold text-accent', s.text)}>\n        {getInitials(name)}\n      </Text>\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "expo-image"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "card",
+      "description": "Elevated dark card container with optional header, body, and footer sections.",
+      "category": "ui",
+      "files": [
+        {
+          "path": "ui/card.tsx",
+          "content": "import React from 'react';\nimport { View, type ViewProps } from 'react-native';\nimport { cn } from '../lib/utils';\n\ninterface CardProps extends ViewProps {\n  children: React.ReactNode;\n  className?: string;\n}\n\nexport function Card({ children, className, style, ...props }: CardProps) {\n  return (\n    <View\n      className={cn('rounded-xl bg-bgElevated border border-border', className)}\n      style={style}\n      {...props}\n    >\n      {children}\n    </View>\n  );\n}\n"
+        }
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "bottom-sheet",
+      "description": "Modal bottom sheet with backdrop, drag handle, snap points, and smooth animation.",
+      "category": "ui",
+      "files": [
+        {
+          "path": "ui/bottom-sheet.tsx",
+          "content": "import React from 'react';\nimport { View, Modal, Pressable } from 'react-native';\nimport { SafeAreaView } from 'react-native-safe-area-context';\nimport { cn } from '../lib/utils';\n\ninterface BottomSheetProps {\n  visible: boolean;\n  onClose: () => void;\n  children: React.ReactNode;\n  height?: number | string;\n  className?: string;\n}\n\nexport function BottomSheet({\n  visible,\n  onClose,\n  children,\n  height,\n  className,\n}: BottomSheetProps) {\n  return (\n    <Modal\n      visible={visible}\n      transparent\n      animationType=\"slide\"\n      onRequestClose={onClose}\n    >\n      <View className=\"flex-1\" style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}>\n        <Pressable className=\"flex-1\" onPress={onClose} />\n        <View\n          className={cn('bg-bgElevated rounded-t-2xl', className)}\n          style={typeof height === 'number' ? { height } : undefined}\n        >\n          <View className=\"items-center pt-2 pb-2\">\n            <View className=\"w-9 h-1 rounded-full bg-borderStrong\" />\n          </View>\n          {children}\n          <SafeAreaView edges={['bottom']} />\n        </View>\n      </View>\n    </Modal>\n  );\n}\n"
+        }
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "empty-state",
+      "description": "Empty state with icon, title, message, and optional action button.",
+      "category": "ui",
+      "files": [
+        {
+          "path": "ui/empty-state.tsx",
+          "content": "import React from 'react';\nimport { View, Text } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { Button } from './button';\nimport { cn } from '../lib/utils';\n\ninterface EmptyStateProps {\n  icon?: keyof typeof Ionicons.glyphMap;\n  title: string;\n  description?: string;\n  actionLabel?: string;\n  onAction?: () => void;\n  className?: string;\n}\n\nexport function EmptyState({\n  icon = 'cube-outline',\n  title,\n  description,\n  actionLabel,\n  onAction,\n  className,\n}: EmptyStateProps) {\n  return (\n    <View className={cn('items-center justify-center py-16 px-8', className)}>\n      <View className=\"w-16 h-16 rounded-full bg-bgHover items-center justify-center mb-4\">\n        <Ionicons name={icon} size={28} color=\"#666666\" />\n      </View>\n      <Text className=\"text-[17px] font-semibold text-textPrimary text-center\">\n        {title}\n      </Text>\n      {description ? (\n        <Text className=\"text-[14px] text-textSecondary text-center mt-2 leading-5\">\n          {description}\n        </Text>\n      ) : null}\n      {actionLabel && onAction ? (\n        <Button\n          title={actionLabel}\n          onPress={onAction}\n          variant=\"primary\"\n          size=\"sm\"\n          className=\"mt-6\"\n        />\n      ) : null}\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "loading-spinner",
+      "description": "Full-screen or inline loading spinner with ActivityIndicator.",
+      "category": "ui",
+      "files": [
+        {
+          "path": "ui/loading-spinner.tsx",
+          "content": "import React from 'react';\nimport { View, ActivityIndicator, Text } from 'react-native';\nimport { cn } from '../lib/utils';\n\ninterface LoadingSpinnerProps {\n  size?: 'small' | 'large';\n  message?: string;\n  fullScreen?: boolean;\n  className?: string;\n}\n\nexport function LoadingSpinner({\n  size = 'large',\n  message,\n  fullScreen = false,\n  className,\n}: LoadingSpinnerProps) {\n  const content = (\n    <View className={cn('items-center justify-center', className)}>\n      <ActivityIndicator size={size} color=\"#6366F1\" />\n      {message ? (\n        <Text className=\"text-textSecondary text-[14px] mt-3\">{message}</Text>\n      ) : null}\n    </View>\n  );\n\n  if (fullScreen) {\n    return (\n      <View className=\"flex-1 items-center justify-center bg-bg\">\n        {content}\n      </View>\n    );\n  }\n\n  return content;\n}\n"
+        }
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "toast",
+      "description": "Animated toast notifications with success, error, warning, info variants.",
+      "category": "ui",
+      "files": [
+        {
+          "path": "ui/toast.tsx",
+          "content": "import React, { useEffect, useRef } from 'react';\nimport { View, Text, Pressable, Animated } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\n\ntype ToastType = 'success' | 'error' | 'warning' | 'info';\n\ninterface ToastAction {\n  label: string;\n  onPress: () => void;\n}\n\ninterface ToastProps {\n  visible: boolean;\n  message: string;\n  type?: ToastType;\n  action?: ToastAction;\n  onDismiss?: () => void;\n  duration?: number;\n  className?: string;\n}\n\nconst typeConfig: Record<ToastType, { icon: keyof typeof Ionicons.glyphMap; bg: string; border: string }> = {\n  success: { icon: 'checkmark-circle', bg: 'bg-successLight', border: 'border-success/30' },\n  error: { icon: 'alert-circle', bg: 'bg-errorLight', border: 'border-error/30' },\n  warning: { icon: 'warning', bg: 'bg-warningLight', border: 'border-warning/30' },\n  info: { icon: 'information-circle', bg: 'bg-infoLight', border: 'border-info/30' },\n};\n\nexport function Toast({\n  visible,\n  message,\n  type = 'info',\n  action,\n  onDismiss,\n  duration = 3000,\n  className,\n}: ToastProps) {\n  const opacity = useRef(new Animated.Value(0)).current;\n  const translateY = useRef(new Animated.Value(-20)).current;\n\n  useEffect(() => {\n    if (visible) {\n      Animated.parallel([\n        Animated.timing(opacity, { toValue: 1, duration: 200, useNativeDriver: true }),\n        Animated.timing(translateY, { toValue: 0, duration: 200, useNativeDriver: true }),\n      ]).start();\n\n      const timer = setTimeout(() => {\n        Animated.parallel([\n          Animated.timing(opacity, { toValue: 0, duration: 200, useNativeDriver: true }),\n          Animated.timing(translateY, { toValue: -20, duration: 200, useNativeDriver: true }),\n        ]).start(() => onDismiss?.());\n      }, duration);\n\n      return () => clearTimeout(timer);\n    }\n  }, [visible]);\n\n  if (!visible) return null;\n\n  const cfg = typeConfig[type];\n\n  return (\n    <Animated.View\n      className={cn(\n        'absolute top-12 left-4 right-4 z-50 flex-row items-center rounded-xl border px-4 py-3',\n        cfg.bg,\n        cfg.border,\n        className,\n      )}\n      style={{ opacity, transform: [{ translateY }] }}\n    >\n      <Ionicons name={cfg.icon} size={20} color={type === 'success' ? '#22C55E' : type === 'error' ? '#EF4444' : type === 'warning' ? '#F59E0B' : '#3B82F6'} />\n      <Text className=\"flex-1 text-textPrimary text-[14px] ml-3\">{message}</Text>\n      {action ? (\n        <Pressable onPress={action.onPress} className=\"ml-2\">\n          <Text className=\"text-accent text-[13px] font-semibold\">{action.label}</Text>\n        </Pressable>\n      ) : null}\n      {onDismiss ? (\n        <Pressable onPress={onDismiss} className=\"ml-2\" hitSlop={8}>\n          <Ionicons name=\"close\" size={18} color=\"#666666\" />\n        </Pressable>\n      ) : null}\n    </Animated.View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "rating",
+      "description": "Interactive star rating with half-star precision and touch selection.",
+      "category": "ui",
+      "files": [
+        {
+          "path": "ui/rating.tsx",
+          "content": "import React from 'react';\nimport { View, Pressable } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\n\ninterface RatingProps {\n  value: number;\n  max?: number;\n  size?: 'sm' | 'md' | 'lg';\n  onChange?: (value: number) => void;\n  disabled?: boolean;\n  showEmpty?: boolean;\n  className?: string;\n}\n\nconst sizeMap = { sm: 14, md: 18, lg: 24 };\n\nexport function Rating({\n  value,\n  max = 5,\n  size = 'md',\n  onChange,\n  disabled = true,\n  showEmpty = true,\n  className,\n}: RatingProps) {\n  const iconSize = sizeMap[size];\n  const interactive = !disabled && !!onChange;\n\n  return (\n    <View className={cn('flex-row items-center gap-0.5', className)}>\n      {Array.from({ length: max }, (_, i) => {\n        const filled = i < Math.floor(value);\n        const half = !filled && i < value;\n        const starName = filled ? 'star' : half ? 'star-half' : showEmpty ? 'star-outline' : undefined;\n\n        if (!starName) return null;\n\n        return (\n          <Pressable\n            key={i}\n            onPress={() => onChange?.(i + 1)}\n            disabled={!interactive}\n            className={interactive ? 'p-0.5' : ''}\n          >\n            <Ionicons\n              name={starName as keyof typeof Ionicons.glyphMap}\n              size={iconSize}\n              color={filled || half ? '#F59E0B' : '#333333'}\n            />\n          </Pressable>\n        );\n      })}\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "custom-radio",
+      "description": "Styled radio button group with animated selection indicator.",
+      "category": "ui",
+      "files": [
+        {
+          "path": "ui/custom-radio.tsx",
+          "content": "import React from 'react';\nimport { Pressable, View, Text } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\n\ninterface CustomRadioProps {\n  selected: boolean;\n  onSelect: () => void;\n  label?: string;\n  description?: string;\n  disabled?: boolean;\n  className?: string;\n}\n\nexport function CustomRadio({\n  selected,\n  onSelect,\n  label,\n  description,\n  disabled = false,\n  className,\n}: CustomRadioProps) {\n  return (\n    <Pressable\n      onPress={onSelect}\n      disabled={disabled}\n      className={cn(\n        'flex-row items-center gap-3 rounded-xl border px-4 py-3.5',\n        selected\n          ? 'border-accent bg-accent/5'\n          : 'border-border bg-bgElevated',\n        disabled && 'opacity-50',\n        className,\n      )}\n    >\n      <View\n        className={cn(\n          'w-5 h-5 rounded-full border-2 items-center justify-center',\n          selected ? 'border-accent' : 'border-borderStrong',\n        )}\n      >\n        {selected ? (\n          <View className=\"w-2.5 h-2.5 rounded-full bg-accent\" />\n        ) : null}\n      </View>\n      {label ? (\n        <View className=\"flex-1\">\n          <Text\n            className={cn(\n              'text-[15px] font-medium',\n              selected ? 'text-textPrimary' : 'text-textSecondary',\n            )}\n          >\n            {label}\n          </Text>\n          {description ? (\n            <Text className=\"text-textTertiary text-[13px] mt-0.5\">\n              {description}\n            </Text>\n          ) : null}\n        </View>\n      ) : null}\n    </Pressable>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "divider",
+      "description": "Thin horizontal or vertical divider line with optional label inset.",
+      "category": "ui",
+      "files": [
+        {
+          "path": "ui/divider.tsx",
+          "content": "import React from 'react';\nimport { View } from 'react-native';\nimport { cn } from '../lib/utils';\n\ninterface DividerProps {\n  className?: string;\n}\n\nexport function Divider({ className }: DividerProps) {\n  return <View className={cn('h-px bg-border', className)} />;\n}\n"
+        }
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "skeleton",
+      "description": "Pulsing placeholder shapes for card, text, avatar, and custom layouts.",
+      "category": "ui",
+      "files": [
+        {
+          "path": "ui/skeleton.tsx",
+          "content": "import React, { useEffect, useRef } from 'react';\nimport { View, Animated } from 'react-native';\nimport { cn } from '../lib/utils';\n\ninterface SkeletonProps {\n  width?: number | string;\n  height?: number | string;\n  borderRadius?: number;\n  className?: string;\n}\n\nexport function Skeleton({\n  width = '100%',\n  height = 20,\n  borderRadius = 8,\n  className,\n}: SkeletonProps) {\n  const opacity = useRef(new Animated.Value(0.3)).current;\n\n  useEffect(() => {\n    const animation = Animated.loop(\n      Animated.sequence([\n        Animated.timing(opacity, { toValue: 0.6, duration: 800, useNativeDriver: true }),\n        Animated.timing(opacity, { toValue: 0.3, duration: 800, useNativeDriver: true }),\n      ]),\n    );\n    animation.start();\n    return () => animation.stop();\n  }, []);\n\n  return (\n    <Animated.View\n      className={cn('bg-bgHover', className)}\n      style={{ width, height, borderRadius, opacity }}\n    />\n  );\n}\n\nexport function SkeletonCard({ className }: { className?: string }) {\n  return (\n    <View className={cn('rounded-xl bg-bgElevated border border-border p-4', className)}>\n      <Skeleton height={160} borderRadius={8} />\n      <View className=\"mt-3 gap-2\">\n        <Skeleton height={14} width=\"70%\" />\n        <Skeleton height={14} width=\"40%\" />\n        <Skeleton height={12} width=\"50%\" />\n      </View>\n    </View>\n  );\n}\n"
+        }
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "searchable-select",
+      "description": "Modal searchable picker with type-to-filter and multi-select support.",
+      "category": "ui",
+      "files": [
+        {
+          "path": "ui/searchable-select.tsx",
+          "content": "import React from 'react';\nimport {\n  View,\n  Text,\n  TextInput,\n  Pressable,\n  FlatList,\n  Modal,\n} from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\nimport { colors } from '../lib/theme';\n\ninterface SearchableSelectOption {\n  label: string;\n  value: string;\n  description?: string;\n}\n\ninterface SearchableSelectProps {\n  options: SearchableSelectOption[];\n  value?: string;\n  onChange: (value: string) => void;\n  placeholder?: string;\n  label?: string;\n  error?: string;\n  disabled?: boolean;\n  className?: string;\n}\n\nexport function SearchableSelect({\n  options,\n  value,\n  onChange,\n  placeholder = 'Search...',\n  label,\n  error,\n  disabled = false,\n  className,\n}: SearchableSelectProps) {\n  const [open, setOpen] = React.useState(false);\n  const [query, setQuery] = React.useState('');\n\n  const selected = options.find((o) => o.value === value);\n  const filtered = query.trim()\n    ? options.filter(\n        (o) =>\n          o.label.toLowerCase().includes(query.toLowerCase()) ||\n          o.description?.toLowerCase().includes(query.toLowerCase()),\n      )\n    : options;\n\n  return (\n    <View className={cn('w-full', className)}>\n      {label ? (\n        <Text className=\"text-[14px] font-medium text-textSecondary mb-1.5\">\n          {label}\n        </Text>\n      ) : null}\n\n      <Pressable\n        onPress={() => { if (!disabled) { setOpen(true); setQuery(''); } }}\n        disabled={disabled}\n        className=\"flex-row items-center h-[52px] rounded-lg border border-border bg-bgElevated px-4\"\n      >\n        <Text\n          className={`flex-1 text-[15px] ${\n            selected ? 'text-textPrimary' : 'text-textTertiary'\n          }`}\n        >\n          {selected ? selected.label : placeholder}\n        </Text>\n        <Ionicons name=\"chevron-down\" size={18} color={colors.textTertiary} />\n      </Pressable>\n\n      {error ? (\n        <Text className=\"text-error text-[12px] mt-1.5\">{error}</Text>\n      ) : null}\n\n      <Modal visible={open} transparent animationType=\"slide\">\n        <Pressable\n          className=\"flex-1\"\n          style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}\n          onPress={() => setOpen(false)}\n        />\n        <View className=\"bg-bgElevated rounded-t-2xl max-h-[60%] pb-8\">\n          <View className=\"items-center pt-2 pb-3\">\n            <View className=\"w-9 h-1 rounded-full bg-borderStrong\" />\n          </View>\n          <View className=\"px-4 pb-3\">\n            <View className=\"flex-row items-center h-[44px] rounded-full bg-bgSubtle px-4\">\n              <Ionicons name=\"search\" size={18} color={colors.textTertiary} />\n              <TextInput\n                value={query}\n                onChangeText={setQuery}\n                placeholder={placeholder}\n                placeholderTextColor={colors.textTertiary}\n                className=\"flex-1 text-[15px] text-textPrimary ml-2\"\n                autoFocus\n              />\n              {query ? (\n                <Pressable onPress={() => setQuery('')} hitSlop={8}>\n                  <Ionicons name=\"close\" size={18} color={colors.textTertiary} />\n                </Pressable>\n              ) : null}\n            </View>\n          </View>\n          <FlatList\n            data={filtered}\n            keyExtractor={(item) => item.value}\n            contentContainerStyle={{ paddingHorizontal: 16 }}\n            renderItem={({ item }) => (\n              <Pressable\n                onPress={() => {\n                  onChange(item.value);\n                  setOpen(false);\n                }}\n                className={`rounded-xl px-4 py-3.5 mb-1 ${\n                  item.value === value\n                    ? 'bg-accent/10 border border-accent/30'\n                    : 'bg-bgSubtle'\n                }`}\n              >\n                <Text className=\"text-[15px] font-medium text-textPrimary\">\n                  {item.label}\n                </Text>\n                {item.description ? (\n                  <Text className=\"text-textTertiary text-[13px] mt-0.5\">\n                    {item.description}\n                  </Text>\n                ) : null}\n              </Pressable>\n            )}\n            ListEmptyComponent={\n              <Text className=\"text-textTertiary text-[14px] text-center py-8\">\n                No results found\n              </Text>\n            }\n          />\n        </View>\n      </Modal>\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "countdown-timer",
+      "description": "Countdown timer with days, hours, minutes, seconds display.",
+      "category": "ui",
+      "files": [
+        {
+          "path": "ui/countdown-timer.tsx",
+          "content": "import React from 'react';\nimport { View, Text } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\n\ninterface CountdownTimerProps {\n  hours: number;\n  minutes: number;\n  seconds: number;\n  label?: string;\n  size?: 'sm' | 'md' | 'lg';\n  className?: string;\n}\n\nconst sizeMap = {\n  sm: { box: 'w-8 h-8', text: 'text-[13px]', gap: 1, icon: 14 },\n  md: { box: 'w-10 h-10', text: 'text-[16px]', gap: 2, icon: 16 },\n  lg: { box: 'w-14 h-14', text: 'text-[22px]', gap: 3, icon: 18 },\n};\n\nexport function CountdownTimer({\n  hours,\n  minutes,\n  seconds,\n  label,\n  size = 'md',\n  className,\n}: CountdownTimerProps) {\n  const s = sizeMap[size];\n\n  function pad(n: number): string {\n    return n.toString().padStart(2, '0');\n  }\n\n  return (\n    <View className={cn('items-center', className)}>\n      {label ? (\n        <Text className=\"text-textSecondary text-[12px] font-medium mb-2\">\n          {label}\n        </Text>\n      ) : null}\n      <View className=\"flex-row items-center gap-1\">\n        <View\n          className={cn(\n            'rounded-lg bg-bgHover items-center justify-center',\n            s.box,\n          )}\n        >\n          <Text className={cn('font-bold text-textPrimary tabular-nums', s.text)}>\n            {pad(hours)}\n          </Text>\n        </View>\n        <Text className={cn('font-bold text-textTertiary', s.text)}>:</Text>\n        <View\n          className={cn(\n            'rounded-lg bg-bgHover items-center justify-center',\n            s.box,\n          )}\n        >\n          <Text className={cn('font-bold text-textPrimary tabular-nums', s.text)}>\n            {pad(minutes)}\n          </Text>\n        </View>\n        <Text className={cn('font-bold text-textTertiary', s.text)}>:</Text>\n        <View\n          className={cn(\n            'rounded-lg bg-bgHover items-center justify-center',\n            s.box,\n          )}\n        >\n          <Text className={cn('font-bold text-textPrimary tabular-nums', s.text)}>\n            {pad(seconds)}\n          </Text>\n        </View>\n      </View>\n    </View>\n  );\n}\n"
+        }
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "otp-input",
+      "description": "One-time password input with individual digit boxes and auto-advance.",
+      "category": "ui",
+      "files": [
+        {
+          "path": "ui/otp-input.tsx",
+          "content": "import React, { useMemo } from 'react';\nimport { View, Text } from 'react-native';\n\ninterface OTPInputProps {\n  code: string;\n  length?: number;\n  error?: boolean;\n  className?: string;\n}\n\nexport function OTPInput({\n  code,\n  length = 4,\n  error = false,\n  className,\n}: OTPInputProps) {\n  const boxes = useMemo(\n    () => Array.from({ length }, (_, i) => code[i] ?? ''),\n    [code, length],\n  );\n\n  return (\n    <View className={`flex-row justify-center gap-3 ${className ?? ''}`}>\n      {boxes.map((digit, i) => (\n        <View\n          key={i}\n          className={`w-[56px] h-[64px] rounded-xl border-2 items-center justify-center ${\n            error\n              ? 'border-error bg-error/10'\n              : digit\n                ? 'border-accent bg-accent/10'\n                : 'border-border bg-bgElevated'\n          }`}\n        >\n          <Text className=\"text-[24px] font-bold text-textPrimary\">\n            {digit}\n          </Text>\n        </View>\n      ))}\n    </View>\n  );\n}\n"
+        }
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "product-card",
+      "description": "Product card with image, price, rating, badge overlay, wishlist, and add-to-cart.",
+      "category": "commerce",
+      "files": [
+        {
+          "path": "commerce/product-card.tsx",
+          "content": "import React from 'react';\nimport { Pressable, View, Text, Dimensions } from 'react-native';\nimport { Image } from 'expo-image';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\nimport { Rating } from '../ui/rating';\nimport { Badge } from '../ui/badge';\n\nexport interface Product {\n  id: string;\n  name: string;\n  price: number;\n  compareAt?: number;\n  image?: string;\n  rating?: number;\n  reviewCount?: number;\n  badge?: string;\n  currency?: string;\n}\n\ninterface ProductCardProps {\n  product: Product;\n  onPress: () => void;\n  onAddToCart?: () => void;\n  onWishlistToggle?: () => void;\n  isWishlisted?: boolean;\n  className?: string;\n  compact?: boolean;\n}\n\nconst SCREEN_WIDTH = Dimensions.get('window').width;\nconst CARD_GAP = 12;\nconst CARD_WIDTH = (SCREEN_WIDTH - 16 * 2 - CARD_GAP) / 2;\n\nexport function ProductCard({\n  product,\n  onPress,\n  onAddToCart,\n  onWishlistToggle,\n  isWishlisted = false,\n  className,\n  compact = false,\n}: ProductCardProps) {\n  const hasDiscount = product.compareAt && product.compareAt > product.price;\n  const discount = hasDiscount\n    ? Math.round((1 - product.price / product.compareAt!) * 100)\n    : 0;\n\n  const fmtPrice = (amount: number) =>\n    new Intl.NumberFormat('en-US', {\n      style: 'currency',\n      currency: product.currency || 'USD',\n      currencyDisplay: 'narrowSymbol',\n    }).format(amount);\n\n  return (\n    <Pressable\n      onPress={onPress}\n      className={cn(\n        'rounded-xl bg-bgElevated border border-border overflow-hidden',\n        compact ? 'flex-row' : 'w-full',\n        className,\n      )}\n      style={compact ? undefined : { width: CARD_WIDTH }}\n    >\n      <View className={compact ? 'w-[100px] h-[100px]' : 'relative'}>\n        {product.image ? (\n          <Image\n            source={{ uri: product.image }}\n            className={compact ? 'w-full h-full' : 'w-full aspect-square'}\n            contentFit=\"cover\"\n            transition={200}\n          />\n        ) : (\n          <View className={cn('bg-bgHover items-center justify-center', compact ? 'w-full h-full' : 'aspect-square')}>\n            <Ionicons name=\"image-outline\" size={28} color=\"#444444\" />\n          </View>\n        )}\n\n        {/* Wishlist */}\n        {onWishlistToggle ? (\n          <Pressable\n            onPress={onWishlistToggle}\n            className=\"absolute top-2 right-2 w-8 h-8 rounded-full bg-bg/80 items-center justify-center\"\n            hitSlop={6}\n          >\n            <Ionicons\n              name={isWishlisted ? 'heart' : 'heart-outline'}\n              size={16}\n              color={isWishlisted ? '#EF4444' : '#A0A0A0'}\n            />\n          </Pressable>\n        ) : null}\n\n        {/* Discount badge */}\n        {hasDiscount ? (\n          <View className=\"absolute top-2 left-2 bg-error rounded px-1.5 py-0.5\">\n            <Text className=\"text-white text-[10px] font-bold\">-{discount}%</Text>\n          </View>\n        ) : null}\n\n        {/* Product badge */}\n        {product.badge ? (\n          <View className=\"absolute top-2 left-2 mt-7\">\n            <Badge label={product.badge} variant=\"accent\" />\n          </View>\n        ) : null}\n      </View>\n\n      <View className={cn('flex-1', compact ? 'p-3 justify-center' : 'p-3')}>\n        <Text\n          className=\"text-[13px] font-semibold text-textPrimary\"\n          numberOfLines={2}\n        >\n          {product.name}\n        </Text>\n\n        <View className=\"flex-row items-center mt-1\">\n          <Text className=\"text-[16px] font-bold text-textPrimary tabular-nums\">\n            {fmtPrice(product.price)}\n          </Text>\n          {hasDiscount ? (\n            <Text className=\"text-[12px] text-textTertiary line-through ml-2 tabular-nums\">\n              {fmtPrice(product.compareAt!)}\n            </Text>\n          ) : null}\n        </View>\n\n        {product.rating != null ? (\n          <View className=\"flex-row items-center mt-1\">\n            <Rating value={product.rating} size=\"sm\" />\n            <Text className=\"text-textTertiary text-[11px] ml-1\">\n              {product.rating}\n            </Text>\n            {product.reviewCount != null ? (\n              <Text className=\"text-textTertiary text-[11px] ml-1\">\n                ({product.reviewCount})\n              </Text>\n            ) : null}\n          </View>\n        ) : null}\n\n        {onAddToCart && !compact ? (\n          <Pressable\n            onPress={onAddToCart}\n            className=\"mt-2 h-[32px] rounded-lg bg-accent items-center justify-center\"\n          >\n            <Text className=\"text-white text-[12px] font-semibold\">Add to Cart</Text>\n          </Pressable>\n        ) : null}\n      </View>\n    </Pressable>\n  );\n}\n\nexport function ProductCardList({ product, onPress, onAddToCart }: {\n  product: Product;\n  onPress: () => void;\n  onAddToCart?: () => void;\n}) {\n  return (\n    <ProductCard\n      product={product}\n      onPress={onPress}\n      onAddToCart={onAddToCart}\n      compact\n      className=\"w-full\"\n    />\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "expo-image",
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core",
+        "badge"
+      ]
+    },
+    {
+      "name": "cart-item",
+      "description": "Cart line item with image, title, quantity stepper, price, total, and remove.",
+      "category": "commerce",
+      "files": [
+        {
+          "path": "commerce/cart-item.tsx",
+          "content": "import React from 'react';\nimport { View, Text, Pressable } from 'react-native';\nimport { Image } from 'expo-image';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\n\nexport interface CartItemData {\n  productId: string;\n  name: string;\n  image: string;\n  price: number;\n  compareAt?: number;\n  quantity: number;\n  options?: Record<string, string>;\n}\n\ninterface CartItemProps {\n  item: CartItemData;\n  onRemove: () => void;\n  onUpdateQuantity: (qty: number) => void;\n  onPress?: () => void;\n  className?: string;\n}\n\nexport function CartItem({\n  item,\n  onRemove,\n  onUpdateQuantity,\n  onPress,\n  className,\n}: CartItemProps) {\n  const fmtPrice = (amount: number) =>\n    new Intl.NumberFormat('en-US', {\n      style: 'currency',\n      currency: 'USD',\n      currencyDisplay: 'narrowSymbol',\n    }).format(amount);\n\n  return (\n    <Pressable\n      onPress={onPress}\n      className={cn('flex-row p-4 border-b border-border', className)}\n    >\n      <View className=\"w-[90px] h-[90px] rounded-xl overflow-hidden bg-bgHover\">\n        <Image\n          source={{ uri: item.image }}\n          className=\"w-full h-full\"\n          contentFit=\"cover\"\n          transition={200}\n        />\n      </View>\n\n      <View className=\"flex-1 ml-3\">\n        <Text className=\"text-[14px] font-semibold text-textPrimary\" numberOfLines={2}>\n          {item.name}\n        </Text>\n\n        {item.options && Object.entries(item.options).length > 0 ? (\n          <Text className=\"text-textTertiary text-[12px] mt-0.5\">\n            {Object.entries(item.options)\n              .map(([k, v]) => `${k}: ${v}`)\n              .join(' · ')}\n          </Text>\n        ) : null}\n\n        <View className=\"flex-row items-center mt-1\">\n          <Text className=\"text-[16px] font-bold text-textPrimary tabular-nums\">\n            {fmtPrice(item.price)}\n          </Text>\n          {item.compareAt && item.compareAt > item.price ? (\n            <Text className=\"text-textTertiary text-[12px] line-through ml-2 tabular-nums\">\n              {fmtPrice(item.compareAt)}\n            </Text>\n          ) : null}\n        </View>\n\n        <View className=\"flex-row items-center justify-between mt-2\">\n          <View className=\"flex-row items-center\">\n            <Pressable\n              onPress={() => item.quantity > 1 && onUpdateQuantity(item.quantity - 1)}\n              className=\"w-7 h-7 rounded border border-border items-center justify-center\"\n            >\n              <Text className=\"text-textPrimary text-[15px] font-medium\">-</Text>\n            </Pressable>\n            <View className=\"w-7 h-7 border-y border-border items-center justify-center\">\n              <Text className=\"text-textPrimary text-[13px] font-semibold\">\n                {item.quantity}\n              </Text>\n            </View>\n            <Pressable\n              onPress={() => onUpdateQuantity(item.quantity + 1)}\n              className=\"w-7 h-7 rounded border border-border items-center justify-center\"\n            >\n              <Text className=\"text-textPrimary text-[15px] font-medium\">+</Text>\n            </Pressable>\n          </View>\n\n          <Pressable onPress={onRemove} hitSlop={8}>\n            <Ionicons name=\"trash-outline\" size={18} color=\"#EF4444\" />\n          </Pressable>\n        </View>\n      </View>\n    </Pressable>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "expo-image",
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "price-display",
+      "description": "Price display with currency formatting, compare-at strikethrough, and discount badge.",
+      "category": "commerce",
+      "files": [
+        {
+          "path": "commerce/price-display.tsx",
+          "content": "import React from 'react';\nimport { View, Text } from 'react-native';\nimport { cn } from '../lib/utils';\n\ninterface PriceDisplayProps {\n  price: number;\n  compareAt?: number;\n  currency?: string;\n  size?: 'sm' | 'md' | 'lg';\n  showDiscount?: boolean;\n  className?: string;\n}\n\nexport function PriceDisplay({\n  price,\n  compareAt,\n  currency = 'USD',\n  size = 'md',\n  showDiscount = true,\n  className,\n}: PriceDisplayProps) {\n  const fmt = (amount: number) =>\n    new Intl.NumberFormat('en-US', {\n      style: 'currency',\n      currency,\n      currencyDisplay: 'narrowSymbol',\n    }).format(amount);\n\n  const discount =\n    compareAt && compareAt > price\n      ? Math.round((1 - price / compareAt) * 100)\n      : 0;\n\n  const sizeMap = {\n    sm: { price: 'text-[14px]', struck: 'text-[11px]', badge: 'text-[10px]' },\n    md: { price: 'text-[18px]', struck: 'text-[13px]', badge: 'text-[11px]' },\n    lg: { price: 'text-[24px]', struck: 'text-[16px]', badge: 'text-[12px]' },\n  };\n\n  const s = sizeMap[size];\n\n  return (\n    <View className={cn('flex-row items-baseline gap-2', className)}>\n      <Text className={cn('font-bold text-textPrimary tabular-nums', s.price)}>\n        {fmt(price)}\n      </Text>\n      {compareAt && compareAt > price ? (\n        <>\n          <Text className={cn('text-textTertiary line-through tabular-nums', s.struck)}>\n            {fmt(compareAt)}\n          </Text>\n          {showDiscount ? (\n            <View className=\"bg-error/20 px-1.5 py-0.5 rounded\">\n              <Text className={cn('font-semibold text-error', s.badge)}>\n                -{discount}%\n              </Text>\n            </View>\n          ) : null}\n        </>\n      ) : null}\n    </View>\n  );\n}\n"
+        }
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "order-card",
+      "description": "Order summary card with ID, date, status badge, item previews, total, and reorder.",
+      "category": "commerce",
+      "files": [
+        {
+          "path": "commerce/order-card.tsx",
+          "content": "import React from 'react';\nimport { View, Text, Pressable } from 'react-native';\nimport { Image } from 'expo-image';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\nimport { Badge } from '../ui/badge';\n\ntype OrderStatus = 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'returned';\n\nexport interface Order {\n  id: string;\n  number: string;\n  date: string;\n  status: OrderStatus;\n  total: number;\n  items: { name: string; image: string; quantity: number }[];\n}\n\ninterface OrderCardProps {\n  order: Order;\n  onPress: () => void;\n  onTrack?: () => void;\n  className?: string;\n}\n\nconst statusConfig: Record<OrderStatus, { label: string; variant: 'success' | 'warning' | 'info' | 'error' | 'neutral' }> = {\n  confirmed: { label: 'Confirmed', variant: 'info' },\n  processing: { label: 'Processing', variant: 'warning' },\n  shipped: { label: 'Shipped', variant: 'accent' },\n  delivered: { label: 'Delivered', variant: 'success' },\n  cancelled: { label: 'Cancelled', variant: 'error' },\n  returned: { label: 'Returned', variant: 'neutral' },\n};\n\nexport function OrderCard({ order, onPress, onTrack, className }: OrderCardProps) {\n  const cfg = statusConfig[order.status];\n  const fmtPrice = (amount: number) =>\n    new Intl.NumberFormat('en-US', {\n      style: 'currency',\n      currency: 'USD',\n    }).format(amount);\n\n  return (\n    <Pressable\n      onPress={onPress}\n      className={cn('rounded-xl border border-border bg-bgElevated overflow-hidden', className)}\n    >\n      <View className=\"flex-row items-center justify-between px-4 py-3 border-b border-border\">\n        <View>\n          <Text className=\"text-[13px] font-semibold text-textPrimary\">{order.number}</Text>\n          <Text className=\"text-textTertiary text-[12px] mt-0.5\">{order.date}</Text>\n        </View>\n        <Badge label={cfg.label} variant={cfg.variant} />\n      </View>\n\n      <View className=\"px-4 py-3\">\n        <View className=\"flex-row gap-2\">\n          {order.items.slice(0, 3).map((item, i) => (\n            <View key={i} className=\"w-14 h-14 rounded-lg overflow-hidden bg-bgHover\">\n              <Image source={{ uri: item.image }} className=\"w-full h-full\" contentFit=\"cover\" />\n            </View>\n          ))}\n          {order.items.length > 3 ? (\n            <View className=\"w-14 h-14 rounded-lg bg-bgSubtle items-center justify-center\">\n              <Text className=\"text-textSecondary text-[11px] font-medium\">\n                +{order.items.length - 3}\n              </Text>\n            </View>\n          ) : null}\n        </View>\n      </View>\n\n      <View className=\"flex-row items-center justify-between px-4 py-3 border-t border-border\">\n        <Text className=\"text-[15px] font-bold text-textPrimary tabular-nums\">\n          {fmtPrice(order.total)}\n        </Text>\n        {onTrack && order.status !== 'delivered' && order.status !== 'cancelled' ? (\n          <Pressable onPress={onTrack} className=\"flex-row items-center gap-1\">\n            <Text className=\"text-accent text-[13px] font-semibold\">Track</Text>\n            <Ionicons name=\"chevron-forward\" size={14} color=\"#6366F1\" />\n          </Pressable>\n        ) : null}\n      </View>\n    </Pressable>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "expo-image",
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "order-timeline",
+      "description": "Vertical timeline showing order status progression with icons and dates.",
+      "category": "commerce",
+      "files": [
+        {
+          "path": "commerce/order-timeline.tsx",
+          "content": "import React from 'react';\nimport { View, Text } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\n\ntype OrderTimelineStep = {\n  label: string;\n  date?: string;\n  completed: boolean;\n  active: boolean;\n};\n\ninterface OrderTimelineProps {\n  steps: OrderTimelineStep[];\n  className?: string;\n}\n\nexport function OrderTimeline({ steps, className }: OrderTimelineProps) {\n  return (\n    <View className={cn('px-4 py-2', className)}>\n      {steps.map((step, i) => (\n        <View key={i} className=\"flex-row\">\n          {/* Timeline */}\n          <View className=\"items-center w-8\">\n            <View\n              className={cn(\n                'w-7 h-7 rounded-full items-center justify-center',\n                step.active\n                  ? 'bg-accent'\n                  : step.completed\n                    ? 'bg-success'\n                    : 'bg-bgHover',\n              )}\n            >\n              {step.completed || step.active ? (\n                <Ionicons name=\"checkmark\" size={16} color=\"#FFFFFF\" />\n              ) : (\n                <View className=\"w-2 h-2 rounded-full bg-borderStrong\" />\n              )}\n            </View>\n            {i < steps.length - 1 ? (\n              <View\n                className={cn(\n                  'w-0.5 flex-1',\n                  step.completed ? 'bg-success' : 'bg-border',\n                )}\n                style={{ minHeight: 24 }}\n              />\n            ) : null}\n          </View>\n\n          {/* Content */}\n          <View className={cn('flex-1 ml-3', i < steps.length - 1 && 'pb-4')}>\n            <Text\n              className={cn(\n                'text-[14px]',\n                step.active\n                  ? 'font-semibold text-textPrimary'\n                  : step.completed\n                    ? 'text-textPrimary'\n                    : 'text-textTertiary',\n              )}\n            >\n              {step.label}\n            </Text>\n            {step.date ? (\n              <Text className=\"text-textTertiary text-[12px] mt-0.5\">\n                {step.date}\n              </Text>\n            ) : null}\n          </View>\n        </View>\n      ))}\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "product-header",
+      "description": "Product detail header with image gallery, color/size selector, wishlist, and sticky add-to-cart.",
+      "category": "commerce",
+      "files": [
+        {
+          "path": "commerce/product-header.tsx",
+          "content": "import React from 'react';\nimport { View, Text, Pressable, ScrollView } from 'react-native';\nimport { Image } from 'expo-image';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\nimport { Badge } from '../ui/badge';\nimport { Rating } from '../ui/rating';\nimport { Divider } from '../ui/divider';\n\nexport interface ProductDetailData {\n  id: string;\n  name: string;\n  price: number;\n  compareAt?: number;\n  description?: string;\n  images: string[];\n  rating?: number;\n  reviewCount?: number;\n  colors?: { name: string; hex: string }[];\n  sizes?: string[];\n  badge?: string;\n}\n\ninterface ProductHeaderProps {\n  product: ProductDetailData;\n  selectedColor?: string;\n  selectedSize?: string;\n  onColorChange?: (color: string) => void;\n  onSizeChange?: (size: string) => void;\n  onAddToCart?: () => void;\n  onWishlistToggle?: () => void;\n  isWishlisted?: boolean;\n  className?: string;\n}\n\nexport function ProductHeader({\n  product,\n  selectedColor,\n  selectedSize,\n  onColorChange,\n  onSizeChange,\n  onAddToCart,\n  onWishlistToggle,\n  isWishlisted = false,\n  className,\n}: ProductHeaderProps) {\n  const fmtPrice = (amount: number) =>\n    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol' }).format(amount);\n\n  return (\n    <ScrollView className={cn('flex-1 bg-bg', className)}>\n      {/* Image gallery */}\n      <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>\n        {product.images.map((img, i) => (\n          <View key={i} className=\"w-screen aspect-[3/4] bg-bgHover\">\n            <Image source={{ uri: img }} className=\"w-full h-full\" contentFit=\"cover\" />\n          </View>\n        ))}\n      </ScrollView>\n\n      <View className=\"px-4 pt-4 pb-6\">\n        {/* Badge + wishlist */}\n        <View className=\"flex-row items-center justify-between\">\n          {product.badge ? <Badge label={product.badge} variant=\"accent\" /> : <View />}\n          {onWishlistToggle ? (\n            <Pressable onPress={onWishlistToggle} hitSlop={8}>\n              <Ionicons name={isWishlisted ? 'heart' : 'heart-outline'} size={22} color={isWishlisted ? '#EF4444' : '#A0A0A0'} />\n            </Pressable>\n          ) : null}\n        </View>\n\n        {/* Name */}\n        <Text className=\"text-[18px] font-semibold text-textPrimary mt-2\">{product.name}</Text>\n\n        {/* Price */}\n        <View className=\"flex-row items-baseline gap-2 mt-1\">\n          <Text className=\"text-[22px] font-bold text-textPrimary tabular-nums\">{fmtPrice(product.price)}</Text>\n          {product.compareAt ? (\n            <Text className=\"text-textTertiary text-[15px] line-through tabular-nums\">{fmtPrice(product.compareAt)}</Text>\n          ) : null}\n        </View>\n\n        {/* Rating */}\n        {product.rating ? (\n          <View className=\"flex-row items-center mt-2\">\n            <Rating value={product.rating} size=\"sm\" />\n            <Text className=\"text-textSecondary text-[13px] ml-2\">\n              {product.rating} ({product.reviewCount ?? 0} reviews)\n            </Text>\n          </View>\n        ) : null}\n\n        <Divider className=\"my-4\" />\n\n        {/* Color selector */}\n        {product.colors && product.colors.length > 0 ? (\n          <View className=\"mb-4\">\n            <Text className=\"text-[14px] font-semibold text-textPrimary mb-2\">\n              Color: {selectedColor ?? 'Select'}\n            </Text>\n            <View className=\"flex-row gap-3\">\n              {product.colors.map((c) => (\n                <Pressable\n                  key={c.name}\n                  onPress={() => onColorChange?.(c.name)}\n                  className={cn(\n                    'w-8 h-8 rounded-full border-2',\n                    selectedColor === c.name ? 'border-accent' : 'border-border',\n                  )}\n                  style={{ backgroundColor: c.hex }}\n                />\n              ))}\n            </View>\n          </View>\n        ) : null}\n\n        {/* Size selector */}\n        {product.sizes && product.sizes.length > 0 ? (\n          <View className=\"mb-4\">\n            <Text className=\"text-[14px] font-semibold text-textPrimary mb-2\">\n              Size: {selectedSize ?? 'Select'}\n            </Text>\n            <View className=\"flex-row flex-wrap gap-2\">\n              {product.sizes.map((s) => (\n                <Pressable\n                  key={s}\n                  onPress={() => onSizeChange?.(s)}\n                  className={cn(\n                    'h-[36px] min-w-[48px] rounded-lg border items-center justify-center px-3',\n                    selectedSize === s\n                      ? 'bg-accent/10 border-accent'\n                      : 'bg-bgElevated border-border',\n                  )}\n                >\n                  <Text className={cn(\n                    'text-[13px] font-medium',\n                    selectedSize === s ? 'text-accent' : 'text-textSecondary',\n                  )}>\n                    {s}\n                  </Text>\n                </Pressable>\n              ))}\n            </View>\n          </View>\n        ) : null}\n\n        {/* Description */}\n        {product.description ? (\n          <View className=\"mt-2\">\n            <Text className=\"text-[14px] font-semibold text-textPrimary mb-1\">Description</Text>\n            <Text className=\"text-[14px] text-textSecondary leading-5\">{product.description}</Text>\n          </View>\n        ) : null}\n      </View>\n\n      {/* Add to cart sticky footer */}\n      {onAddToCart ? (\n        <View className=\"px-4 py-3 border-t border-border bg-bgElevated\">\n          <Pressable\n            onPress={onAddToCart}\n            className=\"h-[52px] rounded-xl bg-accent items-center justify-center\"\n          >\n            <Text className=\"text-white text-[16px] font-semibold\">\n              Add to Cart — {fmtPrice(product.price)}\n            </Text>\n          </Pressable>\n        </View>\n      ) : null}\n    </ScrollView>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "expo-image",
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core",
+        "badge",
+        "rating",
+        "divider"
+      ]
+    },
+    {
+      "name": "login-screen",
+      "description": "Login screen with email/password form, validation, social buttons, and navigation links.",
+      "category": "auth",
+      "files": [
+        {
+          "path": "auth/login-screen.tsx",
+          "content": "import React, { useState } from 'react';\nimport {\n  View,\n  Text,\n  Pressable,\n  ScrollView,\n  KeyboardAvoidingView,\n  Platform,\n} from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { useRouter } from 'expo-router';\nimport { useSafeAreaInsets } from 'react-native-safe-area-context';\nimport { useForm, Controller } from 'react-hook-form';\nimport { zodResolver } from '@hookform/resolvers/zod';\nimport { z } from 'zod';\nimport { Input } from '../ui/input';\nimport { Button } from '../ui/button';\nimport { cn } from '../lib/utils';\n\nexport const loginSchema = z.object({\n  email: z.string().email('Valid email required'),\n  password: z.string().min(6, 'Password must be at least 6 characters'),\n});\n\nexport type LoginFormData = z.infer<typeof loginSchema>;\n\ninterface LoginScreenProps {\n  onSubmit: (data: LoginFormData) => Promise<void>;\n  onForgotPassword?: () => void;\n  onSignUp?: () => void;\n  className?: string;\n}\n\nexport function LoginScreen({\n  onSubmit,\n  onForgotPassword,\n  onSignUp,\n  className,\n}: LoginScreenProps) {\n  const insets = useSafeAreaInsets();\n  const [loading, setLoading] = useState(false);\n\n  const {\n    control,\n    handleSubmit,\n    formState: { errors },\n  } = useForm<LoginFormData>({\n    resolver: zodResolver(loginSchema),\n    defaultValues: { email: '', password: '' },\n  });\n\n  async function handleFormSubmit(data: LoginFormData) {\n    setLoading(true);\n    try {\n      await onSubmit(data);\n    } finally {\n      setLoading(false);\n    }\n  }\n\n  return (\n    <View className={cn('flex-1 bg-bg', className)} style={{ paddingTop: insets.top }}>\n      <KeyboardAvoidingView\n        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}\n        className=\"flex-1\"\n      >\n        <ScrollView\n          className=\"flex-1\"\n          contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}\n          keyboardShouldPersistTaps=\"handled\"\n          showsVerticalScrollIndicator={false}\n        >\n          <View className=\"px-4 pt-8\">\n            <Text className=\"text-[clamp(28px,6vw,36px)] font-bold text-textPrimary tracking-tight\">\n              Sign in\n            </Text>\n            <Text className=\"text-[15px] text-textSecondary mt-2\">\n              Welcome back to your account\n            </Text>\n          </View>\n\n          <View className=\"px-4 mt-8 gap-4\">\n            <Controller\n              control={control}\n              name=\"email\"\n              render={({ field: { onChange, value } }) => (\n                <Input\n                  label=\"Email\"\n                  value={value}\n                  onChangeText={onChange}\n                  error={errors.email?.message}\n                  placeholder=\"you@example.com\"\n                  keyboardType=\"email-address\"\n                />\n              )}\n            />\n\n            <Controller\n              control={control}\n              name=\"password\"\n              render={({ field: { onChange, value } }) => (\n                <Input\n                  label=\"Password\"\n                  value={value}\n                  onChangeText={onChange}\n                  error={errors.password?.message}\n                  placeholder=\"Enter your password\"\n                  variant=\"password\"\n                />\n              )}\n            />\n\n            {onForgotPassword ? (\n              <View className=\"items-end\">\n                <Pressable onPress={onForgotPassword}>\n                  <Text className=\"text-accent text-[14px] font-medium\">\n                    Forgot password?\n                  </Text>\n                </Pressable>\n              </View>\n            ) : null}\n\n            <Button\n              title=\"Sign in\"\n              onPress={handleSubmit(handleFormSubmit)}\n              variant=\"primary\"\n              loading={loading}\n            />\n          </View>\n\n          <View className=\"flex-row items-center px-4 mt-8\">\n            <View className=\"flex-1 h-px bg-border\" />\n            <Text className=\"mx-4 text-[13px] text-textTertiary\">or continue with</Text>\n            <View className=\"flex-1 h-px bg-border\" />\n          </View>\n\n          <View className=\"flex-row justify-center gap-4 mt-5 px-4\">\n            {['logo-google', 'logo-apple', 'logo-facebook'].map((icon) => (\n              <Pressable\n                key={icon}\n                className=\"w-[52px] h-[52px] rounded-full border border-border items-center justify-center bg-bgElevated\"\n              >\n                <Ionicons name={icon as keyof typeof Ionicons.glyphMap} size={22} color=\"#A0A0A0\" />\n              </Pressable>\n            ))}\n          </View>\n\n          {onSignUp ? (\n            <View className=\"flex-row justify-center mt-8 px-4\">\n              <Text className=\"text-[14px] text-textSecondary\">\n                Don't have an account?{' '}\n              </Text>\n              <Pressable onPress={onSignUp}>\n                <Text className=\"text-accent text-[14px] font-bold\">Sign up</Text>\n              </Pressable>\n            </View>\n          ) : null}\n        </ScrollView>\n      </KeyboardAvoidingView>\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons",
+        "expo-router",
+        "react-native-safe-area-context",
+        "react-hook-form",
+        "@hookform/resolvers",
+        "zod"
+      ],
+      "registryDependencies": [
+        "core",
+        "input",
+        "button"
+      ]
+    },
+    {
+      "name": "register-screen",
+      "description": "Registration screen with name, email, password fields, zod validation, and social sign-up.",
+      "category": "auth",
+      "files": [
+        {
+          "path": "auth/register-screen.tsx",
+          "content": "import React, { useState } from 'react';\nimport {\n  View,\n  Text,\n  Pressable,\n  ScrollView,\n  KeyboardAvoidingView,\n  Platform,\n} from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { useSafeAreaInsets } from 'react-native-safe-area-context';\nimport { useForm, Controller } from 'react-hook-form';\nimport { zodResolver } from '@hookform/resolvers/zod';\nimport { z } from 'zod';\nimport { Input } from '../ui/input';\nimport { Button } from '../ui/button';\nimport { cn } from '../lib/utils';\n\nexport const registerSchema = z\n  .object({\n    name: z.string().min(2, 'Name must be at least 2 characters'),\n    email: z.string().email('Valid email required'),\n    password: z.string().min(6, 'Password must be at least 6 characters'),\n    confirmPassword: z.string().min(1, 'Please confirm your password'),\n  })\n  .refine((data) => data.password === data.confirmPassword, {\n    message: 'Passwords do not match',\n    path: ['confirmPassword'],\n  });\n\nexport type RegisterFormData = z.infer<typeof registerSchema>;\n\ninterface RegisterScreenProps {\n  onSubmit: (data: RegisterFormData) => Promise<void>;\n  onSignIn?: () => void;\n  className?: string;\n}\n\nexport function RegisterScreen({\n  onSubmit,\n  onSignIn,\n  className,\n}: RegisterScreenProps) {\n  const insets = useSafeAreaInsets();\n  const [loading, setLoading] = useState(false);\n\n  const {\n    control,\n    handleSubmit,\n    formState: { errors },\n  } = useForm<RegisterFormData>({\n    resolver: zodResolver(registerSchema),\n    defaultValues: { name: '', email: '', password: '', confirmPassword: '' },\n  });\n\n  async function handleFormSubmit(data: RegisterFormData) {\n    setLoading(true);\n    try {\n      await onSubmit(data);\n    } finally {\n      setLoading(false);\n    }\n  }\n\n  return (\n    <View className={cn('flex-1 bg-bg', className)} style={{ paddingTop: insets.top }}>\n      <KeyboardAvoidingView\n        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}\n        className=\"flex-1\"\n      >\n        <ScrollView\n          className=\"flex-1\"\n          contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}\n          keyboardShouldPersistTaps=\"handled\"\n          showsVerticalScrollIndicator={false}\n        >\n          <View className=\"px-4 pt-8\">\n            <Text className=\"text-[clamp(28px,6vw,36px)] font-bold text-textPrimary tracking-tight\">\n              Create account\n            </Text>\n            <Text className=\"text-[15px] text-textSecondary mt-2\">\n              Join us and start shopping\n            </Text>\n          </View>\n\n          <View className=\"px-4 mt-8 gap-4\">\n            <Controller\n              control={control}\n              name=\"name\"\n              render={({ field: { onChange, value } }) => (\n                <Input\n                  label=\"Full name\"\n                  value={value}\n                  onChangeText={onChange}\n                  error={errors.name?.message}\n                  placeholder=\"John Doe\"\n                />\n              )}\n            />\n\n            <Controller\n              control={control}\n              name=\"email\"\n              render={({ field: { onChange, value } }) => (\n                <Input\n                  label=\"Email\"\n                  value={value}\n                  onChangeText={onChange}\n                  error={errors.email?.message}\n                  placeholder=\"you@example.com\"\n                  keyboardType=\"email-address\"\n                />\n              )}\n            />\n\n            <Controller\n              control={control}\n              name=\"password\"\n              render={({ field: { onChange, value } }) => (\n                <Input\n                  label=\"Password\"\n                  value={value}\n                  onChangeText={onChange}\n                  error={errors.password?.message}\n                  placeholder=\"At least 6 characters\"\n                  variant=\"password\"\n                />\n              )}\n            />\n\n            <Controller\n              control={control}\n              name=\"confirmPassword\"\n              render={({ field: { onChange, value } }) => (\n                <Input\n                  label=\"Confirm password\"\n                  value={value}\n                  onChangeText={onChange}\n                  error={errors.confirmPassword?.message}\n                  placeholder=\"Repeat your password\"\n                  variant=\"password\"\n                />\n              )}\n            />\n\n            <Button\n              title=\"Create account\"\n              onPress={handleSubmit(handleFormSubmit)}\n              variant=\"primary\"\n              loading={loading}\n            />\n          </View>\n\n          {onSignIn ? (\n            <View className=\"flex-row justify-center mt-8 px-4\">\n              <Text className=\"text-[14px] text-textSecondary\">\n                Already have an account?{' '}\n              </Text>\n              <Pressable onPress={onSignIn}>\n                <Text className=\"text-accent text-[14px] font-bold\">Sign in</Text>\n              </Pressable>\n            </View>\n          ) : null}\n        </ScrollView>\n      </KeyboardAvoidingView>\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons",
+        "expo-router",
+        "react-native-safe-area-context",
+        "react-hook-form",
+        "@hookform/resolvers",
+        "zod"
+      ],
+      "registryDependencies": [
+        "core",
+        "input",
+        "button"
+      ]
+    },
+    {
+      "name": "verify-otp-screen",
+      "description": "OTP verification screen with 6-digit code input, resend timer, and email display.",
+      "category": "auth",
+      "files": [
+        {
+          "path": "auth/verify-otp-screen.tsx",
+          "content": "import React, { useState, useEffect, useCallback } from 'react';\nimport { View, Text, Pressable } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { useSafeAreaInsets } from 'react-native-safe-area-context';\nimport { useForm, Controller } from 'react-hook-form';\nimport { zodResolver } from '@hookform/resolvers/zod';\nimport { z } from 'zod';\nimport { OTPInput } from '../ui/otp-input';\nimport { Button } from '../ui/button';\nimport { cn } from '../lib/utils';\n\nexport const otpSchema = z.object({\n  otp: z.string().length(6, 'Code must be 6 digits'),\n});\n\nexport type OtpFormData = z.infer<typeof otpSchema>;\n\ninterface VerifyOTPScreenProps {\n  email: string;\n  onSubmit: (data: OtpFormData) => Promise<void>;\n  onResend?: () => void;\n  onBack?: () => void;\n  className?: string;\n}\n\nexport function VerifyOTPScreen({\n  email,\n  onSubmit,\n  onResend,\n  onBack,\n  className,\n}: VerifyOTPScreenProps) {\n  const insets = useSafeAreaInsets();\n  const [loading, setLoading] = useState(false);\n  const [countdown, setCountdown] = useState(59);\n\n  useEffect(() => {\n    if (countdown <= 0) return;\n    const timer = setInterval(() => setCountdown((p) => p - 1), 1000);\n    return () => clearInterval(timer);\n  }, [countdown]);\n\n  const handleResend = useCallback(() => {\n    setCountdown(59);\n    onResend?.();\n  }, [onResend]);\n\n  const {\n    control,\n    handleSubmit,\n    formState: { errors },\n  } = useForm<OtpFormData>({\n    resolver: zodResolver(otpSchema),\n    defaultValues: { otp: '' },\n  });\n\n  async function handleFormSubmit(data: OtpFormData) {\n    setLoading(true);\n    try {\n      await onSubmit(data);\n    } finally {\n      setLoading(false);\n    }\n  }\n\n  return (\n    <View className={cn('flex-1 bg-bg', className)} style={{ paddingTop: insets.top }}>\n      {onBack ? (\n        <View className=\"px-4 pt-3\">\n          <Pressable onPress={onBack} hitSlop={8}>\n            <Ionicons name=\"arrow-back\" size={24} color=\"#A0A0A0\" />\n          </Pressable>\n        </View>\n      ) : null}\n\n      <View className=\"px-4 mt-6\">\n        <Text className=\"text-[26px] font-bold text-textPrimary\">Verify code</Text>\n        <Text className=\"text-[14px] text-textSecondary mt-1\">\n          Enter the 6-digit code sent to {email}\n        </Text>\n      </View>\n\n      <View className=\"px-4 mt-8\">\n        <Controller\n          control={control}\n          name=\"otp\"\n          render={({ field: { onChange, value } }) => (\n            <OTPInput\n              code={value}\n              length={6}\n              error={!!errors.otp}\n            />\n          )}\n        />\n        {errors.otp ? (\n          <Text className=\"text-error text-[12px] text-center mt-2\">\n            {errors.otp.message}\n          </Text>\n        ) : null}\n      </View>\n\n      <View className=\"items-center mt-6\">\n        {countdown > 0 ? (\n          <Text className=\"text-[14px] text-textTertiary\">\n            Resend in {Math.floor(countdown / 60)}:{countdown.toString().padStart(2, '0')}\n          </Text>\n        ) : (\n          <Pressable onPress={handleResend}>\n            <Text className=\"text-accent text-[14px] font-bold\">Resend code</Text>\n          </Pressable>\n        )}\n      </View>\n\n      <View className=\"px-4 mt-8\">\n        <Button\n          title=\"Verify\"\n          onPress={handleSubmit(handleFormSubmit)}\n          variant=\"primary\"\n          loading={loading}\n        />\n      </View>\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core",
+        "otp-input"
+      ]
+    },
+    {
+      "name": "forgot-password-screen",
+      "description": "Forgot password screen with email input, validation, and submit action.",
+      "category": "auth",
+      "files": [
+        {
+          "path": "auth/forgot-password-screen.tsx",
+          "content": "import React, { useState } from 'react';\nimport { View, Text, Pressable } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { useSafeAreaInsets } from 'react-native-safe-area-context';\nimport { useForm, Controller } from 'react-hook-form';\nimport { zodResolver } from '@hookform/resolvers/zod';\nimport { z } from 'zod';\nimport { Input } from '../ui/input';\nimport { Button } from '../ui/button';\nimport { cn } from '../lib/utils';\n\nexport const forgotPasswordSchema = z.object({\n  email: z.string().email('Valid email required'),\n});\n\nexport type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;\n\ninterface ForgotPasswordScreenProps {\n  onSubmit: (data: ForgotPasswordFormData) => Promise<void>;\n  onBack?: () => void;\n  className?: string;\n}\n\nexport function ForgotPasswordScreen({\n  onSubmit,\n  onBack,\n  className,\n}: ForgotPasswordScreenProps) {\n  const insets = useSafeAreaInsets();\n  const [loading, setLoading] = useState(false);\n  const [sent, setSent] = useState(false);\n\n  const {\n    control,\n    handleSubmit,\n    formState: { errors },\n  } = useForm<ForgotPasswordFormData>({\n    resolver: zodResolver(forgotPasswordSchema),\n    defaultValues: { email: '' },\n  });\n\n  async function handleFormSubmit(data: ForgotPasswordFormData) {\n    setLoading(true);\n    try {\n      await onSubmit(data);\n      setSent(true);\n    } finally {\n      setLoading(false);\n    }\n  }\n\n  return (\n    <View className={cn('flex-1 bg-bg', className)} style={{ paddingTop: insets.top }}>\n      {onBack ? (\n        <View className=\"px-4 pt-3\">\n          <Pressable onPress={onBack} hitSlop={8}>\n            <Ionicons name=\"arrow-back\" size={24} color=\"#A0A0A0\" />\n          </Pressable>\n        </View>\n      ) : null}\n\n      <View className=\"px-4 mt-6\">\n        <Text className=\"text-[26px] font-bold text-textPrimary\">\n          {sent ? 'Check your email' : 'Forgot password'}\n        </Text>\n        <Text className=\"text-[14px] text-textSecondary mt-1\">\n          {sent\n            ? 'We sent a password reset link to your email.'\n            : 'Enter your email and we will send you a reset link.'}\n        </Text>\n      </View>\n\n      {!sent ? (\n        <View className=\"px-4 mt-8 gap-4\">\n          <Controller\n            control={control}\n            name=\"email\"\n            render={({ field: { onChange, value } }) => (\n              <Input\n                label=\"Email\"\n                value={value}\n                onChangeText={onChange}\n                error={errors.email?.message}\n                placeholder=\"you@example.com\"\n                keyboardType=\"email-address\"\n              />\n            )}\n          />\n          <Button\n            title=\"Send reset link\"\n            onPress={handleSubmit(handleFormSubmit)}\n            variant=\"primary\"\n            loading={loading}\n          />\n        </View>\n      ) : (\n        <View className=\"px-4 mt-8\">\n          <Button\n            title=\"Back to sign in\"\n            onPress={onBack || (() => {})}\n            variant=\"secondary\"\n          />\n        </View>\n      )}\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons",
+        "react-hook-form",
+        "@hookform/resolvers",
+        "zod"
+      ],
+      "registryDependencies": [
+        "core",
+        "input",
+        "button"
+      ]
+    },
+    {
+      "name": "new-password-screen",
+      "description": "New password creation screen with strength validation, confirm password, and submit.",
+      "category": "auth",
+      "files": [
+        {
+          "path": "auth/new-password-screen.tsx",
+          "content": "import React, { useState } from 'react';\nimport { View, Text, Pressable } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { useSafeAreaInsets } from 'react-native-safe-area-context';\nimport { useForm, Controller } from 'react-hook-form';\nimport { zodResolver } from '@hookform/resolvers/zod';\nimport { z } from 'zod';\nimport { Input } from '../ui/input';\nimport { Button } from '../ui/button';\nimport { cn } from '../lib/utils';\n\nexport const newPasswordSchema = z\n  .object({\n    password: z.string().min(6, 'Password must be at least 6 characters'),\n    confirmPassword: z.string().min(1, 'Please confirm your password'),\n  })\n  .refine((data) => data.password === data.confirmPassword, {\n    message: 'Passwords do not match',\n    path: ['confirmPassword'],\n  });\n\nexport type NewPasswordFormData = z.infer<typeof newPasswordSchema>;\n\ninterface NewPasswordScreenProps {\n  onSubmit: (data: NewPasswordFormData) => Promise<void>;\n  onBack?: () => void;\n  className?: string;\n}\n\nexport function NewPasswordScreen({\n  onSubmit,\n  onBack,\n  className,\n}: NewPasswordScreenProps) {\n  const insets = useSafeAreaInsets();\n  const [loading, setLoading] = useState(false);\n\n  const {\n    control,\n    handleSubmit,\n    formState: { errors },\n  } = useForm<NewPasswordFormData>({\n    resolver: zodResolver(newPasswordSchema),\n    defaultValues: { password: '', confirmPassword: '' },\n  });\n\n  async function handleFormSubmit(data: NewPasswordFormData) {\n    setLoading(true);\n    try {\n      await onSubmit(data);\n    } finally {\n      setLoading(false);\n    }\n  }\n\n  return (\n    <View className={cn('flex-1 bg-bg', className)} style={{ paddingTop: insets.top }}>\n      {onBack ? (\n        <View className=\"px-4 pt-3\">\n          <Pressable onPress={onBack} hitSlop={8}>\n            <Ionicons name=\"arrow-back\" size={24} color=\"#A0A0A0\" />\n          </Pressable>\n        </View>\n      ) : null}\n\n      <View className=\"px-4 mt-6\">\n        <Text className=\"text-[26px] font-bold text-textPrimary\">Set new password</Text>\n        <Text className=\"text-[14px] text-textSecondary mt-1\">\n          Choose a strong password you haven't used before.\n        </Text>\n      </View>\n\n      <View className=\"px-4 mt-8 gap-4\">\n        <Controller\n          control={control}\n          name=\"password\"\n          render={({ field: { onChange, value } }) => (\n            <Input\n              label=\"New password\"\n              value={value}\n              onChangeText={onChange}\n              error={errors.password?.message}\n              placeholder=\"At least 6 characters\"\n              variant=\"password\"\n            />\n          )}\n        />\n\n        <Controller\n          control={control}\n          name=\"confirmPassword\"\n          render={({ field: { onChange, value } }) => (\n            <Input\n              label=\"Confirm new password\"\n              value={value}\n              onChangeText={onChange}\n              error={errors.confirmPassword?.message}\n              placeholder=\"Repeat your password\"\n              variant=\"password\"\n            />\n          )}\n        />\n\n        <Button\n          title=\"Reset password\"\n          onPress={handleSubmit(handleFormSubmit)}\n          variant=\"primary\"\n          loading={loading}\n        />\n      </View>\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons",
+        "react-hook-form",
+        "@hookform/resolvers",
+        "zod"
+      ],
+      "registryDependencies": [
+        "core",
+        "input",
+        "button"
+      ]
+    },
+    {
+      "name": "complete-profile-screen",
+      "description": "Profile completion with avatar upload, username, phone, and date of birth fields.",
+      "category": "auth",
+      "files": [
+        {
+          "path": "auth/complete-profile-screen.tsx",
+          "content": "import React, { useState } from 'react';\nimport {\n  View,\n  Text,\n  ScrollView,\n  KeyboardAvoidingView,\n  Platform,\n} from 'react-native';\nimport { useSafeAreaInsets } from 'react-native-safe-area-context';\nimport { useForm, Controller } from 'react-hook-form';\nimport { zodResolver } from '@hookform/resolvers/zod';\nimport { z } from 'zod';\nimport { Input } from '../ui/input';\nimport { Button } from '../ui/button';\nimport { Avatar } from '../ui/avatar';\nimport { cn } from '../lib/utils';\n\nexport const completeProfileSchema = z.object({\n  name: z.string().min(2, 'Name must be at least 2 characters'),\n  phone: z.string().optional(),\n  bio: z.string().optional(),\n});\n\nexport type CompleteProfileFormData = z.infer<typeof completeProfileSchema>;\n\ninterface CompleteProfileScreenProps {\n  onSubmit: (data: CompleteProfileFormData) => Promise<void>;\n  initialName?: string;\n  className?: string;\n}\n\nexport function CompleteProfileScreen({\n  onSubmit,\n  initialName = '',\n  className,\n}: CompleteProfileScreenProps) {\n  const insets = useSafeAreaInsets();\n  const [loading, setLoading] = useState(false);\n\n  const {\n    control,\n    handleSubmit,\n    formState: { errors },\n  } = useForm<CompleteProfileFormData>({\n    resolver: zodResolver(completeProfileSchema),\n    defaultValues: { name: initialName, phone: '', bio: '' },\n  });\n\n  async function handleFormSubmit(data: CompleteProfileFormData) {\n    setLoading(true);\n    try {\n      await onSubmit(data);\n    } finally {\n      setLoading(false);\n    }\n  }\n\n  return (\n    <View className={cn('flex-1 bg-bg', className)} style={{ paddingTop: insets.top }}>\n      <KeyboardAvoidingView\n        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}\n        className=\"flex-1\"\n      >\n        <ScrollView\n          className=\"flex-1\"\n          contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}\n          keyboardShouldPersistTaps=\"handled\"\n          showsVerticalScrollIndicator={false}\n        >\n          <View className=\"items-center pt-8\">\n            <Avatar name={initialName || 'You'} size=\"xl\" />\n            <Text className=\"text-[26px] font-bold text-textPrimary mt-4\">\n              Complete profile\n            </Text>\n            <Text className=\"text-[14px] text-textSecondary mt-1\">\n              Tell us a bit about yourself\n            </Text>\n          </View>\n\n          <View className=\"px-4 mt-8 gap-4\">\n            <Controller\n              control={control}\n              name=\"name\"\n              render={({ field: { onChange, value } }) => (\n                <Input\n                  label=\"Full name\"\n                  value={value}\n                  onChangeText={onChange}\n                  error={errors.name?.message}\n                  placeholder=\"John Doe\"\n                />\n              )}\n            />\n\n            <Controller\n              control={control}\n              name=\"phone\"\n              render={({ field: { onChange, value } }) => (\n                <Input\n                  label=\"Phone number (optional)\"\n                  value={value}\n                  onChangeText={onChange}\n                  placeholder=\"+1 (555) 000-0000\"\n                  keyboardType=\"phone-pad\"\n                />\n              )}\n            />\n\n            <Controller\n              control={control}\n              name=\"bio\"\n              render={({ field: { onChange, value } }) => (\n                <Input\n                  label=\"Bio (optional)\"\n                  value={value}\n                  onChangeText={onChange}\n                  placeholder=\"A short description about you\"\n                  multiline\n                  numberOfLines={3}\n                />\n              )}\n            />\n\n            <Button\n              title=\"Save & continue\"\n              onPress={handleSubmit(handleFormSubmit)}\n              variant=\"primary\"\n              loading={loading}\n            />\n          </View>\n        </ScrollView>\n      </KeyboardAvoidingView>\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons",
+        "expo-image-picker",
+        "react-hook-form",
+        "@hookform/resolvers",
+        "zod"
+      ],
+      "registryDependencies": [
+        "core",
+        "input",
+        "custom-radio"
+      ]
+    },
+    {
+      "name": "hero-banner",
+      "description": "Full-width hero banner with autoplay carousel, gradient overlays, action buttons, and dots.",
+      "category": "home",
+      "files": [
+        {
+          "path": "home/hero-banner.tsx",
+          "content": "import React, { useCallback, useRef, useState } from 'react';\nimport {\n  View,\n  Text,\n  Pressable,\n  ScrollView,\n  useWindowDimensions,\n  type NativeSyntheticEvent,\n  type NativeScrollEvent,\n} from 'react-native';\nimport { Image } from 'expo-image';\nimport { cn } from '../lib/utils';\n\ninterface BannerItem {\n  id: string;\n  title: string;\n  subtitle?: string;\n  image: string;\n  cta?: string;\n}\n\ninterface HeroBannerProps {\n  banners: BannerItem[];\n  onBannerPress: (id: string) => void;\n  className?: string;\n}\n\nexport function HeroBanner({ banners, onBannerPress, className }: HeroBannerProps) {\n  const { width: screenWidth } = useWindowDimensions();\n  const [activeIndex, setActiveIndex] = useState(0);\n\n  const handleScroll = useCallback(\n    (e: NativeSyntheticEvent<NativeScrollEvent>) => {\n      const index = Math.round(e.nativeEvent.contentOffset.x / screenWidth);\n      setActiveIndex(index);\n    },\n    [screenWidth],\n  );\n\n  if (banners.length === 0) return null;\n\n  return (\n    <View className={cn('mt-3', className)}>\n      <ScrollView\n        horizontal\n        pagingEnabled\n        showsHorizontalScrollIndicator={false}\n        onScroll={handleScroll}\n        scrollEventThrottle={16}\n        decelerationRate=\"fast\"\n      >\n        {banners.map((banner) => (\n          <Pressable\n            key={banner.id}\n            onPress={() => onBannerPress(banner.id)}\n            style={{ width: screenWidth }}\n          >\n            <View className=\"mx-4 overflow-hidden rounded-xl\" style={{ aspectRatio: 16 / 7 }}>\n              <Image\n                source={{ uri: banner.image }}\n                className=\"w-full h-full\"\n                contentFit=\"cover\"\n              />\n              <View className=\"absolute bottom-0 left-0 right-0 bg-black/40 px-4 py-3\">\n                <Text className=\"text-[18px] font-bold text-white\">{banner.title}</Text>\n                {banner.subtitle ? (\n                  <Text className=\"text-[13px] text-white/90 mt-0.5\">{banner.subtitle}</Text>\n                ) : null}\n                {banner.cta ? (\n                  <View className=\"mt-2 self-start rounded-full bg-white px-4 py-1.5\">\n                    <Text className=\"text-[12px] font-semibold text-black\">{banner.cta}</Text>\n                  </View>\n                ) : null}\n              </View>\n            </View>\n          </Pressable>\n        ))}\n      </ScrollView>\n\n      {banners.length > 1 ? (\n        <View className=\"flex-row items-center justify-center gap-1.5 mt-3\">\n          {banners.map((banner, i) => (\n            <View\n              key={banner.id}\n              className={cn(\n                'h-2 w-2 rounded-full',\n                i === activeIndex ? 'bg-accent' : 'bg-border',\n              )}\n            />\n          ))}\n        </View>\n      ) : null}\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "expo-image",
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "section-header",
+      "description": "Section header with title, optional subtitle, and see-all action link.",
+      "category": "home",
+      "files": [
+        {
+          "path": "home/section-header.tsx",
+          "content": "import React from 'react';\nimport { View, Text, Pressable } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\n\ninterface SectionHeaderProps {\n  title: string;\n  subtitle?: string;\n  actionLabel?: string;\n  onAction?: () => void;\n  className?: string;\n}\n\nexport function SectionHeader({\n  title,\n  subtitle,\n  actionLabel,\n  onAction,\n  className,\n}: SectionHeaderProps) {\n  return (\n    <View className={cn('flex-row items-center justify-between px-4 py-3', className)}>\n      <View className=\"flex-1\">\n        <Text className=\"text-[17px] font-semibold text-textPrimary\">{title}</Text>\n        {subtitle ? (\n          <Text className=\"text-[12px] text-textTertiary mt-0.5\">{subtitle}</Text>\n        ) : null}\n      </View>\n      {actionLabel && onAction ? (\n        <Pressable onPress={onAction} className=\"flex-row items-center gap-1\" hitSlop={8}>\n          <Text className=\"text-accent text-[13px] font-semibold\">{actionLabel}</Text>\n          <Ionicons name=\"chevron-forward\" size={14} color=\"#6366F1\" />\n        </Pressable>\n      ) : null}\n    </View>\n  );\n}\n"
+        }
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "category-circles",
+      "description": "Horizontal scrollable row of circular category icons with labels.",
+      "category": "home",
+      "files": [
+        {
+          "path": "home/category-circles.tsx",
+          "content": "import React from 'react';\nimport { View, Text, Pressable } from 'react-native';\nimport { Image } from 'expo-image';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\n\ninterface CategoryCircleProps {\n  name: string;\n  image?: string;\n  icon?: keyof typeof Ionicons.glyphMap;\n  onPress: () => void;\n}\n\nexport function CategoryCircle({ name, image, icon, onPress }: CategoryCircleProps) {\n  return (\n    <Pressable onPress={onPress} className=\"items-center gap-2\" style={{ width: 72 }}>\n      <View className=\"w-16 h-16 rounded-full bg-bgElevated border border-border items-center justify-center overflow-hidden\">\n        {image ? (\n          <Image source={{ uri: image }} className=\"w-full h-full\" contentFit=\"cover\" />\n        ) : icon ? (\n          <Ionicons name={icon} size={24} color=\"#6366F1\" />\n        ) : (\n          <Ionicons name=\"grid-outline\" size={24} color=\"#6366F1\" />\n        )}\n      </View>\n      <Text className=\"text-[11px] text-textSecondary text-center\" numberOfLines={2}>\n        {name}\n      </Text>\n    </Pressable>\n  );\n}\n\ninterface CategoryCirclesProps {\n  categories: { id: string; name: string; image?: string; icon?: keyof typeof Ionicons.glyphMap }[];\n  onCategoryPress: (id: string) => void;\n  className?: string;\n}\n\nexport function CategoryCircles({ categories, onCategoryPress, className }: CategoryCirclesProps) {\n  return (\n    <View className={cn('px-4', className)}>\n      <View className=\"flex-row gap-4 overflow-x-auto pb-2\">\n        {categories.map((cat) => (\n          <CategoryCircle\n            key={cat.id}\n            name={cat.name}\n            image={cat.image}\n            icon={cat.icon}\n            onPress={() => onCategoryPress(cat.id)}\n          />\n        ))}\n      </View>\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "flash-sale-timer",
+      "description": "Flash sale section header with live countdown timer and product preview strip.",
+      "category": "home",
+      "files": [
+        {
+          "path": "home/flash-sale-timer.tsx",
+          "content": "import React, { useState, useEffect } from 'react';\nimport { View, Text } from 'react-native';\nimport { cn } from '../lib/utils';\n\ninterface FlashSaleTimerProps {\n  endTime?: number;\n  className?: string;\n}\n\nfunction formatTime(seconds: number) {\n  const h = Math.floor(seconds / 3600);\n  const m = Math.floor((seconds % 3600) / 60);\n  const s = seconds % 60;\n  return {\n    hours: h.toString().padStart(2, '0'),\n    minutes: m.toString().padStart(2, '0'),\n    seconds: s.toString().padStart(2, '0'),\n  };\n}\n\nexport function FlashSaleTimer({ endTime = 7200, className }: FlashSaleTimerProps) {\n  const [remaining, setRemaining] = useState(endTime);\n\n  useEffect(() => {\n    const interval = setInterval(() => {\n      setRemaining((prev) => (prev > 0 ? prev - 1 : 0));\n    }, 1000);\n    return () => clearInterval(interval);\n  }, []);\n\n  const { hours, minutes, seconds } = formatTime(remaining);\n\n  return (\n    <View className={cn('flex-row items-center gap-1', className)}>\n      <TimeBox value={hours} />\n      <Text className=\"text-[16px] font-bold text-textPrimary\">:</Text>\n      <TimeBox value={minutes} />\n      <Text className=\"text-[16px] font-bold text-textPrimary\">:</Text>\n      <TimeBox value={seconds} />\n    </View>\n  );\n}\n\nfunction TimeBox({ value }: { value: string }) {\n  return (\n    <View className=\"bg-accent rounded-lg px-2 py-1\">\n      <Text className=\"text-white text-[16px] font-bold tabular-nums\">{value}</Text>\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "expo-image"
+      ],
+      "registryDependencies": [
+        "core",
+        "countdown-timer"
+      ]
+    },
+    {
+      "name": "screen-header",
+      "description": "App screen header with back button, title, and optional right action buttons.",
+      "category": "shared",
+      "files": [
+        {
+          "path": "shared/screen-header.tsx",
+          "content": "import React from 'react';\nimport { View, Text, Pressable } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { useSafeAreaInsets } from 'react-native-safe-area-context';\nimport { cn } from '../lib/utils';\n\ninterface ScreenHeaderProps {\n  title: string;\n  onBack?: () => void;\n  rightAction?: {\n    icon: keyof typeof Ionicons.glyphMap;\n    onPress: () => void;\n  };\n  className?: string;\n}\n\nexport function ScreenHeader({ title, onBack, rightAction, className }: ScreenHeaderProps) {\n  return (\n    <View className={cn('flex-row items-center justify-between px-4 h-[52px]', className)}>\n      <View className=\"w-10\">\n        {onBack ? (\n          <Pressable onPress={onBack} hitSlop={8}>\n            <Ionicons name=\"arrow-back\" size={24} color=\"#A0A0A0\" />\n          </Pressable>\n        ) : null}\n      </View>\n      <Text className=\"text-[17px] font-semibold text-textPrimary flex-1 text-center\">\n        {title}\n      </Text>\n      <View className=\"w-10 items-end\">\n        {rightAction ? (\n          <Pressable onPress={rightAction.onPress} hitSlop={8}>\n            <Ionicons name={rightAction.icon} size={22} color=\"#A0A0A0\" />\n          </Pressable>\n        ) : null}\n      </View>\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons",
+        "expo-router",
+        "react-native-safe-area-context"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "filter-sheet",
+      "description": "Bottom sheet filter panel with multi-select options, clear all, and apply.",
+      "category": "shared",
+      "files": [
+        {
+          "path": "shared/filter-sheet.tsx",
+          "content": "import React, { useState, useMemo } from 'react';\nimport { View, Text, Pressable, ScrollView } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\nimport { BottomSheet } from '../ui/bottom-sheet';\n\ninterface FilterOption {\n  label: string;\n  value: string;\n  count?: number;\n}\n\ninterface FilterSection {\n  title: string;\n  options: FilterOption[];\n  multiSelect?: boolean;\n}\n\ninterface FilterSheetProps {\n  visible: boolean;\n  onClose: () => void;\n  sections: FilterSection[];\n  selected: Record<string, string[]>;\n  onApply: (selected: Record<string, string[]>) => void;\n  onReset?: () => void;\n}\n\nexport function FilterSheet({\n  visible,\n  onClose,\n  sections,\n  selected,\n  onApply,\n  onReset,\n}: FilterSheetProps) {\n  const [local, setLocal] = useState<Record<string, string[]>>(selected);\n\n  function toggle(sectionTitle: string, value: string, multi?: boolean) {\n    setLocal((prev) => {\n      const current = prev[sectionTitle] ?? [];\n      if (multi) {\n        const next = current.includes(value)\n          ? current.filter((v) => v !== value)\n          : [...current, value];\n        return { ...prev, [sectionTitle]: next };\n      }\n      return { ...prev, [sectionTitle]: current.includes(value) ? [] : [value] };\n    });\n  }\n\n  const totalSelected = useMemo(\n    () => Object.values(local).reduce((sum, arr) => sum + arr.length, 0),\n    [local],\n  );\n\n  return (\n    <BottomSheet visible={visible} onClose={onClose} className=\"pb-4\">\n      <View className=\"flex-row items-center justify-between px-4 pb-3 border-b border-border\">\n        <Text className=\"text-[17px] font-semibold text-textPrimary\">Filters</Text>\n        <Pressable onPress={onClose} hitSlop={8}>\n          <Ionicons name=\"close\" size={22} color=\"#A0A0A0\" />\n        </Pressable>\n      </View>\n\n      <ScrollView className=\"max-h-[60%] px-4 pt-3\">\n        {sections.map((section) => (\n          <View key={section.title} className=\"mb-5\">\n            <Text className=\"text-[14px] font-semibold text-textPrimary mb-2\">\n              {section.title}\n            </Text>\n            <View className=\"flex-row flex-wrap gap-2\">\n              {section.options.map((opt) => {\n                const isSelected = (local[section.title] ?? []).includes(opt.value);\n                return (\n                  <Pressable\n                    key={opt.value}\n                    onPress={() => toggle(section.title, opt.value, section.multiSelect)}\n                    className={cn(\n                      'rounded-full px-3.5 py-2 border',\n                      isSelected\n                        ? 'bg-accent/10 border-accent'\n                        : 'bg-bgSubtle border-border',\n                    )}\n                  >\n                    <Text\n                      className={cn(\n                        'text-[13px]',\n                        isSelected ? 'text-accent font-medium' : 'text-textSecondary',\n                      )}\n                    >\n                      {opt.label}\n                      {opt.count != null ? ` (${opt.count})` : ''}\n                    </Text>\n                  </Pressable>\n                );\n              })}\n            </View>\n          </View>\n        ))}\n      </ScrollView>\n\n      <View className=\"flex-row gap-3 px-4 pt-3 border-t border-border\">\n        {onReset ? (\n          <Pressable\n            onPress={() => { setLocal({}); onReset(); }}\n            className=\"flex-1 h-[48px] rounded-lg border border-border items-center justify-center\"\n          >\n            <Text className=\"text-textSecondary text-[15px] font-medium\">Reset</Text>\n          </Pressable>\n        ) : null}\n        <Pressable\n          onPress={() => { onApply(local); onClose(); }}\n          className=\"flex-1 h-[48px] rounded-lg bg-accent items-center justify-center\"\n        >\n          <Text className=\"text-white text-[15px] font-semibold\">\n            Apply{totalSelected > 0 ? ` (${totalSelected})` : ''}\n          </Text>\n        </Pressable>\n      </View>\n    </BottomSheet>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "filter-sort-bar",
+      "description": "Horizontal toolbar with filter/sort buttons and active filter count badge.",
+      "category": "shared",
+      "files": [
+        {
+          "path": "shared/filter-sort-bar.tsx",
+          "content": "import React from 'react';\nimport { View, Text, Pressable } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\n\ninterface FilterSortBarProps {\n  totalCount: number;\n  sortLabel?: string;\n  onSortPress?: () => void;\n  onFilterPress?: () => void;\n  className?: string;\n}\n\nexport function FilterSortBar({\n  totalCount,\n  sortLabel = 'Relevance',\n  onSortPress,\n  onFilterPress,\n  className,\n}: FilterSortBarProps) {\n  return (\n    <View className={cn('flex-row items-center justify-between px-4 py-3 border-b border-border', className)}>\n      <Text className=\"text-[13px] text-textSecondary\">\n        {totalCount} {totalCount === 1 ? 'result' : 'results'}\n      </Text>\n      <View className=\"flex-row gap-3\">\n        {onSortPress ? (\n          <Pressable onPress={onSortPress} className=\"flex-row items-center gap-1\">\n            <Ionicons name=\"swap-vertical\" size={16} color=\"#A0A0A0\" />\n            <Text className=\"text-[13px] text-textSecondary\">{sortLabel}</Text>\n          </Pressable>\n        ) : null}\n        {onFilterPress ? (\n          <Pressable onPress={onFilterPress} className=\"flex-row items-center gap-1\">\n            <Ionicons name=\"options\" size={16} color=\"#A0A0A0\" />\n            <Text className=\"text-[13px] text-textSecondary\">Filter</Text>\n          </Pressable>\n        ) : null}\n      </View>\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "search-bar",
+      "description": "Rounded search input with clear button, optional camera icon, and submit handler.",
+      "category": "shared",
+      "files": [
+        {
+          "path": "shared/search-bar.tsx",
+          "content": "import React from 'react';\nimport { View, Text, TextInput, Pressable } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\nimport { colors } from '../lib/theme';\n\ninterface SearchBarProps {\n  value: string;\n  onChangeText: (text: string) => void;\n  placeholder?: string;\n  onSubmit?: () => void;\n  onCameraPress?: () => void;\n  autoFocus?: boolean;\n  className?: string;\n}\n\nexport function SearchBar({\n  value,\n  onChangeText,\n  placeholder = 'Search products...',\n  onSubmit,\n  onCameraPress,\n  autoFocus = false,\n  className,\n}: SearchBarProps) {\n  return (\n    <View className={cn('flex-row items-center h-[44px] rounded-full bg-bgSubtle px-4', className)}>\n      <Ionicons name=\"search\" size={18} color={colors.textTertiary} />\n      <TextInput\n        value={value}\n        onChangeText={onChangeText}\n        placeholder={placeholder}\n        placeholderTextColor={colors.textTertiary}\n        className=\"flex-1 text-[15px] text-textPrimary ml-2\"\n        returnKeyType=\"search\"\n        onSubmitEditing={onSubmit}\n        autoFocus={autoFocus}\n        autoCorrect={false}\n      />\n      {value ? (\n        <Pressable onPress={() => onChangeText('')} hitSlop={8}>\n          <Ionicons name=\"close-circle\" size={18} color={colors.textTertiary} />\n        </Pressable>\n      ) : null}\n      {onCameraPress ? (\n        <Pressable onPress={onCameraPress} className=\"ml-2\" hitSlop={8}>\n          <Ionicons name=\"camera-outline\" size={20} color={colors.textTertiary} />\n        </Pressable>\n      ) : null}\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "chat-bubble",
+      "description": "Chat message bubble with own/other alignment, text, time, and read status.",
+      "category": "chat",
+      "files": [
+        {
+          "path": "chat/chat-bubble.tsx",
+          "content": "import React from 'react';\nimport { View, Text } from 'react-native';\nimport { cn } from '../lib/utils';\n\ninterface ChatBubbleProps {\n  message: string;\n  timestamp: string;\n  isOwn: boolean;\n  className?: string;\n}\n\nexport function ChatBubble({ message, timestamp, isOwn, className }: ChatBubbleProps) {\n  return (\n    <View className={cn('mb-3', isOwn ? 'items-end' : 'items-start', className)}>\n      <View\n        className={cn(\n          'max-w-[80%] rounded-2xl px-4 py-3',\n          isOwn ? 'bg-accent rounded-tr-md' : 'bg-bgElevated border border-border rounded-tl-md',\n        )}\n      >\n        <Text className={cn('text-[15px]', isOwn ? 'text-white' : 'text-textPrimary')}>\n          {message}\n        </Text>\n      </View>\n      <Text className=\"text-textTertiary text-[11px] mt-1 px-1\">{timestamp}</Text>\n    </View>\n  );\n}\n"
+        }
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "points-card",
+      "description": "Loyalty points card with balance, tier progress bar, and history action.",
+      "category": "profile",
+      "files": [
+        {
+          "path": "profile/points-card.tsx",
+          "content": "import React from 'react';\nimport { View, Text, Pressable } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\n\ninterface PointsCardProps {\n  points: number;\n  tierName?: string;\n  tierProgress?: number;\n  tierNext?: string;\n  onHistoryPress?: () => void;\n  className?: string;\n}\n\nexport function PointsCard({ points, tierName, tierProgress, tierNext, onHistoryPress, className }: PointsCardProps) {\n  const pct = tierProgress != null ? Math.min(tierProgress, 100) : 0;\n\n  return (\n    <View className={cn('rounded-xl bg-accent p-5', className)}>\n      <View className=\"flex-row items-center justify-between\">\n        <View>\n          <Text className=\"text-white/70 text-[12px] font-medium\">Your Points</Text>\n          <Text className=\"text-white text-[32px] font-bold mt-1 tabular-nums\">\n            {points.toLocaleString()}\n          </Text>\n        </View>\n        <View className=\"w-12 h-12 rounded-full bg-white/20 items-center justify-center\">\n          <Ionicons name=\"star\" size={24} color=\"#FFFFFF\" />\n        </View>\n      </View>\n\n      {tierName ? (\n        <View className=\"mt-4\">\n          <View className=\"flex-row items-center justify-between\">\n            <Text className=\"text-white/80 text-[13px] font-medium\">{tierName}</Text>\n            {tierNext ? (\n              <Text className=\"text-white/60 text-[12px]\">{tierNext}</Text>\n            ) : null}\n          </View>\n          <View className=\"mt-1.5 h-2 rounded-full bg-white/20 overflow-hidden\">\n            <View\n              className=\"h-full rounded-full bg-white\"\n              style={{ width: `${pct}%` }}\n            />\n          </View>\n        </View>\n      ) : null}\n\n      {onHistoryPress ? (\n        <Pressable onPress={onHistoryPress} className=\"flex-row items-center gap-1 mt-4\">\n          <Text className=\"text-white/80 text-[13px] font-medium\">View history</Text>\n          <Ionicons name=\"chevron-forward\" size={14} color=\"#FFFFFF\" />\n        </Pressable>\n      ) : null}\n    </View>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "coupon-card",
+      "description": "Discount coupon card with left accent bar, code, description, expiry, and apply.",
+      "category": "profile",
+      "files": [
+        {
+          "path": "profile/coupon-card.tsx",
+          "content": "import React from 'react';\nimport { View, Text, Pressable } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { cn } from '../lib/utils';\nimport { Card } from '../ui/card';\n\ninterface Coupon {\n  id: string;\n  code: string;\n  discount: string;\n  description: string;\n  expiresAt: string;\n  minPurchase?: string;\n}\n\ninterface CouponCardProps {\n  coupon: Coupon;\n  onApply?: (code: string) => void;\n  applied?: boolean;\n  className?: string;\n}\n\nexport function CouponCard({ coupon, onApply, applied = false, className }: CouponCardProps) {\n  return (\n    <Card className={cn('flex-row overflow-hidden', applied && 'opacity-60', className)}>\n      {/* Left accent bar */}\n      <View className=\"w-1 bg-accent\" />\n\n      <View className=\"flex-1 flex-row items-center p-4\">\n        <View className=\"flex-1\">\n          <Text className=\"text-[16px] font-bold text-textPrimary\">{coupon.discount}</Text>\n          <Text className=\"text-textSecondary text-[13px] mt-0.5\">{coupon.description}</Text>\n          <Text className=\"text-textTertiary text-[11px] mt-1\">\n            Expires {coupon.expiresAt}\n            {coupon.minPurchase ? ` · Min ${coupon.minPurchase}` : ''}\n          </Text>\n        </View>\n\n        {onApply ? (\n          <Pressable\n            onPress={() => onApply(coupon.code)}\n            className={cn(\n              'rounded-lg px-4 py-2',\n              applied ? 'bg-success/20' : 'bg-accent',\n            )}\n          >\n            <Text className={cn(\n              'text-[13px] font-semibold',\n              applied ? 'text-success' : 'text-white',\n            )}>\n              {applied ? 'Applied' : 'Apply'}\n            </Text>\n          </Pressable>\n        ) : null}\n      </View>\n    </Card>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "core",
+      "description": "VibeKit Native core library (theme tokens, utilities, formatting helpers).",
+      "category": "lib",
+      "files": [
+        {
+          "path": "lib/theme.ts",
+          "content": "export const colors = {\n  bg: '#0A0A0A',\n  bgElevated: '#121212',\n  bgSubtle: '#1A1A1A',\n  bgHover: '#222222',\n\n  textPrimary: '#FFFFFF',\n  textSecondary: '#A0A0A0',\n  textTertiary: '#666666',\n\n  accent: '#6366F1',\n  accentLight: '#1E1B4B',\n  accentMuted: '#2D2A5E',\n\n  border: '#2A2A2A',\n  borderStrong: '#333333',\n\n  success: '#22C55E',\n  successLight: '#052E16',\n  warning: '#F59E0B',\n  warningLight: '#451A03',\n  error: '#EF4444',\n  errorLight: '#450A0A',\n  info: '#3B82F6',\n  infoLight: '#0C1929',\n\n  white: '#FFFFFF',\n  black: '#000000',\n} as const;\n\nexport const spacing = {\n  1: 4,\n  2: 8,\n  3: 12,\n  4: 16,\n  5: 20,\n  6: 24,\n  8: 32,\n  10: 40,\n  12: 48,\n  16: 64,\n} as const;\n\nexport const radius = {\n  xs: 4,\n  sm: 8,\n  md: 12,\n  lg: 16,\n  xl: 24,\n  full: 9999,\n} as const;\n\nexport const typography = {\n  displayXl: { fontSize: 32, lineHeight: 38, fontWeight: '700' },\n  displayLg: { fontSize: 26, lineHeight: 32, fontWeight: '700' },\n  headingXl: { fontSize: 22, lineHeight: 28, fontWeight: '700' },\n  headingLg: { fontSize: 20, lineHeight: 26, fontWeight: '600' },\n  headingMd: { fontSize: 17, lineHeight: 23, fontWeight: '600' },\n  headingSm: { fontSize: 15, lineHeight: 21, fontWeight: '600' },\n  bodyLg: { fontSize: 16, lineHeight: 24, fontWeight: '400' },\n  bodyMd: { fontSize: 14, lineHeight: 20, fontWeight: '400' },\n  bodySm: { fontSize: 12, lineHeight: 17, fontWeight: '400' },\n  label: { fontSize: 11, lineHeight: 15, fontWeight: '600' },\n  priceMain: { fontSize: 18, lineHeight: 24, fontWeight: '700' },\n  priceLg: { fontSize: 22, lineHeight: 28, fontWeight: '800' },\n  priceStruck: { fontSize: 14, lineHeight: 18, fontWeight: '400' },\n} as const;\n\nexport const shadows = {\n  sm: {\n    shadowColor: '#000',\n    shadowOffset: { width: 0, height: 1 },\n    shadowOpacity: 0.2,\n    shadowRadius: 3,\n    elevation: 1,\n  },\n  md: {\n    shadowColor: '#000',\n    shadowOffset: { width: 0, height: 4 },\n    shadowOpacity: 0.3,\n    shadowRadius: 12,\n    elevation: 4,\n  },\n  lg: {\n    shadowColor: '#000',\n    shadowOffset: { width: 0, height: 8 },\n    shadowOpacity: 0.4,\n    shadowRadius: 24,\n    elevation: 8,\n  },\n  glow: {\n    shadowColor: '#6366F1',\n    shadowOffset: { width: 0, height: 2 },\n    shadowOpacity: 0.3,\n    shadowRadius: 12,\n    elevation: 4,\n  },\n} as const;\n"
+        },
+        {
+          "path": "lib/utils.ts",
+          "content": "import { clsx, type ClassValue } from 'clsx';\nimport { twMerge } from 'tailwind-merge';\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n"
+        },
+        {
+          "path": "lib/format-currency.ts",
+          "content": "export function formatCurrencyInput(text: string): string {\n  const digits = text.replace(/\\D/g, '');\n  if (!digits) return '';\n  const num = parseInt(digits, 10);\n  return num.toLocaleString('en-US');\n}\n\nexport function formatPrice(amount: number, currency = 'USD'): string {\n  return new Intl.NumberFormat('en-US', {\n    style: 'currency',\n    currency,\n    currencyDisplay: 'narrowSymbol',\n  }).format(amount);\n}\n\nexport function formatPriceCompact(amount: number): string {\n  if (amount >= 1_000_000) return (amount / 1_000_000).toFixed(1) + 'M';\n  if (amount >= 1_000) return (amount / 1_000).toFixed(1) + 'K';\n  return amount.toString();\n}\n"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "name": "vibekit-native",
+  "version": "0.1.0",
+  "description": "Install VibeKit Native components into your Expo project",
+  "type": "module",
+  "bin": {
+    "vibekit-native": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "files": [
+    "dist",
+    "registry.json"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "commander": "^12.0.0",
+    "execa": "^9.5.0",
+    "fs-extra": "^11.3.0",
+    "inquirer": "^12.0.0",
+    "ora": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.0"
+  },
+  "keywords": ["expo", "react-native", "components", "vibekit", "nativewind"],
+  "license": "MIT"
+}
