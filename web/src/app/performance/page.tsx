@@ -34,7 +34,7 @@ const perfFeatures = [
     title: "Hermes Engine",
     desc: "Every component is tested with Hermes, the JavaScript engine optimized for React Native. Hermes compiles JS to bytecode ahead of time, cutting startup time in half and reducing APK/IPA size by 30%.",
     bad: "JSC engine uses JIT compilation — slower startup, larger binary, more memory. Each new screen adds parse time.",
-    good: "Hermes pre-compiles bytecode. Cold start in under 2 seconds. Binary size stays lean even with 52 components installed.",
+    good: "Hermes pre-compiles bytecode. Cold start in under 2 seconds. Binary size stays lean even with 61 components installed.",
   },
   {
     icon: Cpu,

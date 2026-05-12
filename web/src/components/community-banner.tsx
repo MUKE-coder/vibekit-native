@@ -2,14 +2,9 @@
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight, MessageCircle, Users } from "lucide-react";
 import { useRef } from "react";
 import { SITE } from "@/lib/utils";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 const WHATSAPP_GREEN = "#25D366";
 const WHATSAPP_GREEN_HOVER = "#1FB958";

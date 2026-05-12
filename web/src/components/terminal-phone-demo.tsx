@@ -2,13 +2,8 @@
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Check, Copy, Smartphone, Terminal } from "lucide-react";
 import { useRef } from "react";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 export function TerminalPhoneDemo() {
   const root = useRef<HTMLElement>(null);

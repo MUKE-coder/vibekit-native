@@ -2,15 +2,10 @@
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight, ExternalLink, Github, Linkedin, Youtube } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
 import { Button } from "./ui/button";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 const stats = [
   { value: "6yrs", label: "Coding" },

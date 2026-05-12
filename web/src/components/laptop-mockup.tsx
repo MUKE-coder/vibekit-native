@@ -2,7 +2,6 @@
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   Archive,
   ArrowUp,
@@ -22,10 +21,6 @@ import {
 } from "lucide-react";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 const generatedFiles = [
   { name: "project-description.md", Icon: FileText, sub: "What the app is" },

@@ -63,6 +63,28 @@ const COMPONENT_META: Record<string, {
     dependencies: ['expo-image', '@expo/vector-icons'],
     registryDependencies: ['badge', 'rating', 'divider'],
   },
+  'commerce/wishlist-button.tsx': {
+    category: 'commerce',
+    description: 'Animated heart toggle for wishlists — floating variant for over-image overlay, three sizes, full a11y state.',
+    dependencies: ['@expo/vector-icons'],
+  },
+  'commerce/review-card.tsx': {
+    category: 'commerce',
+    description: 'Customer review card with avatar, verified badge, half-star rating, title/body, and helpful CTA.',
+    dependencies: ['@expo/vector-icons'],
+    registryDependencies: ['avatar'],
+  },
+  'commerce/order-summary.tsx': {
+    category: 'commerce',
+    description: 'Line items + subtotal / shipping / tax / discount breakdown and grand total. Drop into cart, checkout, or order confirmation.',
+    dependencies: ['expo-image'],
+  },
+  'commerce/checkout-form.tsx': {
+    category: 'commerce',
+    description: 'Full checkout flow — contact + shipping address + payment method picker (mobile money / card / COD). Zod-validated.',
+    dependencies: ['@expo/vector-icons', 'react-native-safe-area-context', 'react-hook-form', '@hookform/resolvers', 'zod'],
+    registryDependencies: ['input', 'button', 'screen-header'],
+  },
 
   // Auth
   'auth/login-screen.tsx': {
@@ -180,6 +202,18 @@ const COMPONENT_META: Record<string, {
     dependencies: ['@expo/vector-icons', 'react-native-safe-area-context'],
     registryDependencies: ['button', 'badge', 'screen-header', 'dgateway'],
   },
+  'payments/stripe-pay-button.tsx': {
+    category: 'payments',
+    description: 'Stripe one-time PaymentSheet — mints a PaymentIntent via your backend, opens the native sheet. Requires <StripeProvider> at app root.',
+    dependencies: ['@stripe/stripe-react-native'],
+    registryDependencies: ['button'],
+  },
+  'payments/stripe-subscription-button.tsx': {
+    category: 'payments',
+    description: 'Stripe subscription PaymentSheet — handles both SetupIntent (trial) and PaymentIntent (charge now) flows behind one button.',
+    dependencies: ['@stripe/stripe-react-native'],
+    registryDependencies: ['button'],
+  },
 
   // Nav
   'nav/bottom-tabs.tsx': {
@@ -208,6 +242,21 @@ const COMPONENT_META: Record<string, {
     category: 'dashboard',
     description: 'Horizontally scrollable, sortable data table with custom cell renderers, alignment, and empty state.',
     dependencies: ['@expo/vector-icons'],
+  },
+  'dashboard/chart-line.tsx': {
+    category: 'dashboard',
+    description: 'Smooth area-fill line chart with comparison series, pointer tooltip, and themed dark palette.',
+    dependencies: ['react-native-gifted-charts'],
+  },
+  'dashboard/chart-bar.tsx': {
+    category: 'dashboard',
+    description: 'Vertical bar chart with rounded tops, gradient fill, value-on-top labels, and optional rotated x labels.',
+    dependencies: ['react-native-gifted-charts'],
+  },
+  'dashboard/chart-pie.tsx': {
+    category: 'dashboard',
+    description: 'Donut or pie chart with center label, rotating accent palette, and right-side legend showing percentages.',
+    dependencies: ['react-native-gifted-charts'],
   },
 };
 

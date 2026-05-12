@@ -275,7 +275,7 @@ function CardMockSecondary({ variant }: { variant: "left" | "right" }) {
         {variant === "left" ? "Welcome to the kit" : "Pick a category"}
       </p>
       <p className="mt-1 text-center text-[11px] text-[color:var(--text-tertiary)]">
-        {variant === "left" ? "Log in to continue" : "All 52 components"}
+        {variant === "left" ? "Log in to continue" : "All 61 components"}
       </p>
       <div className="mt-6 space-y-3">
         <div className="h-9 rounded-md border border-[color:var(--border)] bg-[color:var(--bg)]" />

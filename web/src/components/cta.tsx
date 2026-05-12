@@ -2,15 +2,10 @@
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, Terminal } from "lucide-react";
 import { useRef } from "react";
 import { Button } from "./ui/button";
 import { SITE } from "@/lib/utils";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 export function CTA() {
   const root = useRef<HTMLDivElement>(null);

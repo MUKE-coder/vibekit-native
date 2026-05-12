@@ -17,14 +17,14 @@ const commands = [
 
 const categories = [
   { name: "UI", count: 16, desc: "button, input, badge, avatar, card, bottom-sheet, toast, rating, skeleton, otp-input, and more" },
-  { name: "Commerce", count: 6, desc: "product-card, cart-item, price-display, order-card, order-timeline, product-header" },
+  { name: "Commerce", count: 10, desc: "product-card, cart-item, price-display, order-card, order-timeline, product-header, wishlist-button, review-card, order-summary, checkout-form" },
   { name: "Auth", count: 6, desc: "login-screen, register-screen, verify-otp-screen, forgot-password-screen, new-password-screen, complete-profile-screen" },
   { name: "Home", count: 4, desc: "hero-banner, section-header, category-circles, flash-sale-timer" },
   { name: "Shared", count: 4, desc: "screen-header, filter-sheet, filter-sort-bar, search-bar" },
   { name: "Chat", count: 4, desc: "chat-bubble, chat-input, chat-list, chat-header" },
-  { name: "Payments", count: 5, desc: "mobile-money-pay-screen, payment-status-screen, subscription-plan-card, subscription-manage-screen, use-payment-status (DGateway)" },
+  { name: "Payments", count: 7, desc: "mobile-money-pay-screen, payment-status-screen, subscription-plan-card, subscription-manage-screen, stripe-pay-button, stripe-subscription-button, use-payment-status" },
   { name: "Nav", count: 2, desc: "bottom-tabs, app-drawer" },
-  { name: "Dashboard", count: 3, desc: "stat-card, dashboard-shell, data-table" },
+  { name: "Dashboard", count: 6, desc: "stat-card, dashboard-shell, data-table, chart-line, chart-bar, chart-pie" },
   { name: "Profile", count: 2, desc: "points-card, coupon-card" },
 ];
 
@@ -74,7 +74,7 @@ export function CLIReference() {
 
       <div className="reveal mt-10 rounded-2xl card-glass p-6">
         <div className="text-[11px] font-mono uppercase tracking-wider text-[color:var(--text-tertiary)]">
-          10 categories · 52 components
+          10 categories · 61 components
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((cat) => (

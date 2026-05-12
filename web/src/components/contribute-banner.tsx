@@ -2,16 +2,11 @@
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight, GitBranch, Plus } from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
 import { Button } from "./ui/button";
 import { SITE } from "@/lib/utils";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 export function ContributeBanner() {
   const root = useRef<HTMLElement>(null);

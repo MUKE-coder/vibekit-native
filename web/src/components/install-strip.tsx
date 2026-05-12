@@ -2,13 +2,8 @@
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef } from "react";
 import { CopyableCommand } from "./copy-command";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 type ComponentItem = { name: string; desc: string };
 
@@ -79,10 +74,10 @@ export function InstallStrip() {
         <div className="mx-auto max-w-2xl text-center">
           <div className="install-eyebrow inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-secondary)]">
             <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
-            52 components · One npx command
+            61 components · One npx command
           </div>
           <h2 className="install-headline headline-display mt-6 text-[clamp(2rem,4.5vw,3rem)] headline-glow">
-            52 production components. Mobile money + subs built in.
+            61 production components. Mobile money, Stripe, and charts built in.
           </h2>
           <p className="install-sub mt-5 text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
             No provider wrappers. No config files. No dependency bloat. Every component is a single editable file that drops into your Expo project.
@@ -108,7 +103,7 @@ export function InstallStrip() {
 
         {/* Footnote */}
         <p className="mt-8 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-tertiary)]">
-           52 components across 10 categories · Install individually, all compatible together
+           61 components across 10 categories · Install individually, all compatible together
         </p>
       </div>
     </section>

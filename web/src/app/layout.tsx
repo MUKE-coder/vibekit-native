@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import { GsapRegister } from "@/components/gsap-register";
 import { SITE } from "@/lib/utils";
 import "./globals.css";
 
@@ -123,7 +124,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <GsapRegister />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
