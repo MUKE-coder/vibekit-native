@@ -65,7 +65,7 @@ export function Section({
               {eyebrow}
             </div>
           ) : null}
-          <h2 className="reveal headline-display mt-5 text-[clamp(2rem,4.5vw,3.25rem)] headline-glow">
+          <h2 className="reveal headline-display mt-5 text-[clamp(1.6rem,3vw,2.25rem)] headline-glow">
             {title}
           </h2>
           {description ? (

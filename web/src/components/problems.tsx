@@ -63,7 +63,7 @@ export function Problems() {
     <Section
       id="problems"
       eyebrow="The problems we solve"
-      title={<>Building mobile apps with AI shouldn't<br className="hidden sm:block" /> mean rebuilding the same screens.</>}
+      title="Building mobile apps with AI shouldn't mean rebuilding the same screens."
       description="Eleven specific pains that slow down every React Native project — and how VibeKit Native makes each one disappear with a single npx command."
     >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
