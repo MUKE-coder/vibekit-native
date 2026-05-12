@@ -1,25 +1,21 @@
 import { Section } from "./section";
 
 const rows = [
-  { layer: "Framework", tech: "Next.js 16 (App Router)", why: "Latest App Router with React 19" },
-  { layer: "Language", tech: "TypeScript 5.9", why: "Type safety, better DX" },
-  { layer: "Database", tech: "Neon — Serverless Postgres", why: "Free tier, instant setup, serverless scale" },
-  { layer: "Cache", tech: "Upstash Redis", why: "API-layer query caching, rate limiting, session store" },
-  { layer: "ORM", tech: "Prisma v7", why: "Type-safe, AI reads schema easily" },
-  { layer: "Authentication", tech: "Better Auth", why: "Secure, extensible, Prisma-compatible" },
-  { layer: "Data Fetching", tech: "React Query + Redis + Fetch", why: "Client cache (React Query) + Server cache (Redis) = dual layer" },
-  { layer: "Animation", tech: "Framer Motion", why: "State + entrance animations — single library, ~35KB" },
-  { layer: "API Layer", tech: "API Routes (Route Handlers)", why: "Server-side logic via Next.js App Router" },
-  { layer: "Validation", tech: "Zod + React Hook Form", why: "Type-safe validation on client and server" },
-  { layer: "PDF Generation", tech: "@react-pdf/renderer", why: "React components to PDF (lazy-loaded)" },
-  { layer: "Excel Export", tech: "xlsx", why: "Read/write Excel, lightweight (lazy-loaded)" },
-  { layer: "File Storage", tech: "Cloudflare R2 or UploadThing", why: "R2 for S3-compat, UploadThing for simple uploads" },
-  { layer: "Email", tech: "Resend + React Email", why: "Best DX, great deliverability" },
-  { layer: "Payments", tech: "Stripe", why: "Industry standard, webhook-driven" },
-  { layer: "Styling", tech: "Tailwind CSS v4 + shadcn/ui", why: "AI knows these patterns well" },
-  { layer: "Deployment", tech: "Vercel", why: "One-click, preview URLs, zero config" },
-  { layer: "Domain & DNS", tech: "Cloudflare", why: "Free SSL, fast DNS" },
-  { layer: "Components", tech: "JB Component Registry", why: "Production-ready shadcn components" },
+  { layer: "Framework", tech: "Expo SDK 55+ / React Native 0.83", why: "Universal native apps with OTA updates and file-based routing" },
+  { layer: "Language", tech: "TypeScript 5.9", why: "Type safety, better DX with AI agents" },
+  { layer: "Styling", tech: "NativeWind v4", why: "Tailwind CSS for React Native — utility-first, AI-friendly" },
+  { layer: "Navigation", tech: "expo-router", why: "File-based routing, same mental model as Next.js" },
+  { layer: "Forms & Validation", tech: "react-hook-form + Zod", why: "Type-safe form validation on every input" },
+  { layer: "Client State", tech: "Zustand", why: "Lightweight client state — no boilerplate" },
+  { layer: "Server State", tech: "TanStack React Query", why: "Server state, caching, pagination, optimistic updates" },
+  { layer: "Icons", tech: "@expo/vector-icons (Ionicons)", why: "5,000+ icons out of the box, zero setup" },
+  { layer: "Images", tech: "expo-image", why: "Optimized image loading with caching" },
+  { layer: "Animations", tech: "react-native-reanimated", why: "60fps animations on the UI thread" },
+  { layer: "Lists", tech: "@shopify/flash-list", why: "High-performance lists for large data sets" },
+  { layer: "Secure Storage", tech: "expo-secure-store", why: "Encrypted token storage" },
+  { layer: "Push Notifications", tech: "expo-notifications", why: "Native push notifications, iOS and Android" },
+  { layer: "Components", tech: "VibeKit Native Registry", why: "Install production-ready RN components via npx" },
+  { layer: "Deployment", tech: "EAS Build + App Store / Play Store", why: "Build, sign, submit, and OTA update from one CLI" },
 ];
 
 export function Stack() {
@@ -28,7 +24,7 @@ export function Stack() {
       id="stack"
       eyebrow="The standard stack"
       title="Locked stack. Zero decisions. Maximum velocity."
-      description="Every project ships with the same opinionated stack so AI never has to invent — and you never have to debug a dependency mismatch."
+      description="Every component ships with the same opinionated stack so AI never has to invent — and you never have to debug a dependency mismatch."
     >
       <div className="reveal overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--bg-elevated)]">
         <div className="overflow-x-auto">
@@ -62,7 +58,7 @@ export function Stack() {
         </div>
       </div>
       <p className="reveal mt-6 text-center text-[13px] text-[color:var(--text-secondary)]">
-        GD only — GSAP for marketing scroll. Dashboard apps skip GSAP entirely (saves 40KB). All heavy libs (PDF, Excel, charts) use <span className="font-mono">next/dynamic</span> — never load what the current page doesn't need.
+        All components use <span className="font-mono">NativeWind v4</span> with the shared dark design system tokens. Each component is a single plain TypeScript file that drops into your project — no provider wrappers, no config changes, no vendor lock-in.
       </p>
     </Section>
   );

@@ -9,14 +9,12 @@ import { LogoBadge } from "./graphics/logo-mark";
 import { SITE } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
+const GITHUB_URL = "https://github.com/MUKE-coder/vibekit-native";
+
 const navLinks = [
-  { href: "/setup", label: "Setup" },
-  { href: "/tutorial", label: "Tutorial" },
-  { href: "/performance", label: "Performance" },
   { href: "/components", label: "Components" },
-  { href: "/templates", label: "Templates" },
-  { href: "/resources", label: "Resources" },
   { href: "/docs", label: "Docs" },
+  { href: "/install", label: "Install" },
 ];
 
 export function Nav() {
@@ -69,6 +67,9 @@ export function Nav() {
               <span className="font-mono text-[13px] sm:text-[14px] font-medium uppercase tracking-wider text-[color:var(--text-primary)] truncate">
                 VibeKit
               </span>
+              <span className="font-mono text-[13px] sm:text-[14px] font-medium uppercase tracking-wider text-[color:var(--text-tertiary)] hidden sm:inline">
+                Native
+              </span>
             </Link>
 
             {/* Desktop links */}
@@ -87,7 +88,7 @@ export function Nav() {
             <div className="flex items-center gap-2">
               <ThemeToggle className="hidden sm:inline-flex" />
               <Button
-                href={SITE.github}
+                href={GITHUB_URL}
                 variant="outline"
                 size="sm"
                 className="hidden lg:inline-flex"
@@ -95,8 +96,8 @@ export function Nav() {
                 <Github className="h-4 w-4" />
                 GitHub
               </Button>
-              <Button href="#get-started" variant="accent" size="sm" className="hidden sm:inline-flex">
-                Get started
+              <Button href="/components" variant="accent" size="sm" className="hidden sm:inline-flex">
+                Browse components
               </Button>
 
               {/* Mobile hamburger */}
@@ -156,7 +157,7 @@ export function Nav() {
 
             <div className="mt-6 grid grid-cols-2 gap-3">
               <Button
-                href={SITE.github}
+                href={GITHUB_URL}
                 variant="outline"
                 size="md"
                 className="w-full"
@@ -165,12 +166,12 @@ export function Nav() {
                 GitHub
               </Button>
               <Button
-                href="#get-started"
+                href="/components"
                 variant="accent"
                 size="md"
                 className="w-full"
               >
-                Get started
+                Browse components
               </Button>
             </div>
 

@@ -7,16 +7,15 @@ import { useRef } from "react";
 import { Button } from "./ui/button";
 import { OrbitalCore } from "./graphics/icons";
 import { HeroEffects } from "./hero-effects";
-import { SITE } from "@/lib/utils";
 
 const stackChips = [
-  "Next.js 16",
-  "Prisma v7",
-  "Upstash Redis",
-  "Better Auth",
-  "React Query",
-  "Framer Motion",
-  "Tailwind v4",
+  "Expo SDK 55",
+  "React Native 0.83",
+  "NativeWind v4",
+  "TanStack Query",
+  "Zustand",
+  "Reanimated",
+  "FlashList",
 ];
 
 export function Hero() {
@@ -30,7 +29,8 @@ export function Hero() {
         .from(".hero-headline span", { y: 28, opacity: 0, duration: 0.7, stagger: 0.05 }, "-=0.6")
         .from(".hero-sub", { y: 14, opacity: 0, duration: 0.5 }, "-=0.4")
         .from(".hero-cta > *", { y: 10, opacity: 0, duration: 0.4, stagger: 0.08 }, "-=0.3")
-        .from(".hero-chip", { y: 6, opacity: 0, duration: 0.3, stagger: 0.03 }, "-=0.2");
+        .from(".hero-chip", { y: 6, opacity: 0, duration: 0.3, stagger: 0.03 }, "-=0.2")
+        .from(".category-chip", { y: 8, opacity: 0, duration: 0.4, stagger: 0.06 }, "-=0.1");
     },
     { scope: root }
   );
@@ -60,29 +60,30 @@ export function Hero() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--accent)] opacity-60" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
           </span>
-          The framework for vibe coders · v1.0
+          React Native Component Registry · 38 components
         </div>
 
         {/* Orbital mark — scales down on mobile */}
-        <div className="hero-orbital mt-8 sm:mt-10 flex justify-center">
+        <div className="hero-orbital mt-8 sm:mt-10 flex justify-center [--accent:#818cf8] text-indigo-400">
           <OrbitalCore className="h-[110px] w-[110px] sm:h-[140px] sm:w-[140px]" size={140} />
         </div>
 
         {/* Big block headline */}
         <h1 className="hero-headline headline-mono mt-6 sm:mt-8 text-[clamp(2.75rem,13vw,9rem)] text-[color:var(--text-primary)]">
           <span className="block">VIBEKIT</span>
+          <span className="-mt-2 block text-[clamp(1.75rem,8vw,5.5rem)] text-[color:var(--accent)] tracking-[0.15em]">NATIVE</span>
         </h1>
 
         <p className="hero-sub mx-auto mt-6 max-w-2xl text-[15px] sm:text-base leading-relaxed text-[color:var(--text-secondary)]">
-          The framework for shipping production-grade Next.js apps with <strong className="text-[color:var(--text-primary)] font-medium">any coding agent</strong> — Claude Code, Cursor, Kiro, Antigravity, Windsurf, Cline, Aider. Generate 4 files. Build phase by phase. Ship without burning tokens.
+          Production-ready React Native components for <strong className="text-[color:var(--text-primary)] font-medium">Expo apps</strong>. Dark-only design system with indigo accent. Install with one <span className="font-mono text-[color:var(--accent)]">npx</span> command.
         </p>
 
         <div className="hero-cta mt-9 flex flex-wrap items-center justify-center gap-3">
-          <Button href="#get-started" variant="accent" size="lg">
-            Get started
+          <Button href="/components" variant="accent" size="lg">
+            Browse components
             <ArrowUpRight className="h-4 w-4" />
           </Button>
-          <Button href={SITE.github} variant="outline" size="lg">
+          <Button href="https://github.com/MUKE-coder/vibekit-native" variant="outline" size="lg">
             <Github className="h-4 w-4" />
             View on GitHub
           </Button>
@@ -93,7 +94,7 @@ export function Hero() {
           <div className="hero-cta flex items-center gap-2 sm:gap-3 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-3 sm:px-4 py-2.5 sm:py-3 text-left font-mono text-[12px] sm:text-[13px] min-w-0">
             <span className="text-[color:var(--text-tertiary)] shrink-0">$</span>
             <code className="flex-1 truncate text-[color:var(--text-primary)]">
-              git clone github.com/MUKE-coder/vibekit
+              npx vibekit-native install button
             </code>
             <span className="hidden sm:inline text-[10px] uppercase tracking-wider text-[color:var(--text-tertiary)] shrink-0">
               copy
@@ -112,7 +113,28 @@ export function Hero() {
             </span>
           ))}
         </div>
+
+        {/* Category badges — floating animation */}
+        <div className="hero-categories mt-10 flex flex-wrap items-center justify-center gap-2.5">
+          {["UI", "Commerce", "Auth", "Home", "Shared", "Chat", "Profile"].map((cat, i) => (
+            <span key={cat} className="category-chip inline-flex items-center gap-1.5 rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)]/40 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-[color:var(--accent)]"
+              style={{ animationDelay: `${i * 0.15}s` }}>
+              <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
+              {cat}
+            </span>
+          ))}
+        </div>
       </div>
+
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-4px); }
+        }
+        .category-chip {
+          animation: float 3s ease-in-out infinite;
+        }
+      `}</style>
     </section>
   );
 }

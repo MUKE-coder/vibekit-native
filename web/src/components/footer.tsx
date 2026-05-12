@@ -1,32 +1,34 @@
 import Link from "next/link";
 import { SITE } from "@/lib/utils";
 
+const GITHUB_URL = "https://github.com/MUKE-coder/vibekit-native";
+
 const cols = [
   {
-    label: "Framework",
+    label: "Registry",
     links: [
       { name: "Tutorial — TaskFlow course", href: "/tutorial" },
       { name: "Quickstart", href: "/docs/quickstart" },
-      { name: "GitHub", href: SITE.github },
-      { name: "CLAUDE_PROMPT.md", href: `${SITE.github}/blob/main/CLAUDE_PROMPT.md` },
-      { name: "Pre-deploy review", href: `${SITE.github}/blob/main/pre-deploy-review.md` },
+      { name: "GitHub", href: GITHUB_URL },
+      { name: "CLAUDE_PROMPT.md", href: `${GITHUB_URL}/blob/main/CLAUDE_PROMPT.md` },
+      { name: "Pre-deploy review", href: `${GITHUB_URL}/blob/main/pre-deploy-review.md` },
     ],
   },
   {
     label: "Reference",
     links: [
-      { name: "Database guide", href: `${SITE.github}/blob/main/database-guide.md` },
-      { name: "Deployment", href: `${SITE.github}/blob/main/deployment.md` },
-      { name: "Environment vars", href: `${SITE.github}/blob/main/environment-variables.md` },
-      { name: "Monetization", href: `${SITE.github}/blob/main/monetization-guide.md` },
-      { name: "Troubleshooting", href: `${SITE.github}/blob/main/troubleshooting.md` },
+      { name: "Database guide", href: `${GITHUB_URL}/blob/main/database-guide.md` },
+      { name: "Deployment", href: `${GITHUB_URL}/blob/main/deployment.md` },
+      { name: "Environment vars", href: `${GITHUB_URL}/blob/main/environment-variables.md` },
+      { name: "Monetization", href: `${GITHUB_URL}/blob/main/monetization-guide.md` },
+      { name: "Troubleshooting", href: `${GITHUB_URL}/blob/main/troubleshooting.md` },
     ],
   },
   {
     label: "Community",
     links: [
       { name: "Join WhatsApp community", href: SITE.community },
-      { name: "GitHub Discussions", href: `${SITE.github}/discussions` },
+      { name: "GitHub Discussions", href: `${GITHUB_URL}/discussions` },
       { name: "Contribute a component", href: "/contribute" },
       { name: "JB Component Registry", href: "https://jb.desishub.com/blog/jb-component-registry-complete-reference" },
     ],
@@ -89,7 +91,7 @@ export function Footer() {
               VK
             </span>
             <span className="font-display text-[16px] tracking-tight text-[color:var(--text-primary)]">
-              VibeKit
+              VibeKit Native
             </span>
           </div>
 

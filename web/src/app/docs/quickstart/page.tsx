@@ -5,15 +5,12 @@ import { ArrowLeft } from "lucide-react";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
-import { CopyBlock } from "@/components/copy-block";
-import { AgentInstallTabs } from "@/components/agent-install-tabs";
-import { readPrompt } from "@/lib/read-prompt";
 import { SITE } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Quickstart — set up VibeKit in 7 steps",
+  title: "Quickstart — install your first VibeKit Native component",
   description:
-    "Step-by-step quickstart for VibeKit: copy the planning prompt, generate 4 project files, build with any agent, and run the pre-deploy review before launch. All prompts copyable inline.",
+    "Step-by-step quickstart for VibeKit Native: install the CLI, browse components, add them to your Expo project, and ship to stores.",
   alternates: { canonical: "/docs/quickstart" },
   openGraph: {
     url: `${SITE.url}/docs/quickstart`,
@@ -22,49 +19,51 @@ export const metadata: Metadata = {
   },
 };
 
+const prerequisites = [
+  "Node.js 20+ and npm (or pnpm, yarn)",
+  "An Expo project (create one with npx create-expo-app@latest)",
+  "NativeWind v4 set up in your project (npx expo install nativewind tailwindcss)",
+];
+
 const steps = [
   {
     n: 1,
-    title: "Copy the planning prompt",
-    body: "Use the copy button below to grab the full CLAUDE_PROMPT.md content. No need to leave this page.",
+    title: "Run the CLI",
+    body: 'Open your Expo project in the terminal and run <code class="font-mono text-[13.5px] rounded border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-1.5 py-0.5 text-[color:var(--text-primary)]">npx vibekit-native</code>. This launches the interactive menu where you can browse all 38 components, see descriptions, and install what you need. No global install required — npx handles everything.',
   },
   {
     n: 2,
-    title: "Open Claude (claude.ai)",
-    body: "Go to claude.ai and start a new conversation. Paste the prompt as your first message, then add your app idea on a new line. Be specific about who the app is for and what it does.",
+    title: "Browse available components",
+    body: 'Run <code class="font-mono text-[13.5px] rounded border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-1.5 py-0.5 text-[color:var(--text-primary)]">npx vibekit-native list</code> to see every component grouped by category. Each entry shows the component name, category, and a short description so you know exactly what you\'re installing.',
   },
   {
     n: 3,
-    title: "Answer 6–10 questions",
-    body: "Claude will interview you about features, user roles, data model, monetization, file uploads, email, and visual design. Answer honestly — vague answers produce vague output.",
+    title: "Install a component",
+    body: 'Run <code class="font-mono text-[13.5px] rounded border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-1.5 py-0.5 text-[color:var(--text-primary)]">npx vibekit-native install &lt;component-name&gt;</code>. For example: <code class="font-mono text-[13.5px] rounded border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-1.5 py-0.5 text-[color:var(--text-primary)]">npx vibekit-native install login-screen</code>. The component drops into <code class="font-mono text-[13.5px] rounded border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-1.5 py-0.5 text-[color:var(--text-primary)]">src/components/auth/login-screen.tsx</code> as a single editable file. Install multiple components at once to build complete screens.',
   },
   {
     n: 4,
-    title: "Save the 4 generated files",
-    body: "Claude produces project-description.md, project-phases.md, design-style-guide.md, and prompt.md. Save all four in your project root folder.",
+    title: "Install a category",
+    body: 'Need a full auth flow? Run <code class="font-mono text-[13.5px] rounded border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-1.5 py-0.5 text-[color:var(--text-primary)]">npx vibekit-native install auth</code> to install all auth components (login-screen, register-screen, forgot-password-screen, verify-otp-screen) at once. Categories available: auth, commerce, chat, profile, home, shared, ui.',
   },
   {
     n: 5,
-    title: "Copy the framework files + install the /vibekit skill",
-    body: "Copy three files from the GitHub repo into your project root: master_prompt.md (the coding constitution), jb-components.md (component registry reference), and pre-deploy-review.md (the security audit prompt — embedded below). Then install the /vibekit Claude Code skill — one curl command — so the rules auto-load in every session.",
+    title: "Import and use it",
+    body: 'Import the component into your screen: <code class="font-mono text-[13.5px] rounded border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-1.5 py-0.5 text-[color:var(--text-primary)]">import { LoginScreen } from "@/src/components/auth/login-screen"</code>. Every component works with NativeWind classes out of the box — you can style it immediately without any theme configuration.',
   },
   {
     n: 6,
-    title: "Open your coding agent & paste prompt.md",
-    body: "Works with Claude Code, Cursor, Kiro Code, Antigravity, Windsurf, Cline, Aider, or any agent that reads files. The agent will read everything and start Phase 1, stopping for your confirmation between phases.",
+    title: "Customize and wire your data",
+    body: "Edit the installed file directly — it's your code. Tweak the JSX, adjust NativeWind classes, add your TanStack Query hooks, or wire Better Auth. Zero vendor lock-in: the file lives in your project with no registry dependency.",
   },
   {
     n: 7,
-    title: "Run pre-deploy review, then ship",
-    body: "Before deploying, paste the pre-deploy-review prompt (embedded below) into your agent. It writes a Critical / High / Medium report. Address every Critical issue, then deploy.",
+    title: "Ship to stores",
+    body: 'Run <code class="font-mono text-[13.5px] rounded border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-1.5 py-0.5 text-[color:var(--text-primary)]">eas build --profile production</code> to compile your native binaries, then <code class="font-mono text-[13.5px] rounded border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-1.5 py-0.5 text-[color:var(--text-primary)]">eas submit</code> to send to the App Store and Google Play. Push future updates as OTA bundles with <code class="font-mono text-[13.5px] rounded border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-1.5 py-0.5 text-[color:var(--text-primary)]">eas update</code> — most changes never need a store review.',
   },
 ];
 
 export default function Quickstart() {
-  // Read prompts at build time
-  const claudePrompt = readPrompt("CLAUDE_PROMPT.md");
-  const preDeployReview = readPrompt("pre-deploy-review.md");
-
   return (
     <>
       <Nav />
@@ -80,17 +79,32 @@ export default function Quickstart() {
 
           <header className="mt-8 border-b border-[color:var(--border)] pb-10">
             <div className="font-mono text-[11px] uppercase tracking-wider text-[color:var(--accent)]">
-              Guide · 7 steps · ~10 min read
+              Guide · 7 steps · ~5 min read
             </div>
             <h1 className="mt-3 font-mono text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase tracking-tight text-[color:var(--text-primary)]">
               Quickstart
             </h1>
             <p className="mt-5 text-[18px] leading-relaxed text-[color:var(--text-secondary)]">
-              From a one-line idea to a deployed Next.js app, with an opinionated workflow that prevents the usual AI failure modes. <strong className="font-medium text-[color:var(--text-primary)]">No GitHub round-trip needed</strong> — every prompt is copyable right here.
+              From zero to a production React Native component in your Expo project — step by step. No config, no providers, no boilerplate.
             </p>
           </header>
 
-          {/* Steps + embedded prompts */}
+          {/* Prerequisites */}
+          <div className="mt-8 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-5">
+            <h2 className="font-mono text-[11px] uppercase tracking-wider text-[color:var(--accent)]">
+              Prerequisites
+            </h2>
+            <ul className="mt-3 space-y-2">
+              {prerequisites.map((p) => (
+                <li key={p} className="flex items-start gap-2 text-[14px] leading-relaxed text-[color:var(--text-secondary)]">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--accent)]" />
+                  {p}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Steps */}
           <ol className="mt-10 space-y-10">
             {steps.map((s) => (
               <li key={s.n} className="grid gap-5 sm:grid-cols-[auto_1fr]">
@@ -101,107 +115,39 @@ export default function Quickstart() {
                   <h2 className="font-mono text-[18px] uppercase tracking-tight text-[color:var(--text-primary)]">
                     {s.title}
                   </h2>
-                  <p className="mt-3 text-[15.5px] leading-[1.75] text-[color:var(--text-secondary)]">
-                    {s.body}
-                  </p>
-
-                  {/* Inline prompt for step 1 */}
-                  {s.n === 1 ? (
-                    <div className="mt-5">
-                      <CopyBlock
-                        filename="CLAUDE_PROMPT.md"
-                        label="Paste into claude.ai"
-                        code={claudePrompt}
-                      />
-                      <p className="mt-3 text-[13px] text-[color:var(--text-tertiary)]">
-                        Click <span className="font-mono uppercase">Copy</span> above, then go to{" "}
-                        <a
-                          href="https://claude.ai/new"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[color:var(--accent)] underline underline-offset-4"
-                        >
-                          claude.ai/new
-                        </a>{" "}
-                        and paste it as your first message.
-                      </p>
-                    </div>
-                  ) : null}
-
-                  {/* Inline framework files for step 5 */}
-                  {s.n === 5 ? (
-                    <div className="mt-5 space-y-4">
-                      <div className="rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-5">
-                        <h3 className="font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-tertiary)]">
-                          Files to download into your project root
-                        </h3>
-                        <ul className="mt-3 space-y-2">
-                          {[
-                            { file: "master_prompt.md", purpose: "Coding constitution Claude/your agent reads" },
-                            { file: "jb-components.md", purpose: "When to install which JB component" },
-                            { file: "pre-deploy-review.md", purpose: "Security audit prompt for step 7" },
-                          ].map((f) => (
-                            <li key={f.file} className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-                              <a
-                                href={`https://github.com/MUKE-coder/vibekit/blob/main/${f.file}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="font-mono text-[13px] text-[color:var(--accent)] underline underline-offset-4 hover:no-underline"
-                              >
-                                {f.file}
-                              </a>
-                              <span className="text-[13px] text-[color:var(--text-secondary)]">{f.purpose}</span>
-                            </li>
-                          ))}
-                        </ul>
-                        <p className="mt-4 text-[12.5px] text-[color:var(--text-tertiary)]">
-                          Tip: <code className="font-mono text-[12px] rounded border border-[color:var(--border)] bg-[color:var(--bg-subtle)] px-1.5 py-0.5">git clone https://github.com/MUKE-coder/vibekit.git</code>, then copy these three files into your project.
-                        </p>
-                      </div>
-
-                      {/* Agent rules install — works with every major AI agent */}
-                      <div className="rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-5">
-                        <h3 className="font-mono text-[11px] uppercase tracking-wider text-[color:var(--accent)]">
-                          + Install the VibeKit rules for your AI agent
-                        </h3>
-                        <p className="mt-3 text-[14px] leading-relaxed text-[color:var(--text-primary)]">
-                          One curl command. Auto-loads the framework rules into your agent so you don't have to paste long prompts every session. Pick your agent below.
-                        </p>
-                        <div className="mt-4">
-                          <AgentInstallTabs />
-                        </div>
-                      </div>
-                    </div>
-                  ) : null}
-
-                  {/* Inline pre-deploy prompt for step 7 */}
-                  {s.n === 7 ? (
-                    <div className="mt-5">
-                      <CopyBlock
-                        filename="pre-deploy-review.md"
-                        label="Paste into your coding agent"
-                        code={preDeployReview}
-                      />
-                      <p className="mt-3 text-[13px] text-[color:var(--text-tertiary)]">
-                        After the audit, your agent writes findings to <code className="font-mono text-[12px] rounded border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-1.5 py-0.5">pre-deploy-review-report.md</code>. Address every Critical issue before deploying.
-                      </p>
-                    </div>
-                  ) : null}
+                  <p
+                    className="mt-3 text-[15.5px] leading-[1.75] text-[color:var(--text-secondary)]"
+                    dangerouslySetInnerHTML={{ __html: s.body }}
+                  />
                 </div>
               </li>
             ))}
           </ol>
+
+          {/* Example install block */}
+          <div className="mt-14 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-6">
+            <h3 className="font-mono text-[12px] uppercase tracking-wider text-[color:var(--accent)]">
+              One-command example
+            </h3>
+            <div className="mt-4 flex items-center gap-3 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-subtle)] px-4 py-3 font-mono text-[13px]">
+              <span className="text-[color:var(--text-tertiary)]">$</span>
+              <code className="text-[color:var(--text-primary)]">npx vibekit-native install login-screen register-screen product-card chat-bubble</code>
+            </div>
+            <p className="mt-3 text-[13px] text-[color:var(--text-tertiary)]">
+              Four components, four features, one command. Each file drops into your project ready to edit and ship.
+            </p>
+          </div>
 
           <div className="mt-14 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-6">
             <h3 className="font-mono text-[12px] uppercase tracking-wider text-[color:var(--accent)]">
               That's it
             </h3>
             <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--text-primary)]">
-              Seven steps from idea to production. Bookmark this page — you'll repeat the flow for every new project.
+              Seven steps from zero to a production component in your Expo app. You'll repeat this flow every time you need a new screen — and it only takes seconds.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Button href="/components" variant="accent" size="md">
-                Browse JB components
+                Browse all 38 components
               </Button>
               <Button href="/faq" variant="outline" size="md">
                 Read the FAQ
@@ -212,7 +158,6 @@ export default function Quickstart() {
       </main>
       <Footer />
 
-      {/* HowTo schema for AEO */}
       <Script
         id="ld-howto-quickstart"
         type="application/ld+json"
@@ -220,14 +165,14 @@ export default function Quickstart() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "HowTo",
-            name: "Set up VibeKit",
-            description: "Set up VibeKit and build a production-grade Next.js app with any AI coding agent in 7 steps.",
-            totalTime: "PT15M",
+            name: "Set up VibeKit Native",
+            description: "Install VibeKit Native components into your Expo project in 7 steps.",
+            totalTime: "PT5M",
             step: steps.map((s) => ({
               "@type": "HowToStep",
               position: s.n,
               name: s.title,
-              text: s.body,
+              text: s.body.replace(/<[^>]*>/g, ""),
             })),
           }),
         }}

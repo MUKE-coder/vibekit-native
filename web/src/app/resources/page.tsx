@@ -8,13 +8,13 @@ import { resources } from "@/lib/resources-data";
 import { SITE } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Resources — curated shadcn/ui ecosystem",
+  title: "Resources — curated ecosystem for React Native builders",
   description:
-    "Searchable index of the best shadcn/ui registries, blocks, templates, themes, animation libraries, AI primitives, and tools. Curated from awesome-shadcn-ui for production builders.",
+    "Curated tools, libraries, registries, and resources for building React Native / Expo apps. Templates, UI kits, animation libraries, AI tools, and platforms — all production-ready.",
   alternates: { canonical: "/resources" },
   openGraph: {
-    title: "VibeKit Resources — curated shadcn/ui ecosystem",
-    description: "Hand-picked registries, blocks, templates, animations, AI primitives, and tools.",
+    title: "VibeKit Native Resources — curated React Native ecosystem",
+    description: "Hand-picked tools, registries, templates, and platforms for Expo and React Native builders.",
     url: `${SITE.url}/resources`,
     images: ["/og.png"],
   },
@@ -29,21 +29,16 @@ export default function ResourcesPage() {
           eyebrow={`THE ECOSYSTEM · ${resources.length} RESOURCES`}
           title={
             <>
-              Everything that pairs well with <em className="not-italic gradient-text">VibeKit</em>.
+              Everything that pairs well with <em className="not-italic gradient-text">VibeKit Native</em>.
             </>
           }
-          description="Hand-picked from the awesome-shadcn-ui list and our own builds. Registries, blocks, templates, themes, animations, AI primitives, deployment platforms — all curated for production use."
+          description="Curated tools, libraries, and resources for building React Native / Expo apps — registries, templates, animation libraries, AI tools, and deployment platforms."
           containerClassName="max-w-6xl"
         >
           <ResourcesBrowser />
 
           <p className="mt-12 text-center text-[13px] text-[color:var(--text-tertiary)]">
-            Source: <a
-              href="https://github.com/birobirobiro/awesome-shadcn-ui"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[color:var(--text-secondary)] underline underline-offset-4 hover:text-[color:var(--text-primary)]"
-            >github.com/birobirobiro/awesome-shadcn-ui</a> · curated and tagged for VibeKit users. Spotted a missing resource? <a
+            Spotted a missing resource? <a
               href={`${SITE.github}/issues/new`}
               target="_blank"
               rel="noopener noreferrer"

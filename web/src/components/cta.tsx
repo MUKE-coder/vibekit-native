@@ -3,7 +3,7 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowRight, Github } from "lucide-react";
+import { ArrowRight, Terminal } from "lucide-react";
 import { useRef } from "react";
 import { Button } from "./ui/button";
 import { SITE } from "@/lib/utils";
@@ -55,20 +55,20 @@ export function CTA() {
               MIT licensed · Open source
             </div>
             <h2 className="font-display mt-6 text-[clamp(2.25rem,5vw,4rem)] leading-[1.05] tracking-tight text-[color:var(--text-primary)]">
-              Stop fighting AI.<br />
-              <em className="not-italic gradient-text">Start shipping.</em>
+              Ship mobile apps with AI.<br />
+              <em className="not-italic gradient-text">One npx command at a time.</em>
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
-              Open the planning prompt, describe your idea, and let Claude Code build it phase by phase — with a stack that's locked, audited, and production-ready.
+              Install production-ready React Native components into any Expo project. Dark-only, AI-optimized, and completely yours to edit.
             </p>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
               <Button href={SITE.github} variant="accent" size="lg">
-                Get VibeKit on GitHub
+                Get VibeKit Native on GitHub
                 <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button href={`${SITE.github}/blob/main/CLAUDE_PROMPT.md`} variant="outline" size="lg">
-                <Github className="h-4 w-4" />
-                Read the planning prompt
+              <Button href={`${SITE.github}#quick-start`} variant="outline" size="lg">
+                <Terminal className="h-4 w-4" />
+                Quick start guide
               </Button>
             </div>
           </div>

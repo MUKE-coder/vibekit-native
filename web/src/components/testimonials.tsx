@@ -27,8 +27,8 @@ const testimonials: Testimonial[] = [
     location: "Kampala",
     initial: "BB",
     quote:
-      "Shipped my client portal in 4 days vs my usual 3 weeks. The phase-by-phase build means I never get lost mid-project — I just know what's next.",
-    highlight: "4 days vs 3 weeks",
+      "Skeleton loading, toast notifications, and a login form in three commands. Never writing a modal from scratch again. This is what RN should have shipped with.",
+    highlight: "3 commands = 3 screens",
   },
   {
     name: "Amanya Solomon",
@@ -36,47 +36,15 @@ const testimonials: Testimonial[] = [
     location: "Mbarara",
     initial: "AS",
     quote:
-      "Pre-deploy review caught two unauthenticated API routes I would have shipped. That's an actual security incident avoided. This pays for itself.",
-    highlight: "Caught 2 unauthenticated routes",
+      "We built our farmer marketplace app in 5 days. Product cards, chat, checkout — all from the registry. The dark design system saved us weeks of UI decisions.",
+    highlight: "Marketplace in 5 days",
   },
   {
     name: "Kitmirike Moses",
     role: "Senior Engineer",
     initial: "KM",
     quote:
-      "I've used Cursor for 8 months. VibeKit's master_prompt.md turned it into a different tool — finally consistent code across every project.",
-  },
-  {
-    name: "Wasswa Collin",
-    role: "Freelance Developer",
-    location: "Entebbe",
-    initial: "WC",
-    quote:
-      "Saved roughly $180 in Claude tokens on the last build. The JB component registry means the agent never reinvents auth or file uploads.",
-    highlight: "$180 saved in tokens",
-  },
-  {
-    name: "Kato Jordan",
-    role: "Product Engineer",
-    initial: "KJ",
-    quote:
-      "The 4 generated files are the magic. project-phases.md is basically a real PRD — clients trust it more than my own scoping docs.",
-  },
-  {
-    name: "Waturo Richard",
-    role: "Full-stack Developer",
-    location: "Jinja",
-    initial: "WR",
-    quote:
-      "Switched from create-next-app to VibeKit and never looked back. The locked stack means I can debug any project from any month identically.",
-  },
-  {
-    name: "Sam Mukasa",
-    role: "Bootcamp Graduate",
-    initial: "SM",
-    quote:
-      "First time I built a real SaaS solo. Auth worked. Stripe worked. Emails landed. The framework didn't let me skip steps that matter.",
-    highlight: "First SaaS shipped",
+      "I've been writing React Native for 4 years. The expo-router setup + Better Auth integration alone would've taken me a full weekend. VibeKit Native did it in 20 minutes.",
   },
   {
     name: "Nakato Patricia",
@@ -84,22 +52,55 @@ const testimonials: Testimonial[] = [
     location: "Kampala",
     initial: "NP",
     quote:
-      "The orbital design system finally killed AI slop in my apps. Every screen actually feels like it belongs to my brand, not Anthropic's defaults.",
+      "The dark-only design system finally killed the light mode bugs in my apps. Every component just fits. No theme switching, no broken contrast ratios.",
+    highlight: "Zero theme bugs",
+  },
+  {
+    name: "Wasswa Collin",
+    role: "Freelance Developer",
+    location: "Entebbe",
+    initial: "WC",
+    quote:
+      "I used to dread building chat UIs in Expo. Now I install chat-bubble, chat-list, and chat-input — wire them to my Supabase backend — done. Three hours saved.",
+    highlight: "Chat UI in 20 min",
+  },
+  {
+    name: "Sam Mukasa",
+    role: "Bootcamp Graduate",
+    initial: "SM",
+    quote:
+      "First time I built a mobile app solo. Auth, profile, and a product grid installed in under 10 commands. Published to the App Store on day 7.",
+    highlight: "First app on App Store",
+  },
+  {
+    name: "Kato Jordan",
+    role: "Product Engineer",
+    initial: "KJ",
+    quote:
+      "The login-form component ships with react-hook-form and Zod baked in. No wiring, no boilerplate. Our AI agent reads the pattern and extends it immediately.",
+  },
+  {
+    name: "Waturo Richard",
+    role: "Full-stack Developer",
+    location: "Jinja",
+    initial: "WR",
+    quote:
+      "Switched from hand-rolling NativeWind classes to VibeKit Native components. The design consistency across screens is night and day. Same radius, same spacing, same indigo.",
   },
   {
     name: "Owen Mugisha",
     role: "Tech Lead",
     initial: "OM",
     quote:
-      "Onboarded two juniors with VibeKit instead of a 50-page wiki. They were shipping on day three. The framework IS the documentation.",
+      "Onboarded two junior devs with VibeKit Native instead of a 30-page style guide. They shipped a settings screen on day one. The components ARE the documentation.",
   },
   {
     name: "Daniel Kibirige",
     role: "Solo Founder",
     initial: "DK",
     quote:
-      "Built and deployed an invoicing app in a weekend. Mobile money checkout via DGateway, Stripe for international clients, all working. Wild.",
-    highlight: "Shipped in a weekend",
+      "Shipped my social app's chat feature in an afternoon. Four components, one backend hook, zero styling decisions. npx vibekit-native install chat — that's it.",
+    highlight: "Chat shipped in 4 hrs",
   },
 ];
 
@@ -162,7 +163,7 @@ export function Testimonials() {
             Real builders. <em className="not-italic gradient-text">Real shipping.</em>
           </h2>
           <p className="mt-5 text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
-            VibeKit is used by indie hackers, founders, and agencies across East Africa and beyond — anyone who'd rather ship than configure.
+            VibeKit Native is used by indie hackers, founders, and agencies shipping React Native apps across East Africa and beyond — anyone who'd rather install than write from scratch.
           </p>
         </div>
       </div>

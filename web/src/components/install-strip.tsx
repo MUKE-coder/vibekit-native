@@ -1,0 +1,128 @@
+"use client";
+
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef } from "react";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+type ComponentItem = { name: string; desc: string };
+
+const popular: ComponentItem[] = [
+  { name: "login-screen", desc: "Auth" },
+  { name: "register-screen", desc: "Auth" },
+  { name: "hero-banner", desc: "Home" },
+  { name: "product-card", desc: "Commerce" },
+  { name: "chat-bubble", desc: "Chat" },
+  { name: "points-card", desc: "Profile" },
+  { name: "button", desc: "UI" },
+  { name: "skeleton", desc: "UI" },
+  { name: "bottom-sheet", desc: "UI" },
+  { name: "input", desc: "UI" },
+  { name: "avatar", desc: "UI" },
+  { name: "toast", desc: "UI" },
+];
+
+export function InstallStrip() {
+  const root = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: root.current,
+          start: "top 80%",
+          toggleActions: "play none none none",
+        },
+        defaults: { ease: "power3.out" },
+      });
+
+      tl.from(".install-eyebrow", { y: 14, opacity: 0, duration: 0.5 })
+        .from(".install-headline", { y: 18, opacity: 0, duration: 0.6 }, "-=0.3")
+        .from(".install-sub", { y: 14, opacity: 0, duration: 0.5 }, "-=0.4")
+        .from(".install-command", { y: 12, opacity: 0, duration: 0.5 }, "-=0.3")
+        .from(".component-cell", {
+          y: 16,
+          opacity: 0,
+          stagger: 0.04,
+          duration: 0.45,
+          ease: "power2.out",
+        }, "-=0.3");
+    },
+    { scope: root }
+  );
+
+  return (
+    <section
+      ref={root}
+      id="install"
+      className="relative isolate overflow-hidden border-y border-[color:var(--border)] bg-[color:var(--bg-subtle)] py-20 sm:py-28"
+    >
+      {/* Faded grid background */}
+      <div className="pointer-events-none absolute inset-0 grid-pattern opacity-50" aria-hidden />
+      {/* Soft accent bloom */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-64"
+        aria-hidden
+        style={{
+          background:
+            "radial-gradient(ellipse 50% 100% at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 80%)",
+        }}
+      />
+
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+        {/* Header */}
+        <div className="mx-auto max-w-2xl text-center">
+          <div className="install-eyebrow inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-secondary)]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
+            38 components · One npx command
+          </div>
+          <h2 className="install-headline font-display mt-6 text-[clamp(2rem,4.5vw,3rem)] leading-[1.1] tracking-tight text-[color:var(--text-primary)]">
+            Install any component in <em className="not-italic gradient-text">one command</em>.
+          </h2>
+          <p className="install-sub mt-5 text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
+            No provider wrappers. No config files. No dependency bloat. Every component is a single editable file that drops into your Expo project.
+          </p>
+        </div>
+
+        {/* Terminal command */}
+        <div className="install-command mx-auto mt-10 max-w-lg">
+          <div className="flex items-center gap-3 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-4 py-3 text-left font-mono text-[13px] shadow-[var(--shadow-sm)]">
+            <span className="text-[color:var(--text-tertiary)] shrink-0">$</span>
+            <code className="flex-1 truncate text-[color:var(--text-primary)]">
+              npx vibekit-native install login-screen product-card chat-bubble
+            </code>
+            <span className="text-[10px] uppercase tracking-wider text-[color:var(--text-tertiary)] shrink-0">
+              copy
+            </span>
+          </div>
+        </div>
+
+        {/* Component grid */}
+        <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-px overflow-hidden rounded-md border border-[color:var(--border)] bg-[color:var(--border)]">
+          {popular.map((c) => (
+            <div
+              key={c.name}
+              className="component-cell group relative flex flex-col items-center justify-center gap-1.5 bg-[color:var(--bg-elevated)] p-5 text-center transition-colors hover:bg-[color:var(--bg-subtle)]"
+            >
+              <span className="font-mono text-[12px] font-medium text-[color:var(--text-primary)] truncate max-w-full">
+                {c.name}
+              </span>
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[color:var(--text-tertiary)]">
+                {c.desc}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Footnote */}
+        <p className="mt-8 text-center font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-tertiary)]">
+           38 components across 7 categories · Install individually, all compatible together
+        </p>
+      </div>
+    </section>
+  );
+}

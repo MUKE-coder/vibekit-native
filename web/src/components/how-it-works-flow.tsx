@@ -3,16 +3,7 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import {
-  ArrowRight,
-  FileText,
-  ListTodo,
-  Palette,
-  PenLine,
-  Rocket,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, Package, Smartphone, Wrench } from "lucide-react";
 import { useRef } from "react";
 
 if (typeof window !== "undefined") {
@@ -24,44 +15,44 @@ type Step = {
   eyebrow: string;
   title: string;
   body: string;
-  icons: { Icon: React.ComponentType<{ className?: string }>; label: string }[];
+  icons: { label: string }[];
   caption: string;
 };
 
 const steps: Step[] = [
   {
     n: "01",
-    eyebrow: "PLAN",
-    title: "Tell Claude your idea.",
-    body: "Paste the planning prompt into Claude.ai with one paragraph about your app. Claude either interviews you or jumps straight to a structured summary if your brief is detailed — then asks for your consent before generating.",
+    eyebrow: "INSTALL",
+    title: "npx vibekit-native install",
+    body: "Browse the registry, pick a component, and install it with one command. Every component drops into your Expo project as a single editable file — no wrapper providers, no config changes, no bloat.",
     icons: [
-      { Icon: FileText, label: "project-description" },
-      { Icon: ListTodo, label: "project-phases" },
-      { Icon: Palette, label: "design-style-guide" },
-      { Icon: Sparkles, label: "prompt" },
+      { label: "npx vibekit-native list" },
+      { label: "npx vibekit-native install login-form" },
+      { label: "Import and go" },
     ],
-    caption: "Output: 4 downloadable files",
+    caption: "Output: one file, zero config changes",
   },
   {
     n: "02",
-    eyebrow: "BUILD",
-    title: "Drop them into your agent.",
-    body: "Add the 4 files plus the master prompt and component registry to your project. Open Claude Code, Cursor, Cline, Windsurf — any agent that reads files. It reads everything, plans Phase 1, and starts building. Stops between phases for your sign-off.",
+    eyebrow: "CUSTOMIZE",
+    title: "Edit. Style. Connect.",
+    body: "Every installed component is a plain TypeScript file in your project — no black box, no registry lock-in. Edit the JSX, tweak the NativeWind classes, wire your API. It's your code from the first install.",
     icons: [
-      { Icon: PenLine, label: "Phase 1 · Auth" },
-      { Icon: PenLine, label: "Phase 2 · CRUD" },
-      { Icon: PenLine, label: "Phase 3 · Polish" },
+      { label: "Edit the source" },
+      { label: "Wire TanStack Query" },
+      { label: "Add your brand" },
     ],
-    caption: "Phase by phase, with your control",
+    caption: "Your code. Your control. Zero vendor lock-in.",
   },
   {
     n: "03",
     eyebrow: "SHIP",
-    title: "Audit, then deploy.",
-    body: "Before going live, paste the pre-deploy review prompt. Your agent runs a senior-level audit covering security, performance, and resource usage. Fix every Critical. Push to Vercel. Point a domain. Done.",
+    title: "Build for stores.",
+    body: "Run EAS Build, submit to the App Store and Google Play. Every component is production-tested on iOS and Android. Push OTA updates with expo-updates. No surprises at review time.",
     icons: [
-      { Icon: ShieldCheck, label: "Critical / High / Medium" },
-      { Icon: Rocket, label: "Vercel + Cloudflare" },
+      { label: "EAS Build" },
+      { label: "App Store + Play Store" },
+      { label: "OTA updates" },
     ],
     caption: "Production-ready in hours, not weeks",
   },
@@ -127,10 +118,10 @@ export function HowItWorksFlow() {
             How it works
           </div>
           <h2 className="flow-headline font-display mt-6 text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] tracking-tight text-[color:var(--text-primary)]">
-            Three steps from idea to <em className="not-italic gradient-text">production</em>.
+            Install. Customize. <em className="not-italic gradient-text">Ship.</em>
           </h2>
           <p className="flow-sub mt-5 text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
-            Plan with Claude. Build with any agent. Audit and ship. The whole flow takes an afternoon — and the patterns repeat for every project after.
+            Three steps from zero to a production React Native app. No boilerplate, no config, no context providers to wrap.
           </p>
         </div>
 
@@ -143,7 +134,7 @@ export function HowItWorksFlow() {
 
         {/* Footnote */}
         <p className="mt-12 text-center font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-tertiary)]">
-          See the laptop demo below for what step 1 looks like in real time
+          See the terminal demo below for what step 1 looks like in real time
         </p>
       </div>
     </section>
@@ -175,12 +166,12 @@ function FlowFragment({ step, isLast }: { step: Step; isLast: boolean }) {
 
         {/* Icon row */}
         <div className="mt-6 flex flex-wrap items-center gap-2">
-          {step.icons.map(({ Icon, label }) => (
+          {step.icons.map(({ label }) => (
             <span
               key={label}
               className="inline-flex items-center gap-1.5 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-subtle)] px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-[color:var(--text-secondary)]"
             >
-              <Icon className="h-3 w-3 text-[color:var(--accent)]" />
+              <Package className="h-3 w-3 text-[color:var(--accent)]" />
               {label}
             </span>
           ))}
@@ -191,7 +182,7 @@ function FlowFragment({ step, isLast }: { step: Step; isLast: boolean }) {
         </div>
       </article>
 
-      {/* Arrow between cards (desktop horizontal, mobile vertical) */}
+      {/* Arrow between cards */}
       {!isLast ? (
         <div
           className="flow-arrow flex items-center justify-center text-[color:var(--text-tertiary)] lg:px-2"

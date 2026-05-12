@@ -2,79 +2,59 @@ import { Section } from "./section";
 
 const problems = [
   {
-    pain: "Slow page loads",
-    looks: "API routes hit the database on every request — no cache layer between React Query and Postgres. 1,000 users = 1,000 identical queries.",
-    solution: "Upstash Redis caches hot API queries in memory (sub-5ms). React Query on the client + Redis on the server = dual-layer caching.",
+    pain: "Setting up Expo from scratch",
+    looks: "Every new project means re-building the same screens — login, profile, product cards, chat bubbles — one painful file at a time.",
+    solution: "npx vibekit-native install drops production-ready components into your project. Auth, commerce, chat — all pre-built, all dark-themed.",
   },
   {
-    pain: "Bloated JS bundles",
-    looks: "Heavy libraries (PDF renderer, spreadsheet parser, chart libs) load on every page. Two animation frameworks fight for bandwidth.",
-    solution: "next/dynamic for every import > 15KB. Framer Motion ONLY (single library ~35KB). GSAP only for advanced marketing sites. Bundle analysis in pre-deploy catches bloat before users do.",
+    pain: "Endless boilerplate",
+    looks: "Hours of copying SafeAreaView, StatusBar, NavigationContainer, ThemeProvider — before writing a single line of actual app code.",
+    solution: "Every component handles its own providers, safe areas, and theme tokens. Import and go. Zero boilerplate.",
   },
   {
-    pain: "AI slop design",
-    looks: "Every app looks the same — purple gradients, generic shadcn defaults, no brand identity.",
-    solution: "design-style-guide.md is customized per project (colors, typography, spacing) and Claude Code follows it exactly.",
+    pain: "Inconsistent design",
+    looks: "Cards, buttons, and inputs look different on every screen. Font sizes drift. Spacing is a mess.",
+    solution: "A unified dark-only design system with CSS variables. Every component uses the same tokens — install any component, it fits your app instantly.",
   },
   {
-    pain: "Inconsistent UI",
-    looks: "Buttons, cards, and forms look slightly different on every page.",
-    solution: "Design tokens defined in one place, enforced by the master prompt across every component.",
+    pain: "Auth takes forever",
+    looks: "Building login, signup, password reset, OTP verification, and social auth from scratch — each with edge cases you'll miss.",
+    solution: "Pre-built auth components (login-form, signup-form, forgot-password, otp-verify) with react-hook-form + Zod validation built in. Install in one command.",
   },
   {
-    pain: "Shipping broken auth",
-    looks: "AI writes insecure login flows, missing password reset, no OAuth, session bugs.",
-    solution: "jb-components.md points Claude to install JB Better Auth UI — battle-tested auth in one command.",
+    pain: "No AI-friendly stack",
+    looks: "AI agents don't know your project structure. Every session starts with context-building instead of actual feature work.",
+    solution: "A locked Expo stack with clear conventions. AI agents read the registry, understand the patterns, and ship features without guessing.",
   },
   {
-    pain: "Burning tokens",
-    looks: "$100–$200 per project because AI rewrites boilerplate every time (auth, tables, forms, uploads).",
-    solution: "JB Component Registry covers the big primitives — AI installs and wires up instead of writing from scratch (60–80% token savings).",
+    pain: "Mobile API confusion",
+    looks: "Setting up tRPC, REST endpoints, secure token storage, and cache invalidation — across iOS, Android, and web.",
+    solution: "Better Auth for auth, TanStack Query for data, Expo API Routes for backend, expo-secure-store for tokens. Installed and wired in minutes.",
   },
   {
-    pain: "Getting stuck in loops",
-    looks: "AI tries the same broken fix repeatedly, context gets polluted, progress stalls.",
-    solution: "Phase-based build + rescue prompts in prompt-engineering.md + troubleshooting.md playbook.",
+    pain: "Dark mode from scratch",
+    looks: "Writing color tokens, theme context, persistent preferences, and system-preference detection — for every project.",
+    solution: "Dark-only by design. Every component ships with the complete dark palette. No theme switching, no light mode bugs, no conditional styles.",
   },
   {
-    pain: "No plan, no clarity",
-    looks: "Starting with “build me a SaaS” and hoping for the best.",
-    solution: "Claude interviews you first, generates project-description.md + project-phases.md — a clear blueprint before a single line of code.",
+    pain: "Building storefront UIs",
+    looks: "Product cards, grids, detail pages, cart views, checkout forms, order summaries — a full e-commerce UI from zero.",
+    solution: "Eight commerce components — product-card, product-grid, product-detail, cart-view, checkout-form, order-summary, wishlist-button, review-card. Ship a store in an afternoon.",
   },
   {
-    pain: "Tech stack chaos",
-    looks: "AI picks a different stack every project — jsPDF here, Drizzle there, useEffect for data.",
-    solution: "Master prompt locks the stack: Next.js 16 + Prisma v7 + React Query + Zod + @react-pdf/renderer + xlsx — always.",
+    pain: "Chat UI complexity",
+    looks: "Message bubbles, input bars, conversation lists, typing indicators, scroll-to-bottom — every chat needs the same 5 components.",
+    solution: "chat-bubble, chat-input, chat-list, chat-header — install all four and wire them to your backend in under an hour.",
   },
   {
-    pain: "Prisma version drift",
-    looks: "AI mixes Prisma v6 and v7 patterns, breaks the build.",
-    solution: "Master prompt enforces Prisma v7 patterns exactly (generator, custom output path, adapter-pg).",
+    pain: "No database layer",
+    looks: "AsyncStorage for everything — tokens, user data, product catalogs, chat history. No queries, no relations, no migrations. Data lost on reinstall.",
+    solution: "VibeKit Native components are agnostic to your data layer. Use TanStack Query with any REST/GraphQL API, Zustand for local state, or bring your own database — Supabase, Firebase, or a custom backend. The components just render UI.",
   },
   {
-    pain: "Deployment confusion",
-    looks: "App works locally, breaks in production — env vars, DNS, SSL, email spam.",
-    solution: "deployment.md + environment-variables.md walk through every step with checklists.",
-  },
-  {
-    pain: "Vague prompts = vague code",
-    looks: "“Make it look better” produces unpredictable changes that break other things.",
-    solution: "prompt-engineering.md teaches the 5-part formula and context-loading technique.",
-  },
-  {
-    pain: "Payment setup hell",
-    looks: "Stripe keys, webhooks, feature gating, billing pages — most builds never ship monetization.",
-    solution: "monetization-guide.md + JB Stripe UI component handle the full flow.",
-  },
-  {
-    pain: "Losing track of progress",
-    looks: "Mid-build, no idea what’s done vs. what’s left.",
-    solution: "Phase tasks in project-phases.md are checkboxes — Claude Code checks them off as it goes.",
-  },
-  {
-    pain: "No rescue plan when AI breaks",
-    looks: "Build stalls for hours because AI keeps making it worse.",
-    solution: "Rescue prompts + hard-reset protocol + the V0 bypass technique in prompt-engineering.md.",
+    pain: "Deploying to stores",
+    looks: "EAS Build config, app signing, store listings, review guidelines, OTA updates — the barrier between finished code and shipped app.",
+    solution: "Build-deploy guide with EAS configuration files included. PnP dev builds, app store submission checklists, and OTA update setup ready to go.",
   },
 ];
 
@@ -83,8 +63,8 @@ export function Problems() {
     <Section
       id="problems"
       eyebrow="The problems we solve"
-      title={<>Every vibe coder hits the<br className="hidden sm:block" /> same walls. We remove each one.</>}
-      description="Thirteen specific pains that derail AI-built apps — and how VibeKit makes each one disappear."
+      title={<>Building mobile apps with AI shouldn't<br className="hidden sm:block" /> mean rebuilding the same screens.</>}
+      description="Eleven specific pains that slow down every React Native project — and how VibeKit Native makes each one disappear with a single npx command."
     >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {problems.map((p) => (
@@ -103,7 +83,7 @@ export function Problems() {
             </p>
             <div className="my-5 h-px bg-[color:var(--border)]" />
             <div className="text-[11px] font-mono uppercase tracking-wider text-[color:var(--accent)]">
-              VibeKit fix
+              VibeKit Native fix
             </div>
             <p className="mt-1 text-[14px] leading-relaxed text-[color:var(--text-primary)]">
               {p.solution}

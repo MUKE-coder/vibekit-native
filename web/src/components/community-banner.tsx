@@ -81,11 +81,11 @@ export function CommunityBanner() {
               </div>
 
               <h2 className="community-headline font-display mt-5 text-[clamp(1.75rem,4vw,2.75rem)] leading-[1.05] tracking-tight text-[color:var(--text-primary)]">
-                Join builders shipping with VibeKit.
+                Join builders shipping with VibeKit Native.
               </h2>
 
               <p className="community-body mt-4 max-w-xl text-[15.5px] leading-relaxed text-[color:var(--text-secondary)]">
-                Indie hackers, freelancers, founders — we trade screenshots, debug agent loops together, and share what's working in the framework. Drop in to ask anything.
+                Indie hackers, freelancers, founders — we trade screenshots of our Expo apps, debug NativeWind layouts together, and share which components ship fastest. Drop in to ask anything.
               </p>
 
               {/* Quick benefits */}

@@ -7,9 +7,9 @@ import { Section } from "@/components/section";
 import { SITE } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Documentation — VibeKit framework guides",
+  title: "Documentation — VibeKit Native guides",
   description:
-    "Documentation for the VibeKit framework: getting started, the master prompt, the JB component registry, deployment, troubleshooting, and the pre-deploy review.",
+    "Documentation for VibeKit Native: getting started, component registry reference, CLI commands, and more.",
   alternates: { canonical: "/docs" },
   openGraph: { url: `${SITE.url}/docs`, images: ["/og.png"] },
 };
@@ -17,25 +17,21 @@ export const metadata: Metadata = {
 const guides = [
   {
     slug: "what-is-vibekit",
-    title: "What is VibeKit?",
-    blurb: "An overview of the framework: what problem it solves, how it works, and who it's for.",
+    title: "What is VibeKit Native?",
+    blurb: "An overview of the component registry: what problem it solves, how it works, and who it's for.",
   },
   {
     slug: "quickstart",
     title: "Quickstart",
-    blurb: "From a blank Claude conversation to a deployed Next.js app — step by step.",
+    blurb: "From zero to a production React Native component in your Expo project — step by step.",
   },
 ];
 
 const externalGuides = [
-  { name: "Master prompt", href: `${SITE.github}/blob/main/master_prompt.md`, blurb: "The coding constitution Claude Code follows on every build." },
-  { name: "Database guide", href: `${SITE.github}/blob/main/database-guide.md`, blurb: "Neon + Prisma v7: schema, migrations, query patterns." },
-  { name: "Deployment", href: `${SITE.github}/blob/main/deployment.md`, blurb: "Vercel + Cloudflare DNS + SSL + email domain verification." },
-  { name: "Environment variables", href: `${SITE.github}/blob/main/environment-variables.md`, blurb: "Step-by-step setup for every secret per integration." },
-  { name: "Monetization", href: `${SITE.github}/blob/main/monetization-guide.md`, blurb: "Stripe, webhooks, feature gating, billing pages." },
-  { name: "Pre-deploy review", href: `${SITE.github}/blob/main/pre-deploy-review.md`, blurb: "Senior-level audit prompt to run before going live." },
-  { name: "Prompt engineering", href: `${SITE.github}/blob/main/prompt-engineering.md`, blurb: "5-part formula, token economy, rescue system." },
-  { name: "Troubleshooting", href: `${SITE.github}/blob/main/troubleshooting.md`, blurb: "Symptoms → fixes when AI gets stuck." },
+  { name: "Component Registry (GitHub)", href: SITE.github, blurb: "Browse all 38 components, see source code, and open issues." },
+  { name: "CLI Documentation", href: `${SITE.github}#usage`, blurb: "Full CLI reference: every command, flag, and category install." },
+  { name: "Contributing", href: `${SITE.github}/blob/main/CONTRIBUTING.md`, blurb: "Add your own components to the registry. Open a PR." },
+  { name: "Design System", href: `${SITE.github}/blob/main/design-style-guide.md`, blurb: "Dark-only design tokens: colors, typography, spacing, radius." },
 ];
 
 export default function DocsHub() {
@@ -46,7 +42,7 @@ export default function DocsHub() {
         <Section
           eyebrow="DOCUMENTATION"
           title={<>Everything you need to ship.</>}
-          description="The framework lives in two places: this site (which you can read straight through), and the GitHub repo (which contains the actual prompts and reference guides Claude Code uses)."
+          description="VibeKit Native lives in two places: this site (guides you can read straight through), and the GitHub repo (component source code, CLI docs, and contribution guide)."
           containerClassName="max-w-5xl"
         >
           <div className="grid gap-3 sm:grid-cols-2">

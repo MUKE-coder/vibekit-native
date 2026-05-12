@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowUpRight, BarChart3, Cpu, Database, Images, Layers, PackageOpen, Zap } from "lucide-react";
+import { ArrowUpRight, Battery, Cpu, HardDrive, ImageIcon, Layers, Smartphone, Zap, Gauge } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { Nav } from "@/components/nav";
 import { Section } from "@/components/section";
@@ -7,81 +7,80 @@ import { Button } from "@/components/ui/button";
 import { SITE } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Performance by default",
+  title: "Performance — React Native, fast by default",
   description:
-    "VibeKit ships hard performance budgets, dual-layer caching (React Query + Redis), single animation library, automatic code splitting, and pre-deploy bundle analysis — so every AI-built app is fast by default, not by accident.",
+    "VibeKit Native components are built for performance: Hermes engine, reanimated worklets, FlashList, expo-image caching, and minimal bundle size. No jank, no lag.",
   alternates: { canonical: "/performance" },
   openGraph: {
     url: `${SITE.url}/performance`,
-    title: "Performance by default — VibeKit",
+    title: "React Native performance — VibeKit Native",
     description:
-      "Hard performance budgets, Redis caching, single animation library, automatic code splitting. No performance fixes needed after shipping.",
+      "Hermes, reanimated, FlashList, expo-image — every VibeKit Native component is production-tested for smooth 60fps performance.",
     images: ["/og.png"],
   },
 };
 
 const metrics = [
-  { metric: "First Load JS", target: "< 100KB per page", how: "next/dynamic for heavy imports, no 'use client' on server components" },
-  { metric: "LCP", target: "< 2.5s", how: "next/image + priority, preloaded hero font, no client-side hero content" },
-  { metric: "CLS", target: "< 0.1", how: "Fixed aspect-ratio on all media, explicit image dimensions" },
-  { metric: "TBT", target: "< 200ms", how: "No heavy JS on main thread, chunked computations, Web Workers" },
-  { metric: "API Response (p95)", target: "< 200ms", how: "Redis cache on hot paths, DB indexes on filtered columns, pagination" },
+  { metric: "App Startup", target: "< 2s cold start", how: "Hermes engine + lazy native module loading" },
+  { metric: "Frame Rate", target: "60fps scrolling", how: "FlashList with recycling + reanimated worklets on UI thread" },
+  { metric: "Bundle Size", target: "< 3MB per component category", how: "Tree-shaken imports, no bloat per file" },
+  { metric: "Image Load", target: "< 500ms first paint", how: "expo-image with disk caching + blurhash preview" },
+  { metric: "Memory", target: "< 150MB peak", how: "FlashList recycling, image cache limits, no leaks" },
 ];
 
 const perfFeatures = [
   {
-    icon: Database,
-    title: "Dual-Layer Caching",
-    desc: "React Query on the client + Redis on the server. Client cache gives instant back-nav and optimistic updates. Redis offloads the database and shares cached results across all users — so 1,000 users viewing the same dashboard don't run 1,000 queries.",
-    bad: "Every page load hits the database. No cache = slow responses under load.",
-    good: "Redis serves cached API responses in <5ms. Database only queried when cache expires or data changes.",
-  },
-  {
-    icon: PackageOpen,
-    title: "Single Animation Library",
-    desc: "Framer Motion handles both state transitions AND entrance animations. No GSAP unless you're building a complex marketing site with multi-pin scroll sequences. Dashboard/internal apps save ~40KB by never installing GSAP.",
-    bad: "Two animation frameworks loaded = 75KB+ gzipped. Most pages don't use 90% of either library.",
-    good: "One library at ~35KB. Framer Motion's whileInView replaces ScrollTrigger for 95% of use cases.",
-  },
-  {
-    icon: Layers,
-    title: "Automatic Code Splitting",
-    desc: "Every import over 15KB gzipped must use next/dynamic. PDF renderer, spreadsheet parser, chart libraries, Stripe checkout — none of them load until the user actually needs them.",
-    bad: "@react-pdf/renderer (85KB) loads on every page even if only one page exports invoices. xlsx (65KB) loads on the home page.",
-    good: "Heavy libraries load on-demand. First Load JS stays under 100KB per page. Invoice export button triggers dynamic import only when clicked.",
+    icon: Zap,
+    title: "Hermes Engine",
+    desc: "Every component is tested with Hermes, the JavaScript engine optimized for React Native. Hermes compiles JS to bytecode ahead of time, cutting startup time in half and reducing APK/IPA size by 30%.",
+    bad: "JSC engine uses JIT compilation — slower startup, larger binary, more memory. Each new screen adds parse time.",
+    good: "Hermes pre-compiles bytecode. Cold start in under 2 seconds. Binary size stays lean even with 38 components installed.",
   },
   {
     icon: Cpu,
-    title: "Streaming & Suspense Boundaries",
-    desc: "Every data-fetching section is wrapped in <Suspense> with a skeleton. The page renders immediately, and each section streams in as its data resolves. No section blocks another.",
-    bad: "Page waterfalls: fetch user → fetch org → fetch dashboard stats → all data must resolve before ANYTHING renders.",
-    good: "Dashboard shell renders instantly. Stats grid, recent orders, and activity feed each stream in independently. No waterfall, no blank page.",
+    title: "UI Thread Animations",
+    desc: "Animations run on the UI thread via react-native-reanimated worklets — never crossing the async bridge. Toast slides, bottom sheets, skeleton pulses all animate at a solid 60fps even under heavy JS thread load.",
+    bad: "JS thread animations (Animated API) must cross the async bridge every frame. A flatlist scrolling with JS thread animations = jank.",
+    good: "Reanimated worklets run at native speed. The JS thread can be busy fetching data while the UI thread keeps animating smoothly.",
   },
   {
-    icon: Images,
-    title: "Image Discipline",
-    desc: "Every image must have aspect-ratio and explicit dimensions. All fonts use next/font/google with display: swap and preload on hero fonts. No layout shift, no invisible text.",
-    bad: "Images without dimensions cause layout shifts as they load. Font swap causes text reflow. CLS of 0.3+ is common.",
-    good: "Zero layout shift. Images respect their aspect ratio from the first paint. Fonts load with fallback text immediately visible.",
+    icon: Layers,
+    title: "FlashList Recycling",
+    desc: "Product grids, chat messages, order lists — every scrollable component uses @shopify/flash-list. It recycles views instead of creating new ones, meaning 10,000 items scrolls as smoothly as 10.",
+    bad: "FlatList creates new views for each visible item. Scroll a list of 1,000 products = memory spikes, dropped frames, and jank.",
+    good: "FlashList recycles just 15-20 views regardless of list size. Memory stays flat at ~80MB even with infinite scroll.",
   },
   {
-    icon: BarChart3,
-    title: "Bundle Analysis in Pre-Deploy",
-    desc: "Before shipping, the pre-deploy audit runs ANALYZE=true next build. Any chunk over 50KB is flagged and investigated. No bloated bundles slip through.",
-    bad: "Blown-up bundles discovered in production. Users on slow networks wait 10+ seconds for JavaScript to parse.",
-    good: "Every chunk is verified before deploy. If a bundle grows unexpectedly, it's caught before users see it.",
+    icon: ImageIcon,
+    title: "expo-image Caching",
+    desc: "All image components use expo-image with automatic disk caching and blurhash previews. Images load once from the network, then serve from disk cache. Blurhash placeholders mean zero layout shift while images load.",
+    bad: "React Native Image component provides no caching. Every re-render re-fetches from the network. No placeholder means jumpy layouts.",
+    good: "expo-image caches to disk on first load. Subsequent renders are instant. Blurhash previews fill the space at 2KB vs 200KB for the full image.",
+  },
+  {
+    icon: HardDrive,
+    title: "Minimal Bundle Impact",
+    desc: "Each component is a single plain TypeScript file with no provider setup, no configuration, and no additional dependencies beyond the core Expo stack. Installing 10 components adds < 100KB to your project's source.",
+    bad: "UI libraries with providers, themes, and config files add 500KB-2MB before you write any code. You pay for components you never use.",
+    good: "Install only what you use, pay only for what you install. No registry lock-in, no bloat, no unused code in your bundle.",
+  },
+  {
+    icon: Battery,
+    title: "Battery-Efficient Animations",
+    desc: "Animations use native-driven springs and transitions (not setInterval or requestAnimationFrame on JS thread). Bottom sheets, toasts, and skeleton loaders use minimal CPU — no battery drain from JavaScript timers.",
+    bad: "setInterval-based animations keep the JS thread busy even when the app is in the background. Timer drift, battery drain, delayed responses.",
+    good: "Native animations driven by reanimated's timer worklets. Zero JS thread overhead once the animation starts. Battery-friendly even with multiple active animations.",
   },
 ];
 
 const comparisonRows = [
-  { feature: "First Load JS", vanilla: "200–500KB per page (eager PDF, xlsx, animation libs)", vibekit: "< 100KB per page (next/dynamic + single animation lib)" },
-  { feature: "API Latency", vanilla: "50–200ms per request (database every time)", vibekit: "< 5ms cached (Redis hot paths)" },
-  { feature: "Animation Bundle", vanilla: "75KB+ (GSAP + Framer Motion, both mostly unused)", vibekit: "35KB (Framer Motion only, fully utilized)" },
-  { feature: "Page Render", vanilla: "Blocking waterfall (sequential awaits)", vibekit: "Streaming (parallel Suspense boundaries)" },
-  { feature: "Layout Stability (CLS)", vanilla: "0.15–0.5 (unconstrained images, font swap)", vibekit: "< 0.1 (aspect-ratio, preloaded fonts)" },
-  { feature: "DB Query Load", vanilla: "N+1 problems, no query caching, same query repeated per user", vibekit: "Redis cache absorbs 90%+ of reads, cache invalidation on writes" },
-  { feature: "Bundle Awareness", vanilla: "Never checked. Bloated bundles discovered in production.", vibekit: "Pre-deploy ANALYZE=true next build. Chunks >50KB flagged." },
-  { feature: "Animation Performance", vanilla: "Animations on top/left/width/height = layout thrashing", vibekit: "Transform + opacity only, will-change on heavy elements" },
+  { feature: "Startup Time", vanilla: "4–6s cold start (JSC JIT compilation)", vibekit: "< 2s (Hermes bytecode)" },
+  { feature: "Scroll Performance", vanilla: "FlatList drops frames at 500+ items", vibekit: "FlashList maintains 60fps at 10,000+ items" },
+  { feature: "Animation Thread", vanilla: "JS thread bridge crossing = jank under load", vibekit: "UI thread worklets = smooth 60fps always" },
+  { feature: "Image Loading", vanilla: "No cache, re-fetches on re-render", vibekit: "expo-image disk cache + blurhash previews" },
+  { feature: "Bundle Size", vanilla: "500KB–2MB for a UI library you barely use", vibekit: "~10KB per component file, only what you install" },
+  { feature: "Memory (Long Lists)", vanilla: "Spikes to 300MB+ with FlatList", vibekit: "Stays at ~80MB with FlashList recycling" },
+  { feature: "Navigation", vanilla: "React Navigation with manual linking", vibekit: "expo-router file-based, lazy route loading" },
 ];
 
 export default function PerformancePage() {
@@ -96,20 +95,20 @@ export default function PerformancePage() {
           </div>
           <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24 text-center">
             <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)]/60 backdrop-blur px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-secondary)]">
-              <Zap className="h-3 w-3 text-[color:var(--accent)]" />
-              Performance by default
+              <Gauge className="h-3 w-3 text-[color:var(--accent)]" />
+              React Native performance
             </div>
             <h1 className="mt-6 font-mono text-[clamp(2.5rem,6vw,4.5rem)] font-bold uppercase leading-[0.95] tracking-tight text-[color:var(--text-primary)]">
-              Fast by default.
+              Smooth at 60fps.
               <br />
               <span className="gradient-text">Not by accident.</span>
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-[18px] leading-relaxed text-[color:var(--text-secondary)]">
-              AI-built apps are slow by default — bloated bundles, uncached queries, dual animation frameworks, and layout-shifting images. VibeKit encodes performance as hard rules that the agent cannot skip.
+              Every VibeKit Native component is built with Hermes, reanimated worklets, and FlashList — so your app stays smooth scrolling thousands of items, animating bottom sheets, and loading images.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <Button href={SITE.github} variant="accent" size="lg">
-                Start building
+              <Button href="/components" variant="accent" size="lg">
+                Browse components
                 <ArrowUpRight className="ml-1.5 h-4 w-4" />
               </Button>
               <Button href="/docs/quickstart" variant="outline" size="lg">
@@ -121,9 +120,9 @@ export default function PerformancePage() {
 
         {/* The Performance Budget */}
         <Section
-          eyebrow="The numbers you'll hit"
-          title={<>A hard budget, not a <em className="not-italic gradient-text">guideline</em>.</>}
-          description="Every page must meet these thresholds. The agent checks each one before declaring a page done. No exceptions."
+          eyebrow="What you can expect"
+          title={<>Hard numbers, <em className="not-italic gradient-text">not guesses</em>.</>}
+          description="Every component ships meeting these baselines. No jank, no lag, no surprises on real devices."
           containerClassName="max-w-5xl"
         >
           <div className="reveal overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--bg-elevated)]">
@@ -133,7 +132,7 @@ export default function PerformancePage() {
                   <tr>
                     <th className="px-5 py-3 font-medium">Metric</th>
                     <th className="px-5 py-3 font-medium">Target</th>
-                    <th className="px-5 py-3 font-medium">How it's enforced</th>
+                    <th className="px-5 py-3 font-medium">How it's achieved</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -154,8 +153,8 @@ export default function PerformancePage() {
         <section className="border-t border-[color:var(--border)]">
           <Section
             eyebrow="Six performance layers"
-            title={<>How VibeKit makes AI <em className="not-italic gradient-text">write fast code</em>.</>}
-            description="Each layer targets a specific perf killer that AI-built apps suffer from — and enforces the fix with a rule the agent cannot override."
+            title={<>Every component is <em className="not-italic gradient-text">performance-tested</em>.</>}
+            description="Each layer targets a specific performance killer that React Native apps suffer from — and solves it at the component level."
             containerClassName="max-w-6xl"
           >
             <div className="grid gap-6 sm:grid-cols-2">
@@ -177,13 +176,13 @@ export default function PerformancePage() {
                   </p>
                   <div className="mt-5 grid gap-3 sm:grid-cols-2">
                     <div className="rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--bg)] p-4">
-                      <div className="text-[10px] font-mono uppercase tracking-widest text-[color:var(--text-tertiary)]">Without VibeKit</div>
+                      <div className="text-[10px] font-mono uppercase tracking-widest text-[color:var(--text-tertiary)]">Without VibeKit Native</div>
                       <p className="mt-1.5 text-[13px] leading-relaxed text-[color:var(--danger-text, #DC2626)]">
                         {f.bad}
                       </p>
                     </div>
                     <div className="rounded-[var(--radius)] border border-[color:var(--accent)]/20 bg-[color:var(--accent)]/[0.04] p-4">
-                      <div className="text-[10px] font-mono uppercase tracking-widest text-[color:var(--accent)]">With VibeKit</div>
+                      <div className="text-[10px] font-mono uppercase tracking-widest text-[color:var(--accent)]">With VibeKit Native</div>
                       <p className="mt-1.5 text-[13px] leading-relaxed text-[color:var(--text-primary)]">
                         {f.good}
                       </p>
@@ -198,9 +197,9 @@ export default function PerformancePage() {
         {/* Comparison Table */}
         <section className="border-t border-[color:var(--border)]">
           <Section
-            eyebrow="Vanilla AI vs VibeKit"
-            title={<>The same app. One is <em className="not-italic gradient-text">10x faster</em>.</>}
-            description="Same feature set. Same framework. The difference is whether performance rules exist or not."
+            eyebrow="Vanilla RN vs VibeKit Native"
+            title={<>The same app. One is <em className="not-italic gradient-text">10x smoother</em>.</>}
+            description="Same feature set. Same framework. The difference is whether performance patterns are built into the components or left to chance."
             containerClassName="max-w-5xl"
           >
             <div className="reveal overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--bg-elevated)]">
@@ -209,8 +208,8 @@ export default function PerformancePage() {
                   <thead className="bg-[color:var(--bg-subtle)] text-[11px] font-mono uppercase tracking-wider text-[color:var(--text-tertiary)]">
                     <tr>
                       <th className="px-5 py-3 font-medium">Dimension</th>
-                      <th className="px-5 py-3 font-medium text-[color:var(--text-tertiary)]">AI without VibeKit</th>
-                      <th className="px-5 py-3 font-medium text-[color:var(--accent)]">VibeKit — by default</th>
+                      <th className="px-5 py-3 font-medium text-[color:var(--text-tertiary)]">Vanilla React Native</th>
+                      <th className="px-5 py-3 font-medium text-[color:var(--accent)]">VibeKit Native</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -225,9 +224,6 @@ export default function PerformancePage() {
                 </table>
               </div>
             </div>
-            <p className="reveal mt-6 text-center text-[13px] text-[color:var(--text-tertiary)]">
-              These aren't aspirational targets — they're hard rules encoded in the master prompt. The agent cannot skip them.
-            </p>
           </Section>
         </section>
 
@@ -237,7 +233,7 @@ export default function PerformancePage() {
             align="center"
             eyebrow="Ready to ship fast?"
             title={<>Stop fixing performance <em className="not-italic gradient-text">after</em> shipping.</>}
-            description="The performance rules are already written. Your agent just needs to read them."
+            description="Performance is built into every component from day one."
             containerClassName="max-w-2xl"
           >
             <div className="reveal mt-8 flex flex-wrap justify-center gap-4">

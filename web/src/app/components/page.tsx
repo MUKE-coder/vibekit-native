@@ -8,14 +8,14 @@ import { components } from "@/lib/components-data";
 import { SITE } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Components — production-ready primitives for VibeKit projects",
+  title: "Components — React Native component registry",
   description:
-    "Browse the JB Component Registry: production-ready shadcn components for auth, file uploads, Stripe checkout, data tables, blogs, e-commerce, and more. Install with one command.",
+    "Browse the VibeKit Native component registry: 38 production-ready React Native components for auth, commerce, chat, profile, home, and UI. Install with one npx command.",
   alternates: { canonical: "/components" },
   openGraph: {
-    title: "VibeKit Components — production-ready primitives",
+    title: "VibeKit Native Components — React Native registry",
     description:
-      "Production-ready shadcn components for auth, payments, data tables, file uploads, e-commerce, and more.",
+      "38 production-ready React Native components for Expo apps. Auth, commerce, chat, profile, and UI primitives. Install with npx.",
     url: `${SITE.url}/components`,
     images: ["/og.png"],
   },
@@ -29,7 +29,7 @@ export default function ComponentsPage() {
         <Section
           eyebrow={`THE REGISTRY · ${components.length} COMPONENTS`}
           title={<>Production-ready primitives. <em className="not-italic gradient-text">One command.</em></>}
-          description="Don't write what already exists. Each component ships with full source, env var setup, and Prisma schema additions where needed. Claude Code installs them on demand."
+          description="Don't write what already exists. Each component installs as a single editable file in your Expo project with no config, no providers, and no bloat."
           containerClassName="max-w-6xl"
         >
           <ComponentsBrowser />

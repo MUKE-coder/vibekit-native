@@ -7,13 +7,13 @@ export function cn(...inputs: ClassValue[]) {
 
 export const SITE = {
   name: "VibeKit",
-  fullName: "VibeKit Framework",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://vibekit.desishub.com",
-  tagline: "Ship production apps with Claude Code",
+  fullName: "VibeKit Native",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://vibekit-native.desishub.com",
+  tagline: "React Native components, one npx command",
   description:
-    "VibeKit is a structured framework for vibe coders building production-grade Next.js apps with Claude Code or any agent — without burning tokens, shipping broken auth, or getting stuck.",
+    "VibeKit Native is a React Native / Expo component registry with a dark-only design system. Install production-ready components into any Expo project with a single npx command.",
   twitter: "@jbwebdeveloper",
-  github: "https://github.com/MUKE-coder/vibekit",
+  github: "https://github.com/MUKE-coder/vibekit-native",
   community: "https://chat.whatsapp.com/LKQUiM0dExJ60EiBDgoqRq",
   author: "JB (Muke Johnbaptist) · Desishub Technologies",
   authorUrl: "https://jb.desishub.com",

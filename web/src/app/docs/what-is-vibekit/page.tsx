@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Package } from "lucide-react";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { SITE } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "What is VibeKit? — the Claude Code framework explained",
+  title: "What is VibeKit Native? — React Native component registry",
   description:
-    "VibeKit is a structured framework for building production-grade Next.js apps with Claude Code. Learn what it is, what problem it solves, and why every vibe coder should use it.",
+    "VibeKit Native is a React Native / Expo component registry with a dark-only design system. Install production-ready components into any Expo project with a single npx command.",
   alternates: { canonical: "/docs/what-is-vibekit" },
   openGraph: {
     url: `${SITE.url}/docs/what-is-vibekit`,
@@ -38,82 +38,88 @@ export default function WhatIsVibeKit() {
               Guide
             </div>
             <h1 className="mt-3 font-mono text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase tracking-tight text-[color:var(--text-primary)]">
-              What is VibeKit?
+              What is VibeKit Native?
             </h1>
             <p className="mt-5 text-[18px] leading-relaxed text-[color:var(--text-secondary)]">
-              VibeKit is a structured framework for vibe coders building production-grade Next.js applications with Claude Code or any AI agent — without burning tokens, shipping broken auth, or getting stuck in fix loops.
+              A registry of 38 production-ready React Native components for Expo apps — installable with a single <span className="font-mono text-[color:var(--accent)]">npx</span> command. Dark-only, AI-optimized, and completely yours to edit.
             </p>
           </header>
 
           <Prose>
             <h2>The short version</h2>
             <p>
-              VibeKit gives Claude Code an opinionated tech stack, a phase-by-phase build plan, a customized design style guide, a pre-deploy security audit, and a registry of production-ready components. It eliminates the unpredictability of AI-generated code by locking every important decision before a single line of code is written.
+              VibeKit Native gives you a curated registry of React Native components — auth forms, chat UIs, product cards, profile screens, and more — that install directly into your Expo project with <code>npx vibekit-native install</code>. Every component shares a unified dark design system, uses NativeWind v4 for styling, and ships as a plain editable TypeScript file. No provider wrappers, no config changes, no vendor lock-in.
             </p>
 
             <h2>What problem does it solve?</h2>
             <p>
-              When you ask an AI to "build a SaaS", you get one of three outcomes — all bad:
+              Every React Native project starts the same way — rebuilding the same screens:
             </p>
             <ol>
-              <li><strong>Generic AI slop:</strong> purple gradients, default shadcn cards, every app looks identical.</li>
-              <li><strong>Token burn:</strong> $100–$200 per project because the AI rewrites auth, tables, and forms from scratch every session.</li>
-              <li><strong>Stuck builds:</strong> AI loops on the same broken fix for 30 minutes, context fills with junk, progress stalls.</li>
+              <li><strong>Boilerplate overhead:</strong> SafeAreaView, StatusBar, navigation containers, theme providers — written from scratch every time.</li>
+              <li><strong>Inconsistent design:</strong> Cards look different on every screen. Font sizes drift. Spacing is a mess.</li>
+              <li><strong>AI agent confusion:</strong> No two projects share the same patterns, so AI agents waste context learning your conventions.</li>
             </ol>
             <p>
-              VibeKit removes all three failure modes by giving the agent everything it needs — locked stack, validated patterns, pre-built components — before the first prompt.
+              VibeKit Native removes all three by giving you pre-built, consistent, AI-friendly components that work together out of the box.
             </p>
 
             <h2>Who is it for?</h2>
             <ul>
-              <li><strong>Vibe coders</strong> who use Claude Code (or any AI agent) and want production-quality output, not prototypes.</li>
-              <li><strong>Solo founders</strong> shipping their first SaaS who can't afford to burn tokens debugging.</li>
-              <li><strong>Indie hackers</strong> launching multiple apps and tired of reinventing auth, payments, file uploads.</li>
-              <li><strong>Agencies</strong> using AI to deliver client work and needing consistent quality across projects.</li>
+              <li><strong>React Native developers</strong> who want production-ready screens without writing boilerplate.</li>
+              <li><strong>Indie hackers</strong> shipping Expo apps to the App Store and Play Store fast.</li>
+              <li><strong>AI-powered builders</strong> using Claude Code, Cursor, or Cline to generate mobile apps and need consistent patterns the agent can extend.</li>
+              <li><strong>Freelancers and agencies</strong> delivering multiple client apps who can't rebuild auth and chat every project.</li>
             </ul>
 
-            <h2>What's in the framework?</h2>
-            <p>VibeKit is two things working together:</p>
+            <h2>What you get</h2>
+            <p>38 components across 7 categories — every screen your app needs:</p>
+            <ul>
+              <li><strong>Auth:</strong> login-screen, register-screen, forgot-password-screen, verify-otp-screen, new-password-screen, complete-profile-screen — full auth flow with react-hook-form + Zod.</li>
+              <li><strong>Commerce:</strong> product-card, cart-item, price-display, order-card, order-timeline, product-header — ship a store in an afternoon.</li>
+              <li><strong>Chat:</strong> chat-bubble — wire to any backend in under an hour.</li>
+              <li><strong>Home:</strong> hero-banner, section-header, category-circles, flash-sale-timer — every app needs a home screen.</li>
+              <li><strong>Profile:</strong> points-card, coupon-card — loyalty and vouchers done.</li>
+              <li><strong>Shared:</strong> screen-header, filter-sheet, filter-sort-bar, search-bar — shared screen patterns.</li>
+              <li><strong>UI:</strong> button, input, badge, avatar, card, bottom-sheet, toast, skeleton, rating, otp-input and more — interaction patterns that work.</li>
+            </ul>
+
+            <h2>The stack</h2>
+            <p>Every component is built on a locked, AI-friendly stack:</p>
+            <ul>
+              <li><strong>Expo SDK 55+</strong> — universal native apps with OTA updates</li>
+              <li><strong>NativeWind v4</strong> — Tailwind CSS for React Native</li>
+              <li><strong>expo-router</strong> — file-based routing</li>
+              <li><strong>TanStack React Query</strong> — server state and caching</li>
+              <li><strong>Zod + react-hook-form</strong> — type-safe validation</li>
+              <li><strong>Zustand</strong> — lightweight client state</li>
+              <li><strong>react-native-reanimated</strong> — 60fps UI thread animations</li>
+            </ul>
+
+            <h2>How it works</h2>
             <ol>
-              <li>
-                <strong>A planning prompt</strong> you paste into Claude (the chat web UI) along with your app idea. Claude interviews you and generates 4 files: <code>project-description.md</code>, <code>project-phases.md</code>, <code>design-style-guide.md</code>, and <code>prompt.md</code>.
-              </li>
-              <li>
-                <strong>A coding constitution</strong> (<code>master_prompt.md</code>) that Claude Code follows during the build. It locks the stack — Next.js 16, Prisma v7, Better Auth, React Query, Tailwind v4, shadcn/ui — and enforces patterns like server-side pagination, Zod validation, and the JB component registry.
-              </li>
+              <li>Open your Expo project in the terminal.</li>
+              <li>Run <code>npx vibekit-native install login-screen</code> — a ready-to-edit file drops into <code>src/components/auth/</code>.</li>
+              <li>Import and use it. Edit the JSX, tweak the NativeWind classes, wire your API.</li>
+              <li>Ship to the App Store and Play Store via EAS Build. Push OTA updates for the next iteration.</li>
             </ol>
 
-            <h2>How does it work in practice?</h2>
-            <p>The end-to-end flow is seven steps:</p>
-            <ol>
-              <li>Copy <code>CLAUDE_PROMPT.md</code> from the GitHub repo.</li>
-              <li>Open Claude (claude.ai), paste the prompt, append your app idea.</li>
-              <li>Answer 6–10 questions about features, data, integrations, and design.</li>
-              <li>Receive 4 generated files. Save them in your project root.</li>
-              <li>Copy <code>master_prompt.md</code>, <code>jb-components.md</code>, and <code>pre-deploy-review.md</code> from the repo.</li>
-              <li>Open Claude Code and paste <code>prompt.md</code>. Claude Code builds phase by phase, stopping for confirmation between phases.</li>
-              <li>Before deploying, run <code>pre-deploy-review.md</code> for a senior-level audit covering performance, security, and resource usage.</li>
-            </ol>
-
-            <h2>Why this approach beats "just prompt better"</h2>
+            <h2>Why this beats writing from scratch</h2>
             <p>
-              Prompt engineering helps, but it doesn't solve the real problem: AI agents have no persistent memory between conversations and no opinion about <em>what good code looks like</em>. They default to whatever they saw most in training — which means generic, inconsistent, often insecure output.
+              Every component ships with the same dark design system — indigo accent, zinc borders, 12px radius, consistent spacing. When you install LoginForm, it looks the same as ChatBubble and ProductCard. No theme drift, no style mismatches, no "this button has different radius on this screen" bugs.
             </p>
             <p>
-              A framework is different. The rules persist across sessions. The component library means the AI never has to invent auth or file uploads from scratch. The pre-deploy review catches the security gaps that AI agents systematically miss (unauthenticated routes, missing webhook signature verification, mass assignment vulnerabilities).
-            </p>
-            <p>
-              You're not making the AI smarter. You're making it impossible for the AI to take the wrong shortcut.
+              And because every component is a plain TypeScript file in your project, you own it completely. No registry lock-in, no black box, no dependency on a CDN. Delete the file, or edit it — it's your code.
             </p>
 
             <h2>Is it free?</h2>
             <p>
-              Yes. MIT licensed, open source, and free to use. You'll pay for Claude Code itself (Anthropic's subscription) and for the cloud services your app uses (Neon, Vercel, Resend, Stripe — most have free tiers).
+              Yes. MIT licensed, open source, and free to use. No paid tiers, no pro plan, no feature gating. You'll pay for the services your app uses (Expo EAS Build credits, Neon database, Better Auth — most have generous free tiers).
             </p>
 
             <h2>Where do I start?</h2>
             <p>
-              Read the <Link href="/docs/quickstart">quickstart guide</Link>, then head to the <a href={SITE.github} target="_blank" rel="noopener noreferrer">GitHub repo</a> and copy <code>CLAUDE_PROMPT.md</code>.
+              Run <code>npx vibekit-native</code> in any Expo project to launch the interactive CLI, or read the <Link href="/docs/quickstart">quickstart guide</Link> for step-by-step setup.
             </p>
           </Prose>
 
@@ -122,6 +128,7 @@ export default function WhatIsVibeKit() {
               Read the quickstart
             </Button>
             <Button href={SITE.github} variant="outline" size="md">
+              <Package className="h-4 w-4" />
               Open the GitHub repo
             </Button>
           </div>
@@ -129,7 +136,6 @@ export default function WhatIsVibeKit() {
       </main>
       <Footer />
 
-      {/* Article schema for AEO */}
       <Script
         id="ld-article-what-is"
         type="application/ld+json"
@@ -137,8 +143,8 @@ export default function WhatIsVibeKit() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            headline: "What is VibeKit?",
-            description: "A structured framework for building production-grade Next.js apps with Claude Code or any AI agent.",
+            headline: "What is VibeKit Native?",
+            description: "A React Native / Expo component registry with dark-only design system. Install components with npx.",
             author: { "@type": "Person", name: "JB (Muke Johnbaptist)", url: SITE.authorUrl },
             publisher: { "@type": "Organization", name: "Desishub Technologies", url: "https://desishub.com" },
             mainEntityOfPage: `${SITE.url}/docs/what-is-vibekit`,

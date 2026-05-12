@@ -7,73 +7,73 @@ import { Section } from "@/components/section";
 import { SITE } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "FAQ — VibeKit Framework",
+  title: "FAQ — VibeKit Native",
   description:
-    "Frequently asked questions about VibeKit: which coding agents it supports, what's in the 4 generated files, how it differs from create-next-app, and more.",
+    "Frequently asked questions about VibeKit Native: how the CLI works, what components are available, the tech stack, and how to contribute.",
   alternates: { canonical: "/faq" },
   openGraph: { url: `${SITE.url}/faq`, images: ["/og.png"] },
 };
 
 const faqs: { q: string; a: string }[] = [
   {
-    q: "What is VibeKit?",
-    a: "VibeKit is a structured framework for building production-grade Next.js applications with any AI coding agent. It generates four files (project-description.md, project-phases.md, design-style-guide.md, prompt.md) that lock the app's scope, build phases, and visual design before a single line of code is written. The agent then builds phase by phase using a locked tech stack: Next.js 16, Prisma v7, Better Auth, React Query, Zod, and Tailwind v4.",
+    q: "What is VibeKit Native?",
+    a: "VibeKit Native is a registry of 38 production-ready React Native components for Expo apps. Each component installs with a single npx command (npx vibekit-native install <name>) and drops into your project as an editable TypeScript file. All components share a dark-only design system with NativeWind v4 styling — consistent out of the box.",
   },
   {
-    q: "Which AI coding agents does VibeKit work with?",
-    a: "VibeKit works with any coding agent that reads project files. This includes Claude Code, Cursor, Kiro Code, Antigravity, Windsurf, Cline, Aider, Continue, Cody, v0, Lovable, and Bolt. The four generated files are agent-agnostic markdown — drop them into any project and the agent will read them as part of its context.",
+    q: "How is this different from a component library like NativeBase or Tamagui?",
+    a: "Those are full UI libraries you install and import from node_modules. VibeKit Native installs each component as a plain file in your project — you own the code completely. No version lock-in, no breaking updates from upstream, no dependency on a CDN. And since each component is a single file, AI agents can read, understand, and extend them instantly.",
   },
   {
-    q: "How is VibeKit different from create-next-app?",
-    a: "create-next-app gives you a blank Next.js project. VibeKit gives you a planned project: a customized design system, a phase-by-phase build plan, a coding constitution for the agent, a registry of pre-built components (auth, payments, file uploads, data tables), and a pre-deploy security audit prompt. You start from a brief, not from boilerplate.",
+    q: "Does VibeKit Native work without Expo?",
+    a: "No — the components are built for Expo SDK 55+ with expo-router and NativeWind v4. If you're using bare React Native CLI without Expo, you'd need to adapt the file structure and navigation patterns yourself. We recommend Expo for new projects.",
   },
   {
-    q: "Is VibeKit free?",
-    a: "Yes, VibeKit is MIT licensed and free to use. You'll pay for the AI agent itself (Claude Code subscription, Cursor subscription, etc.) and for the cloud services your app uses (Neon Postgres, Vercel hosting, Resend for email, Stripe for payments). Most of those have generous free tiers for small projects.",
+    q: "Is VibeKit Native free?",
+    a: "Yes, MIT licensed and free to use forever. You'll pay for the services your app uses — EAS Build credits for store deployment, Neon for cloud database, Better Auth for authentication — most of which have generous free tiers.",
   },
   {
-    q: "What tech stack does VibeKit lock you into?",
-    a: "Next.js 16 (App Router), TypeScript 5.9, Tailwind CSS v4, shadcn/ui, Prisma v7 + Neon Postgres, Better Auth, React Query, React Hook Form + Zod, API Routes (Route Handlers), @react-pdf/renderer for PDFs, xlsx for Excel, Resend + React Email for transactional email, Stripe for payments, Cloudflare R2 or UploadThing for file storage, deployed on Vercel with Cloudflare DNS.",
+    q: "What tech stack does VibeKit Native expect?",
+    a: "Expo SDK 55+, TypeScript, NativeWind v4, expo-router, TanStack React Query, Zod + react-hook-form, Zustand, @expo/vector-icons, react-native-reanimated, @shopify/flash-list, and EAS Build for deployment. Components follow these conventions but work with any stack — they're just files in your project.",
   },
   {
-    q: "Why lock the stack instead of letting the AI choose?",
-    a: "Because AI agents are inconsistent. Without a locked stack, you'll get jsPDF in one project, react-pdf in the next; Drizzle here, Prisma there; useEffect for data fetching when React Query is right. The locked stack means every project is debuggable in the same way, every component is reusable across projects, and the agent never has to invent — it just builds.",
+    q: "Do I need to set up a design system or theme first?",
+    a: "No. Every component ships with the dark-only design system built in — indigo accent, zinc borders, 12px default radius, consistent spacing. Install any component and it matches every other component immediately. No ThemeProvider, no CSS variable setup, no theme switching.",
   },
   {
-    q: "What does the pre-deploy review do?",
-    a: "Before deploying, you paste pre-deploy-review.md into your coding agent. It performs a senior-level audit covering: high CPU tasks, performance bottlenecks (N+1 queries, missing pagination, memory leaks), background tasks (webhook idempotency, retry logic, distributed locks), and security (unauthenticated routes, SQL injection, missing rate limiting, exposed secrets). It writes findings as Critical / High / Medium to pre-deploy-review-report.md. You address Critical issues before going live.",
+    q: "What categories of components are available?",
+    a: "Seven categories: Auth (login-screen, register-screen, forgot-password-screen, verify-otp-screen, new-password-screen, complete-profile-screen), Home (hero-banner, section-header, category-circles, flash-sale-timer), Commerce (product-card, cart-item, price-display, order-card, order-timeline, product-header), Chat (chat-bubble), Profile (points-card, coupon-card), Shared (screen-header, filter-sheet, filter-sort-bar, search-bar), and UI (button, input, badge, avatar, card, bottom-sheet, toast, skeleton, rating, otp-input + more).",
   },
   {
-    q: "What's the JB Component Registry?",
-    a: "A collection of production-ready shadcn components for the most common app primitives: authentication (Better Auth UI), file uploads (S3/R2), Stripe checkout, data tables, MDX blogs, marketing sites, e-commerce carts, searchable selects, API documentation, and Mobile Money payments. Your coding agent installs them with one command instead of writing auth or file uploads from scratch — saving 60–80% of tokens per feature.",
+    q: "Can I install multiple components at once?",
+    a: "Yes — npx vibekit-native install auth installs all auth components. You can also pass multiple names: npx vibekit-native install login-screen product-card chat-bubble. Category names install everything in that category.",
   },
   {
-    q: "Do I need to be a developer to use VibeKit?",
-    a: "You need basic comfort with the command line, git, and reading code — but you don't need to write much code yourself. The agent does the writing. You'll review, confirm, and occasionally redirect. If you've successfully shipped anything with Cursor or Claude Code before, you can use VibeKit.",
+    q: "How do I customize a component after installing it?",
+    a: "Edit the file directly at src/components/<category>/<name>.tsx. It's a plain TypeScript file with NativeWind classes — tweak the JSX, change the styling, wire your API. No registry lock-in. Delete the file if you don't need it anymore. It's your code.",
   },
   {
-    q: "How long does it take to build an app with VibeKit?",
-    a: "A typical SaaS MVP — auth, dashboard, CRUD, payments, email, deploy — takes 8–20 hours of agent time spread across 3–7 days. Phase 1 (foundation: auth + layout + design system) is usually 1–2 hours. Each subsequent phase is 1–4 hours depending on feature complexity. The pre-deploy review and deployment take another 2–3 hours combined.",
+    q: "Is there a dark mode or light mode?",
+    a: "Dark-only by design. Every component ships with the complete dark palette — no light mode variants, no theme switching, no .dark conditional classes. This eliminates an entire class of bugs (wrong contrast, unreadable text, inconsistent backgrounds) and keeps every component predictable.",
   },
   {
-    q: "Can I use VibeKit for something other than SaaS?",
-    a: "Yes. The framework is opinionated about Next.js but agnostic about app type. People have used it for marketing sites (with the Website UI component), blogs (MDX Blog component), e-commerce stores (Stripe UI or DGateway Shop), internal admin tools, and learning platforms. Anything that fits the Next.js + Postgres + auth pattern.",
+    q: "How do database and ORM work in VibeKit Native?",
+    a: "VibeKit Native components don't enforce a specific database — they're just UI files in your project. Use whatever data layer you prefer: TanStack Query with any backend, local state with Zustand, or a database with expo-sqlite, Supabase, or Firebase. The components are agnostic.",
   },
   {
-    q: "What if my agent gets stuck or loops on the same error?",
-    a: "VibeKit ships with a rescue system. The troubleshooting.md guide has symptom-to-fix recipes, and prompt-engineering.md has three rescue techniques: the Hard Reset (start a new conversation with full context), the Decomposition (split a failing prompt into 3–4 small prompts), and the V0 Bypass (design visual issues in V0, hand off the result). The Phase-by-Phase build structure also limits how far things can drift between confirmations.",
+    q: "Can I use VibeKit Native with Claude Code, Cursor, or other AI agents?",
+    a: "Absolutely. Every component follows consistent patterns — Zod schemas, react-hook-form wrappers, NativeWind classes — so AI agents read and extend them instantly. Install a component, tell your agent to wire it to your backend, and it ships. The predictable structure means agents spend zero context guessing your conventions.",
   },
   {
-    q: "Does VibeKit support dark mode?",
-    a: "Yes — but only if you opt in. The planning interview asks if you want dark mode. If you say yes, the design-style-guide.md includes a dark palette, the master prompt enforces ThemeProvider + next-themes, and a toggle is added to the sidebar. If you say no, dark mode is skipped entirely — no extra code, no .dark classes, no toggle.",
+    q: "How do I deploy an app built with VibeKit Native?",
+    a: "Use EAS Build: eas build --profile production compiles your native binaries. Then eas submit sends to the App Store and Google Play. For frequent updates, eas update pushes OTA JavaScript updates that users get on next app open — most changes never need a store review cycle.",
   },
   {
-    q: "Can I customize the design beyond the style guide?",
-    a: "Absolutely. The design-style-guide.md is a starting point — once it's in your project, you and the agent can iterate on it. Change the primary color, swap fonts, adjust spacing. The master prompt enforces consistency across the app, but the tokens themselves are entirely yours to edit.",
+    q: "What if a component doesn't do exactly what I need?",
+    a: "Edit the installed file. Every component is a starting point — change the validation, swap the icons, adjust the layout. The dark design system tokens are consistent across all components, so your customizations still match the rest of the app. If you build something generally useful, open a PR to contribute it back.",
   },
   {
     q: "Where do I get help if something breaks?",
-    a: "Open an issue on the GitHub repo, reach out via the JB website (jb.desishub.com), or post in the Desishub community. For agent-specific issues (Claude Code limits, Cursor bugs), the agent's own Discord/Slack will be more responsive than us.",
+    a: "Open an issue on the GitHub repo (github.com/MUKE-coder/vibekit-native), reach out via the JB website (jb.desishub.com), or post in the Desishub WhatsApp community. For Expo-specific issues, the Expo Discord is more responsive than we are.",
   },
 ];
 
@@ -85,7 +85,7 @@ export default function FAQ() {
         <Section
           eyebrow="FREQUENTLY ASKED"
           title={<>Common questions, <em className="not-italic gradient-text">direct answers</em>.</>}
-          description="Everything you might want to know about VibeKit, the agents it supports, and how it compares to building from scratch."
+          description="Everything you might want to know about VibeKit Native, how the CLI works, and how it fits into your Expo workflow."
           containerClassName="max-w-3xl"
         >
           <ol className="reveal divide-y divide-[color:var(--border)] rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)]">
@@ -133,7 +133,6 @@ export default function FAQ() {
       </main>
       <Footer />
 
-      {/* FAQPage schema for AEO — direct lift in answer engines */}
       <Script
         id="ld-faq"
         type="application/ld+json"

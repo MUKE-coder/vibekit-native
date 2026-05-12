@@ -16,7 +16,7 @@ const stats = [
   { value: "6yrs", label: "Coding" },
   { value: "15.2K", label: "YouTube subs" },
   { value: "100+", label: "Apps shipped" },
-  { value: "30+", label: "Components in JB Registry" },
+  { value: "38", label: "Native components" },
 ];
 
 const skills = [
@@ -173,7 +173,7 @@ export function Creator() {
             <h2 className="creator-headline font-display mt-6 text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.05] tracking-tight text-[color:var(--text-primary)]">
               Hi, I'm <em className="not-italic gradient-text">JB</em>.
               <br />
-              <span className="text-[color:var(--text-secondary)]">I built VibeKit</span>
+              <span className="text-[color:var(--text-secondary)]">I built VibeKit Native</span>
             </h2>
 
             <div className="creator-bio mt-6 space-y-4 text-[15.5px] leading-relaxed text-[color:var(--text-secondary)]">
@@ -181,10 +181,10 @@ export function Creator() {
                 I'm <strong className="font-medium text-[color:var(--text-primary)]">Muke Johnbaptist</strong>, founder of <a href="https://desishub.com" target="_blank" rel="noopener noreferrer" className="text-[color:var(--accent)] underline underline-offset-4">Desishub Technologies</a> in Kampala, Uganda. I specialize in <strong className="font-medium text-[color:var(--text-primary)]">AI engineering</strong>, <strong className="font-medium text-[color:var(--text-primary)]">Go (Golang) backend development</strong>, and designing systems across mobile, desktop, and web. I'm also the creator of the <a href="https://gritframework.dev/" target="_blank" rel="noopener noreferrer" className="text-[color:var(--accent)] underline underline-offset-4">Grit Framework</a>.
               </p>
               <p>
-                VibeKit is what I wished existed when I started using AI to build real apps. I was burning tokens, getting a different stack every project, and watching agents ship code with unauthenticated routes. So I built the framework that fixes all of it — and put it in front of every coding agent I use.
+                VibeKit Native is what I wished existed when I started building React Native apps with AI. Every new project meant rewriting login screens, profile layouts, and product cards. So I built a registry of production-ready components — installable with one npx command, dark-only, and designed to work with any AI coding agent.
               </p>
               <p>
-                Everything in here is battle-tested in real client projects and my own apps. If it ships from my laptop, it goes into the framework.
+                Every component is battle-tested in real client Expo projects and my own apps. Login forms, chat UIs, product grids — all shipping in production on iOS and Android.
               </p>
             </div>
 

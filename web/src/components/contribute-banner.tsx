@@ -65,14 +65,14 @@ export function ContributeBanner() {
               </div>
 
               <h2 className="contrib-headline font-display mt-6 text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] tracking-tight text-[color:var(--text-primary)]">
-                Got a component?{" "}
+                Got a React Native component?{" "}
                 <em className="not-italic gradient-text">Add it to the registry.</em>
               </h2>
 
               <p className="contrib-body mt-5 max-w-xl text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
-                Built something reusable — auth flow, payment widget, AI feature, dashboard
-                primitive? Open a pull request. Once merged, your component gets a permanent
-                doc page and is loaded by every Claude Code agent reading the registry.
+                Built a reusable React Native component — auth flow, chat UI, commerce widget,
+                UI primitive? Open a pull request. Once merged, your component ships with
+                every npx vibekit-native install and is available to every developer using the registry.
               </p>
 
               {/* Quick stats */}
@@ -125,10 +125,10 @@ export function ContributeBanner() {
                 </div>
                 <pre className="mt-3 leading-relaxed whitespace-pre overflow-x-auto">
                   <code>{`{
-  slug: "your-thing",
-  name: "Your Thing",
-  category: "data",
-  install: "...",
+  slug: "your-component",
+  name: "Your Component",
+  category: "commerce",
+  install: "npx vibekit-native install ...",
   features: [...],
   filesAdded: [...],
 }`}</code>
