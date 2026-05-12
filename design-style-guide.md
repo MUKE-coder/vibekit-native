@@ -1,654 +1,628 @@
-# Invoice Pro — Design Style Guide
+# VibeKit Native — Design Style Guide (Template)
 
-> Single source of truth for all visual and interaction decisions in Invoice Pro. Reference this file before writing any UI code.
+> **This file is a template.** The VibeKit Native Planning Assistant (`CLAUDE_PROMPT.md`) tailors it per-project — swapping the accent color, typography pairings, app name, and component specs based on your interview answers and visual reference. Replace `{{TOKENS}}` with the values your planning conversation produced.
 >
-> **Aesthetic**: Modern Minimal (Linear / Vercel school)
-> **Scope**: Dashboard, Landing, Invoice PDF Templates, Email Templates
+> Single source of truth for every visual + interaction decision in **{{APP_NAME}}**. Reference this file before writing any UI code. It overrides the generic design rules in `master_prompt.md` where they differ.
 
 ---
 
 ## 1. Design Philosophy
 
-Invoice Pro is a premium B2B SaaS product for professionals who send invoices. The UI must feel **trustworthy, refined, and effortless** — the kind of tool you'd expect to pay for.
+{{APP_NAME}} is a {{APP_KIND}} (e.g., "social messaging app", "field-service POS", "B2B logistics tracker") for {{PRIMARY_USER}}. The UI must feel **{{AESTHETIC_TRAITS}}** (e.g., "fast, native, and quiet" / "playful but professional" / "minimal and trustworthy").
 
 **Three core principles:**
 
-1. **Premium minimalism** — Generous whitespace, sharp typography, subtle shadows. No decoration without purpose.
-2. **Indigo as the hero** — One bold primary color on a warm neutral canvas. The indigo signals action, brand, and identity. Everything else stays quiet.
-3. **Quiet confidence** — Refined borders, soft shadows, precise alignment. No gradients, no emoji in UI, no playful flourishes. It should feel like a tool, not a toy.
+1. **Native-first feel** — Respects iOS Human Interface Guidelines and Android Material 3 conventions where they matter (back-gesture, swipe-to-dismiss, haptic feedback). Doesn't try to look like a web app shrunk to a phone.
+2. **{{ACCENT}} as the hero** — One bold accent color. Every CTA, every active state, every "this is the action" cue uses this color. No rainbow gradients, no AI-slop purple-pink-orange. Other surfaces stay quiet (neutral grays, near-black backgrounds).
+3. **Quiet confidence at 60 fps** — Smooth scrolling, smooth animations, instant haptics. The phone is in the user's hand — every micro-delay is felt. Performance budget is design, not engineering.
+
+**Visual reference:** {{REFERENCE_LINK}} (Dribbble shot, app screenshot, competitor app — pasted by the user during planning).
 
 ---
 
-## 2. Typography
+## 2. Color Palette
 
-### Font Family
+VibeKit Native ships **dark-by-default**. Light mode is optional and requires a per-screen variant — pick it deliberately only if `project-description.md` → "Dark mode: Both" is set.
 
-**Primary font: [Onest](https://fonts.google.com/specimen/Onest)** (Google Fonts)
+### Core tokens (`src/components/lib/theme.ts`)
 
-Load via `next/font/google`:
+```ts
+export const colors = {
+  // Backgrounds (darkest → most-elevated)
+  bg:           '{{BG}}',         // e.g., '#0A0A0A' — base screen background
+  bgSubtle:     '{{BG_SUBTLE}}',  // e.g., '#121212' — section dividers, list rows
+  bgElevated:   '{{BG_ELEVATED}}',// e.g., '#1A1A1A' — cards, sheets, modals
+  bgHover:      '{{BG_HOVER}}',   // e.g., '#222222' — pressed / hover state
 
-```tsx
-import { Onest } from "next/font/google";
+  // Text
+  textPrimary:  '{{TEXT_PRIMARY}}',   // e.g., '#FFFFFF' — headlines, body
+  textSecondary:'{{TEXT_SECONDARY}}', // e.g., '#A0A0A0' — supporting copy
+  textTertiary: '{{TEXT_TERTIARY}}',  // e.g., '#666666' — captions, placeholders, metadata
+  textInverse:  '{{TEXT_INVERSE}}',   // e.g., '#0A0A0A' — text on accent buttons
 
-const onest = Onest({
-  subsets: ["latin"],
-  variable: "--font-onest",
-  display: "swap",
-});
+  // Borders (1px always — never 2px unless selected)
+  border:       '{{BORDER}}',       // e.g., '#2A2A2A' — default
+  borderStrong: '{{BORDER_STRONG}}',// e.g., '#333333' — hover / focused
+
+  // Accent (the ONE hero color)
+  accent:       '{{ACCENT}}',       // e.g., '#6366F1' — solid CTAs, active states
+  accentLight:  '{{ACCENT_LIGHT}}', // e.g., '#1E1B4B' — selected backgrounds (10% accent on dark)
+  accentMuted:  '{{ACCENT_MUTED}}', // e.g., '#2D2A5E' — hover on accent surfaces
+
+  // Semantic (status feedback only — never as decoration)
+  success:      '#22C55E',
+  successLight: '#052E16',
+  warning:      '#F59E0B',
+  warningLight: '#451A03',
+  error:        '#EF4444',
+  errorLight:   '#450A0A',
+  info:         '#3B82F6',
+  infoLight:    '#0C1929',
+} as const;
 ```
 
-Apply via `className={onest.variable}` on the root layout and reference it in Tailwind config as the default sans font.
+### Picking an accent
 
-**Why Onest**: modern geometric sans with excellent legibility at small sizes. Crisp numerals (critical for invoices and totals). Open-source, fast to load.
+- **One color per project.** No "primary + secondary + tertiary." That's a brand-style-guide trap.
+- **Contrast against `bg`:** the accent must hit WCAG AA 4.5:1 on the base background for text-on-accent buttons.
+- **Test on dim screens.** Mobile users use phones in bright sun. A subtle accent disappears outdoors.
+- **Default if undecided:** Indigo `#6366F1` (high contrast, brand-neutral, works in every category).
 
-### Type Scale
+### NativeWind config (`tailwind.config.js`)
 
-| Style | Size | Weight | Line Height | Tracking | Usage |
-|-------|------|--------|-------------|----------|-------|
-| `display` | 48px | 600 | 1.1 | -0.02em | Landing hero, marketing |
-| `display-sm` | 36px | 600 | 1.15 | -0.02em | Section headers on landing |
-| `h1` | 30px | 600 | 1.2 | -0.015em | Page titles in dashboard |
-| `h2` | 24px | 600 | 1.25 | -0.01em | Section headings |
-| `h3` | 20px | 600 | 1.3 | -0.005em | Card titles, modal titles |
-| `h4` | 16px | 600 | 1.4 | 0 | List item titles, labels |
-| `body-lg` | 16px | 400 | 1.55 | 0 | Marketing body copy |
-| `body` | 14px | 400 | 1.5 | 0 | Default dashboard body text |
-| `body-sm` | 13px | 400 | 1.5 | 0 | Secondary info, table data |
-| `caption` | 12px | 500 | 1.4 | 0.01em | Meta, timestamps, badges |
-| `micro` | 11px | 600 | 1.3 | 0.04em | Uppercase labels, eyebrows (uppercase) |
-| `tabular` | 14px | 500 | 1.5 | 0 | Numbers, amounts — use `font-variant-numeric: tabular-nums` |
-| `invoice-total` | 28px | 700 | 1.1 | -0.02em | Invoice total amount |
+```js
+import { colors } from './src/components/lib/theme';
 
-**Rules:**
-- Headings use weight 600, never 700 or 800 in UI chrome (avoid aggressive).
-- Marketing display headlines may use 600.
-- **Always** use `tabular-nums` for money, quantities, and invoice numbers.
-- Line-height: tighter (1.1–1.3) for display/headings, 1.5 for body.
+module.exports = {
+  content: ['./app/**/*.{js,jsx,ts,tsx}', './src/**/*.{js,jsx,ts,tsx}'],
+  presets: [require('nativewind/preset')],
+  theme: {
+    extend: {
+      colors: {
+        bg:           colors.bg,
+        bgSubtle:     colors.bgSubtle,
+        bgElevated:   colors.bgElevated,
+        bgHover:      colors.bgHover,
+        textPrimary:  colors.textPrimary,
+        textSecondary:colors.textSecondary,
+        textTertiary: colors.textTertiary,
+        textInverse:  colors.textInverse,
+        border:       colors.border,
+        borderStrong: colors.borderStrong,
+        accent:       colors.accent,
+        accentLight:  colors.accentLight,
+        accentMuted:  colors.accentMuted,
+        success:      colors.success,
+        successLight: colors.successLight,
+        warning:      colors.warning,
+        warningLight: colors.warningLight,
+        error:        colors.error,
+        errorLight:   colors.errorLight,
+        info:         colors.info,
+        infoLight:    colors.infoLight,
+      },
+    },
+  },
+};
+```
+
+Now every component can use `text-textPrimary`, `bg-bgElevated`, `border-border`, `bg-accent` etc.
 
 ---
 
-## 3. Color Palette
+## 3. Typography
 
-### Primary (Indigo)
+Phone screens are smaller than laptops. The web's 14–18pt body scale doesn't transfer — we use a **slightly larger base** for thumb-friendly reading.
 
-| Token | Hex | Usage |
-|-------|-----|-------|
-| `primary-50` | `#EEF2FF` | Subtle backgrounds, focus rings, selected rows |
-| `primary-100` | `#E0E7FF` | Hover surfaces, avatar bg, soft highlights |
-| `primary-500` | `#6366F1` | Secondary action accents, links in body copy |
-| `primary-600` | `#4F46E5` | **Primary brand** — buttons, active states, logo, primary CTA |
-| `primary-700` | `#4338CA` | Button hover / pressed |
-| `primary-900` | `#312E81` | Deep shadow text (rarely) |
+### Font families (`expo-font`)
 
-### Neutrals (Warm Zinc)
+```ts
+// app/_layout.tsx
+import { useFonts, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
+import { JetBrainsMono_400Regular } from '@expo-google-fonts/jetbrains-mono';
+```
 
-| Token | Hex | Usage |
-|-------|-----|-------|
-| `neutral-50` | `#FAFAFA` | Page background |
-| `neutral-100` | `#F4F4F5` | Card rails, table header bg, muted surfaces |
-| `neutral-200` | `#E4E4E7` | Borders, dividers, input outlines |
-| `neutral-300` | `#D4D4D8` | Placeholder text on light, disabled borders |
-| `neutral-400` | `#A1A1AA` | Placeholder, meta text, secondary icons |
-| `neutral-500` | `#71717A` | Secondary text, captions |
-| `neutral-600` | `#52525B` | Body text secondary |
-| `neutral-700` | `#3F3F46` | Body text primary (on white) |
-| `neutral-900` | `#18181B` | Headings, primary text |
-| `white` | `#FFFFFF` | Cards, modals, sidebar, nav |
+| Role | Font | Why |
+|---|---|---|
+| **UI / body** | **{{SANS_FONT}}** (default: Inter) | High legibility at every size, native-feeling on both iOS + Android |
+| **Numbers / monospace / code** | **{{MONO_FONT}}** (default: JetBrains Mono) | Tabular numerals for prices, counts, timestamps |
+| **Optional display / brand headlines** | **{{DISPLAY_FONT}}** (e.g., Geist, Onest, system) | Use sparingly — only marketing screens, onboarding |
 
-### Semantic
+### Type scale (mobile-tuned)
 
-| Token | Hex | Usage |
-|-------|-----|-------|
-| `success-50` | `#ECFDF5` | Paid badge bg, success toast bg |
-| `success-600` | `#059669` | Paid status, revenue-positive numbers, checkmarks |
-| `warning-50` | `#FFFBEB` | Pending badge bg, due-soon alerts |
-| `warning-600` | `#D97706` | Overdue warnings, quota warnings |
-| `error-50` | `#FEF2F2` | Error toast bg, destructive confirm |
-| `error-600` | `#DC2626` | Errors, destructive actions, quota exceeded |
-| `info-50` | `#EFF6FF` | Info banner bg |
-| `info-600` | `#2563EB` | Info text, neutral badges |
+```ts
+// src/components/lib/theme.ts (continued)
+export const typography = {
+  // Headlines (sparing on mobile — too much vertical real estate)
+  display:  { fontSize: 32, lineHeight: 38, fontWeight: '700' },  // onboarding, hero
+  h1:       { fontSize: 28, lineHeight: 34, fontWeight: '700' },  // screen title
+  h2:       { fontSize: 22, lineHeight: 28, fontWeight: '600' },  // section header
+  h3:       { fontSize: 18, lineHeight: 24, fontWeight: '600' },  // card title
 
-### Invoice Status Colors
+  // Body
+  bodyLg:   { fontSize: 17, lineHeight: 24, fontWeight: '400' },  // hero copy, first paragraph
+  body:     { fontSize: 15, lineHeight: 22, fontWeight: '400' },  // default body
+  bodySm:   { fontSize: 13.5, lineHeight: 20, fontWeight: '400' },// secondary
 
-| Status | Background | Text | Dot |
-|--------|-----------|------|-----|
-| Draft | `neutral-100` | `neutral-700` | `neutral-400` |
-| Sent | `primary-50` | `primary-700` | `primary-600` |
-| Viewed | `info-50` | `info-600` | `info-600` |
-| Paid | `success-50` | `success-600` | `success-600` |
-| Overdue | `error-50` | `error-600` | `error-600` |
-| Cancelled | `neutral-100` | `neutral-500` | `neutral-400` |
+  // Meta
+  caption:  { fontSize: 12, lineHeight: 16, fontWeight: '500' },  // timestamps, badges
+  micro:    { fontSize: 11, lineHeight: 14, fontWeight: '600' },  // uppercase eyebrows
 
-**No gradients in app UI chrome.** The only acceptable gradient use:
-- Marketing hero backgrounds (very subtle radial from `primary-50` → white)
-- The Pro plan billing card (subtle indigo gradient for premium feel)
+  // Numbers (tabular)
+  numLg:    { fontSize: 28, lineHeight: 32, fontVariant: ['tabular-nums'] }, // stat cards
+  numMd:    { fontSize: 18, lineHeight: 22, fontVariant: ['tabular-nums'] }, // prices
+} as const;
+```
+
+### NativeWind utility classes
+
+Use Tailwind size classes (`text-[15px] leading-[22px]`) for one-off cases; for repeated patterns, build a typed `<Text>` wrapper:
+
+```tsx
+// src/components/ui/typography.tsx
+export const Heading = ({ children, level = 1, className, ...rest }: { level?: 1 | 2 | 3 } & TextProps) => {
+  const cls = {
+    1: 'text-[28px] leading-[34px] font-bold text-textPrimary',
+    2: 'text-[22px] leading-[28px] font-semibold text-textPrimary',
+    3: 'text-[18px] leading-[24px] font-semibold text-textPrimary',
+  }[level];
+  return <Text className={cn(cls, className)} {...rest}>{children}</Text>;
+};
+```
+
+### Rules
+
+- **iOS allows dynamic type** — respect it. Set `maxFontSizeMultiplier={1.4}` on hero text, `maxFontSizeMultiplier={1.2}` on dense UI.
+- **Line height ≥ 1.3× font size.** Mobile reading distance is shorter; cramped lines feel claustrophobic.
+- **Truncate, don't wrap, in dense lists.** `numberOfLines={1} ellipsizeMode="tail"`.
+- **NEVER use `<Text>` without a wrapper** for repeated patterns. Type tokens come from the theme.
 
 ---
 
 ## 4. Spacing
 
-**8px base grid.** All spacing = multiple of 4.
+8pt grid — same as iOS HIG and Material 3 — but ALWAYS rounded to a multiple-of-4. Mobile uses tighter spacing than web because screens are smaller.
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `space-0.5` | 2px | Icon internal spacing |
-| `space-1` | 4px | Tight gaps (badge padding) |
-| `space-2` | 8px | Between related inline elements |
-| `space-3` | 12px | Input internal padding, card gaps |
-| `space-4` | 16px | Standard gap between components |
-| `space-5` | 20px | Card internal padding (small cards) |
-| `space-6` | 24px | Card internal padding (default) |
-| `space-8` | 32px | Between sections within a page |
-| `space-10` | 40px | Section separators |
-| `space-12` | 48px | Large section breaks |
-| `space-16` | 64px | Marketing section padding |
-| `space-24` | 96px | Landing hero vertical padding |
-
-**Page-level spacing:**
-- Dashboard content max-width: `1280px` with `px-8` on desktop, `px-4` on mobile
-- Sidebar width: `256px` (expanded), `72px` (collapsed)
-- Main content top padding: `24px` below header
-- Section-to-section gap: `32px`
-- Card internal padding: `24px` (default), `32px` (hero/primary cards)
-
-**Density: Comfortable** — rows are `48px` tall, not `32px`. Breathable.
-
----
-
-## 5. Border Radius
-
-| Token | Value | Usage |
-|-------|-------|-------|
-| `radius-sm` | 6px | Inputs, small chips, tag pills |
-| `radius` | 8px | **Default** — buttons, badges, small cards |
-| `radius-md` | 10px | Medium cards, modals content |
-| `radius-lg` | 12px | Main dashboard cards, table containers |
-| `radius-xl` | 16px | Modal outer shell, large feature cards |
-| `radius-2xl` | 20px | Hero marketing cards only |
-| `radius-full` | 9999px | Avatars, status dots, icon pills |
-
-**Rule**: Never mix radius values in the same container. A card with `radius-lg` should contain children with `radius` or smaller, never larger.
-
----
-
-## 6. Shadows & Elevation
-
-```
-shadow-xs:    0 1px 2px 0 rgba(24, 24, 27, 0.05)
-shadow-sm:    0 1px 3px 0 rgba(24, 24, 27, 0.08), 0 1px 2px -1px rgba(24, 24, 27, 0.04)
-shadow-md:    0 4px 6px -1px rgba(24, 24, 27, 0.08), 0 2px 4px -2px rgba(24, 24, 27, 0.04)
-shadow-lg:    0 10px 15px -3px rgba(24, 24, 27, 0.08), 0 4px 6px -4px rgba(24, 24, 27, 0.04)
-shadow-xl:    0 20px 25px -5px rgba(24, 24, 27, 0.10), 0 8px 10px -6px rgba(24, 24, 27, 0.04)
-
-shadow-focus: 0 0 0 3px rgba(79, 70, 229, 0.15)  // Focus rings only
+```ts
+export const spacing = {
+  xs:  4,
+  sm:  8,
+  md:  12,
+  base:16,    // default gap between unrelated elements
+  lg:  20,
+  xl:  24,
+  '2xl': 32,
+  '3xl': 48,
+  '4xl': 64,
+} as const;
 ```
 
-**Usage:**
-- Cards on page: `shadow-xs` + `border border-neutral-200`
-- Hover on interactive cards: `shadow-sm`
-- Dropdowns & popovers: `shadow-md` + `border border-neutral-200`
-- Modals: `shadow-xl`
-- Focus rings: `shadow-focus` instead of outline
-- **Inputs have NO shadow** — use border only
+### Common spacings
 
-**Philosophy**: Borders do most of the work. Shadows are subtle — a hint of depth, not a cloud.
-
----
-
-## 7. Component Specifications
-
-### 7.1 Buttons
-
-**Primary Button**
-- Background: `primary-600` (`#4F46E5`)
-- Text: White, `14px` weight 500
-- Height: `40px` (default), `36px` (sm), `44px` (lg)
-- Horizontal padding: `16px`
-- Border radius: `radius` (8px)
-- Hover: `primary-700`
-- Active: `primary-700` + scale(0.98)
-- Focus: `shadow-focus` ring
-- Disabled: `neutral-200` bg, `neutral-400` text
-- Loading: spinner replaces icon, text stays
-
-**Secondary Button (Outline)**
-- Background: White
-- Border: `1px solid neutral-200`
-- Text: `neutral-900`, 14px weight 500
-- Hover: `neutral-50` bg, `neutral-300` border
-
-**Ghost Button**
-- Background: Transparent
-- Text: `neutral-700`, 14px weight 500
-- Hover: `neutral-100` bg
-
-**Destructive Button**
-- Background: `error-600`
-- Text: White
-- Hover: `#B91C1C`
-- Use only for delete/cancel actions
-
-**Text Link**
-- Color: `primary-600`
-- Hover: `primary-700`, underline
-- Inline: underlined, `underline-offset-4`, `decoration-neutral-300`
-
-**Icon Button**
-- Size: `36×36px` (default), `32×32px` (sm)
-- Background: Transparent (ghost) or White + border
-- Icon: `18px`, `neutral-600`
-- Radius: `radius` (8px)
-- Hover: `neutral-100`
+| Context | Spacing |
+|---|---|
+| Screen edge padding (default) | `px-4` (16) |
+| Section vertical padding | `py-6` (24) |
+| Card internal padding | `p-5` (20) — `p-6` for hero cards |
+| Form field gap (vertical) | `gap-4` (16) |
+| List item padding | `px-4 py-3` (16 × 12) |
+| Tap target minimum | 44 × 44 (use `hitSlop` if visual size is smaller) |
+| Bottom tab bar padding | `py-2 px-1` (safe-area handles the rest) |
 
 ---
 
-### 7.2 Inputs
+## 5. Radius
 
-- Height: `40px`
-- Background: White
-- Border: `1px solid neutral-200`
-- Radius: `radius-sm` (6px)
-- Padding: `12px` horizontal
-- Text: `14px`, `neutral-900`
-- Placeholder: `neutral-400`
-- Focus: `primary-600` border + `shadow-focus` ring, **no outline**
-- Disabled: `neutral-50` bg, `neutral-400` text
-- Invalid: `error-600` border, error text below (`13px`, `error-600`)
-- Label above: `13px` weight 500, `neutral-700`, `8px` gap to input
-- Helper text below: `12px`, `neutral-500`
+Mobile lives in rounded corners. iOS leans larger (16–20pt for cards), Android slightly flatter (8–12pt). VibeKit Native picks a **single rounded language** and uses it consistently on both platforms.
 
-**Textarea**: same as input, min-height `96px`, `vertical` resize only.
-
-**Select**: same as input + chevron icon right. On open, menu uses `shadow-md` + `border neutral-200`.
-
-**Search Input (global search)**
-- Background: `neutral-50`
-- Border: `1px solid neutral-200`
-- Icon: search, `neutral-400`, left `12px`
-- Height: `38px`
-- On focus: border → `primary-600`, bg → white
-
----
-
-### 7.3 Cards
-
-**Default Card**
-- Background: White
-- Border: `1px solid neutral-200`
-- Radius: `radius-lg` (12px)
-- Shadow: `shadow-xs`
-- Padding: `24px`
-- Hover (if interactive): `shadow-sm` + `border-neutral-300`
-
-**Metric Card (dashboard KPI)**
-- Label: `caption` uppercase `neutral-500` tracking-wider
-- Value: `28px` weight 600 `neutral-900`, `tabular-nums`
-- Delta: `13px` weight 500, `success-600` (up) or `error-600` (down)
-- Icon: top-right, `20px`, `neutral-400`
-
-**Feature Card (landing)**
-- Padding: `32px`
-- Icon: `40px`, `primary-600` in a `primary-50` square (`radius`)
-- Title: `h3`
-- Description: `body` `neutral-600`
-
-**Pricing Card**
-- Border: `1px solid neutral-200`
-- Radius: `radius-xl` (16px)
-- Padding: `32px`
-- Featured (Pro): `2px solid primary-600`, subtle `primary-50` gradient top
-- Price: `48px` weight 700 `neutral-900`
-- `/month`: `16px` weight 400 `neutral-500`
-
----
-
-### 7.4 Tables
-
-- Header row: `bg-neutral-50`, `13px` weight 600 `neutral-600` uppercase tracking-wider, `48px` tall
-- Body row: `56px` tall (comfortable), `14px` `neutral-700`
-- Border bottom between rows: `1px solid neutral-100`
-- Hover row: `bg-neutral-50`
-- Selected row: `bg-primary-50`
-- First column padding: `24px` left
-- Last column padding: `24px` right
-- Sort indicators: `neutral-400` chevron, `primary-600` when active
-- Sticky header when scrolling
-- Zebra striping: **off** — rely on dividers only (cleaner)
-
-**Row actions (kebab menu)**: icon button on hover reveal, dropdown right-aligned.
-
----
-
-### 7.5 Status Badges
-
-- Height: `24px`
-- Padding: `4px 10px`
-- Radius: `radius-full`
-- Font: `12px` weight 500
-- Dot: `6px` circle, `6px` right margin, flex-inline
-- Background + text: see §3 Invoice Status Colors
-
-**Example** — Paid:
-```
-bg-success-50 text-success-600 border border-success-600/10
-● Paid
+```ts
+export const radius = {
+  none:    0,
+  sm:      6,    // chips, badges
+  md:      8,    // inputs, small buttons
+  lg:      12,   // cards, list items
+  xl:      16,   // hero cards, modal sheets
+  '2xl':   20,   // bottom sheets
+  '3xl':   24,   // floating action surfaces
+  full:    9999, // pill chips, circular buttons, avatars
+} as const;
 ```
 
----
+NativeWind: `rounded` (4), `rounded-md` (6), `rounded-lg` (8), `rounded-xl` (12), `rounded-2xl` (16), `rounded-3xl` (24), `rounded-full`.
 
-### 7.6 Sidebar (Dashboard Navigation)
+### Card anatomy
 
-- Width: `256px`
-- Background: White
-- Border right: `1px solid neutral-200`
-- Padding: `16px`
-- Logo block: `64px` tall, bottom border `neutral-100`
-- Nav section label: `micro` uppercase `neutral-400`, `12px` bottom margin
-- Nav item:
-  - Height: `40px`
-  - Padding: `10px 12px`
-  - Radius: `radius`
-  - Icon: `18px` `neutral-500`
-  - Text: `14px` weight 500 `neutral-700`
-  - Gap icon ↔ text: `12px`
-  - Hover: `bg-neutral-100`
-  - Active: `bg-primary-50`, `text-primary-700`, icon `primary-600`, optional `2px` left accent bar
-- User block at bottom: avatar `36×36` + name `14px` + email `12px neutral-500`
-
----
-
-### 7.7 Top Bar / Page Header
-
-- Height: `64px`
-- Background: White
-- Border bottom: `1px solid neutral-100`
-- Padding: `0 32px`
-- Left: breadcrumbs or page title (`h1`)
-- Right: search + notifications bell + avatar
-- Sticky on scroll
-
----
-
-### 7.8 Modals & Dialogs
-
-- Overlay: `rgba(24, 24, 27, 0.5)` + `backdrop-blur-sm`
-- Modal: max-width `512px` (default), `640px` (lg)
-- Background: White
-- Radius: `radius-xl` (16px)
-- Shadow: `shadow-xl`
-- Header padding: `24px 24px 16px`
-- Body padding: `16px 24px`
-- Footer padding: `16px 24px 24px`, right-aligned buttons with `12px` gap
-- Title: `h3`
-- Description: `body-sm` `neutral-500`
-- Close button: icon top-right `16px`
-- Open animation: scale(0.96) + opacity → scale(1) + opacity, `200ms` ease-out
-
----
-
-### 7.9 Toasts / Notifications
-
-Using Sonner:
-- Bottom-right position
-- White bg, `shadow-lg`, `border border-neutral-200`
-- Radius: `radius` (8px)
-- Padding: `14px 16px`
-- Icon left: `18px`, color by type
-- Title: `14px` weight 500 `neutral-900`
-- Description: `13px` `neutral-500`
-- Auto-dismiss: `4s`
-- Success: checkmark `success-600`
-- Error: x-circle `error-600`
-- Warning: triangle `warning-600`
-- Info: info-circle `primary-600`
-
----
-
-### 7.10 Empty States
-
-- Vertically centered in container
-- Icon: `48px`, `neutral-300` inside a `72×72` `neutral-100` circle
-- Title: `h3` `neutral-900`
-- Description: `body` `neutral-500`, max-width `400px`, centered
-- Primary CTA button below, `32px` top margin
-
----
-
-### 7.11 Forms
-
-- Field vertical gap: `20px`
-- Field group label: `13px` weight 500 `neutral-700`
-- Field group helper text: `12px` `neutral-500`, below input
-- Section group divider: `border-t neutral-200`, `32px` top margin
-- Section group header: `h4` `neutral-900`, followed by `body-sm neutral-500`
-- Form footer: sticky bottom or inline, right-aligned Cancel (ghost) + Save (primary)
-
-**Validation (React Hook Form + Zod):**
-- Inline errors below field: `12px` weight 500 `error-600`
-- Border on invalid: `error-600`
-- Disable submit button during `isSubmitting`, show spinner inside button
-
----
-
-## 8. Iconography
-
-Use **[Lucide Icons](https://lucide.dev)** (`lucide-react`) as the primary icon library.
-
-**Sizing:**
-- Nav icons: `18px`
-- Inline with body text: `14px`
-- Icon buttons: `18px`
-- Card feature icons: `20–24px`
-- Empty state icons: `48px`
-- Marketing feature icons: `28–40px`
-
-**Color rules:**
-- Default neutral icons: `neutral-500`
-- Active/selected icons: `primary-600`
-- Icon inside a primary CTA button: `white`
-- Feature highlight icons: `primary-600` on `primary-50` square bg
-
-**Stroke width:** `2` (default). Do not mix strokes.
-
----
-
-## 9. Motion & Animation
-
-**Principles:** fast, subtle, never bouncy.
-
-| Transition | Duration | Easing |
-|-----------|----------|--------|
-| Button press | `100ms` | `ease-out` |
-| Hover state | `150ms` | `ease-out` |
-| Dropdown/popover | `150ms` | `ease-out` |
-| Modal enter | `200ms` | `ease-out` |
-| Modal exit | `150ms` | `ease-in` |
-| Page transition | `300ms` | `ease-out` |
-| Toast slide | `250ms` | `cubic-bezier(0.16, 1, 0.3, 1)` |
-
-**Do:**
-- `transition-colors` on all interactive elements
-- Fade + scale for modals (`scale(0.96) → scale(1)`)
-- Skeleton shimmer for loading cards
-
-**Don't:**
-- Spring animations
-- Rotation / flips
-- Anything > 400ms
-- Blinking, pulsing (except loading spinners)
-
----
-
-## 10. Imagery
-
-- **Product screenshots on landing**: Real dashboard screens inside a browser frame (Mac-style chrome), subtle shadow, slight tilt optional
-- **Avatars**: Circular, `neutral-100` placeholder bg with initials in `neutral-600`
-- **Empty states**: Simple Lucide icon, no illustrations
-- **Logos (brand)**: max `150×52.5px` in PDF, `h-12` in email header, `h-10` in dashboard topbar
-- **Hero illustrations**: Prefer abstract product mockups or a single marquee dashboard screenshot over cartoons
-
----
-
-## 11. Landing Page Specifics
-
-- Hero background: `neutral-50` with a very subtle radial `primary-50 → transparent` centered
-- Hero headline: `display` (48px) `neutral-900`, max 2 lines
-- Hero subhead: `body-lg` (16px) `neutral-600`, max 640px width
-- Hero CTA cluster: primary button + ghost "See pricing" link, `24px` gap
-- Section alternation: white → `neutral-50` → white, `96px` vertical padding each
-- Max content width: `1200px`
-- Feature grid: 3 columns desktop, 1 column mobile, `32px` gap
-- Testimonial card: bigger radius (`radius-xl`), 1 border, `32px` padding
-- Pricing cards: see §7.3
-
----
-
-## 12. Invoice PDF Templates
-
-PDFs use `@react-pdf/renderer` with its own `StyleSheet`. Keep PDF styling **closely aligned** with dashboard tokens but adapted for print:
-
-**PDF palette:**
-- Text primary: `#18181B`
-- Text secondary: `#52525B`
-- Muted: `#A1A1AA`
-- Borders: `#E4E4E7`
-- Brand accent: user's custom `brandColor` from Brand settings (fallback `#4F46E5`)
-
-**PDF typography:**
-- Header/total: 24px weight 700
-- Section headings: 13px weight 700 uppercase, `letterSpacing: 0.5`
-- Body: 10px weight 400
-- Table: 10px, `tabular-nums`
-
-**PDF spacing:**
-- Page padding: `40px`
-- Section gap: `24px`
-- Header height: `80px`
-
-**PDF templates** remain visually distinct (Professional, Modern, Classic, Minimal) but **all share** the typography scale, neutral palette, and spacing rhythm above.
-
----
-
-## 13. Email Templates (React Email)
-
-- Max width: `600px`
-- Background: `#F4F4F5` (neutral-100)
-- Card: white, `border: 1px solid #E4E4E7`, `radius: 12px`
-- Header: uses brand color if set, else `#4F46E5`
-- Body padding: `24px`
-- Typography: system font stack (Onest doesn't render in email clients) — `font-family: 'Onest', -apple-system, 'Segoe UI', Roboto, sans-serif` with fallbacks
-- Buttons: solid `primary-600`, white text, `12px 24px` padding, `radius: 8px`, `font-size: 14px`, `weight: 500`
-- Footer: `caption` size, `neutral-500` color, centered
-- **Currency**: always use the brand's currency symbol via `data.currency`, never hardcode `$`
-
----
-
-## 14. Tailwind Configuration (v4 — CSS-first)
-
-Tailwind v4 uses a CSS-first configuration model. ALL custom tokens go in `globals.css` via the `@theme` directive. No `tailwind.config.ts` file is created or needed.
-
-Add this to your `src/app/globals.css` inside an `@theme` block:
-
-```css
-@import "tailwindcss";
-
-@theme {
-  --font-sans: "Onest", "Inter", system-ui, sans-serif;
-
-  --color-primary-50: #EEF2FF;
-  --color-primary-100: #E0E7FF;
-  --color-primary-500: #6366F1;
-  --color-primary-600: #4F46E5;
-  --color-primary-700: #4338CA;
-  --color-primary-900: #312E81;
-
-  --color-success-50: #ECFDF5;
-  --color-success-600: #059669;
-  --color-warning-50: #FFFBEB;
-  --color-warning-600: #D97706;
-  --color-error-50: #FEF2F2;
-  --color-error-600: #DC2626;
-  --color-info-50: #EFF6FF;
-  --color-info-600: #2563EB;
-
-  --shadow-xs: 0 1px 2px 0 rgba(24, 24, 27, 0.05);
-  --shadow-focus: 0 0 0 3px rgba(79, 70, 229, 0.15);
-
-  --radius-xs: 0.375rem;
-  --radius-sm: 0.5rem;
-  --radius-md: 0.625rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-  --radius-2xl: 1.25rem;
-}
-
-/* Custom CSS variables for design tokens that can't live in @theme */
-:root {
-  --font-mono: "JetBrains Mono", "Fira Code", monospace;
-  --sidebar-width: 256px;
-  --sidebar-collapsed-width: 72px;
-  --topbar-height: 64px;
-}
+```tsx
+<View className="rounded-xl bg-bgElevated border border-border p-5">
+  ...
+</View>
 ```
 
-For neutrals, use Tailwind's built-in `zinc` scale directly (`text-zinc-700`, `bg-zinc-50`) — it matches exactly.
-
-**IMPORTANT:** Do NOT create a `tailwind.config.ts`. Tailwind v4 ignores it unless you explicitly import it. All configuration is CSS-first. If a shadcn/ui install script creates a `tailwind.config.ts`, delete it — the `@theme` block in `globals.css` replaces it.
+`rounded-xl` (12pt) is the default for cards. Hero cards / payment cards / onboarding cards use `rounded-2xl` (16pt). Bottom sheets use `rounded-3xl` (24pt) at the TOP only — `rounded-t-3xl`.
 
 ---
 
-## 15. Responsive Breakpoints
+## 6. Component Specs
 
-**Mobile-first — every layout starts as single-column.**
+### Buttons
 
-| Breakpoint | Width | Target |
+| Size | Height | Horizontal padding | Font size |
+|---|---|---|---|
+| `sm` | 36 | 12 | 13 |
+| `md` (default) | 48 | 20 | 15 |
+| `lg` | 56 | 24 | 16 |
+
+Variants:
+- **Primary**: `bg-accent` text-white — the hero CTA. ONE per screen.
+- **Secondary**: `bg-transparent border border-borderStrong text-textPrimary` — supporting actions.
+- **Ghost**: `bg-transparent text-textSecondary` — tertiary actions.
+- **Destructive**: `bg-error text-white` — irreversible actions (delete, cancel subscription).
+- **Text**: `bg-transparent text-accent` — inline link-style actions.
+
+All buttons: `rounded-lg` (md+) or `rounded-md` (sm), `flex-row items-center justify-center gap-2`, `active:opacity-95` for press feedback.
+
+### Inputs
+
+| Variant | Height | Radius |
 |---|---|---|
-| Default | 360px+ | Phones, small devices |
-| `sm` | 640px | Large phones |
-| `md` | 768px | Tablets (sidebars collapse, 2-column grids) |
-| `lg` | 1024px | Desktop (sidebar visible, 3-column grids) |
-| `xl` | 1280px | Wide desktop (max content width) |
-| `2xl` | 1536px | Ultrawide (constrained containers) |
+| `standard` | 52 | `rounded-lg` (8) |
+| `search` | 44 | `rounded-full` |
 
-**Page-level rules:**
-- Dashboard padding: `px-4 md:px-8`, max-width `1280px`, centered with `mx-auto`
-- Sidebar: hidden below `lg` → Sheet drawer. `lg:flex` + `w-64` when visible.
-- Data tables: on `md` and below, convert each row to a stacked card (border + label:value layout)
-- Marketing section padding: `py-16 sm:py-24 lg:py-32`
-- Hero text: `text-3xl sm:text-4xl md:text-5xl lg:text-6xl` — fluid, never a single size
-- Touch targets: minimum `44×44px` on mobile, `40×40px` on desktop
-- Modals: go full-screen below `sm` (`fixed inset-0 m-0 rounded-none`), centered card above `sm`
-- Grid layouts: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4` — add breakpoints in order
-- Tables: horizontal scroll wrapper below `md` (`overflow-x-auto`) OR card conversion
+Padding: `px-4` (16). Border: `border border-border` default, `border-accent` on focus, `border-error` on error. Label sits above input (`text-textSecondary text-[14px] mb-1.5`).
 
-**Test every page at 375px before considering it done.** The most common responsive bugs (overflow, tiny touch targets, broken nav) all appear at 375px first.
+### Cards (variants)
 
-## 16. Accessibility
-- Color contrast: `4.5:1` for body text, `3:1` for large text and UI components
-- Focus rings: visible on all interactive elements (`shadow-focus`), never removed
-- Icons used alone: include `aria-label` or `sr-only` text
-- Form fields: always have a `<label>` linked via `htmlFor`
-- Status badges: don't rely on color alone — include text + dot
-- Semantic HTML: use `<button>` for actions, `<a>` for navigation
+| Variant | Class |
+|---|---|
+| Default | `rounded-xl bg-bgElevated border border-border p-5` |
+| Pressable | + `active:opacity-95`, `android_ripple={{ color: colors.bgHover }}` |
+| Selected | swap `border border-border` → `border-2 border-accent`, add `bg-accentLight` |
+| Hero | swap radius to `rounded-2xl`, padding to `p-6` |
+
+### Lists
+
+- `FlashList` always (never `FlatList` for >50 items)
+- `estimatedItemSize` is required — measure your tallest item
+- `ItemSeparatorComponent` for divider lines: `<View className="h-px bg-border" />`
+- Pull-to-refresh `<RefreshControl tintColor={colors.accent} />`
+- Empty state: registry `<EmptyState />` component
+- Item layout: `flex-row items-center gap-3 px-4 py-3` minimum
+
+### Sheets + modals
+
+- Bottom sheet: registry `<BottomSheet />` — `rounded-t-3xl bg-bgElevated`, drag handle at top
+- Full modal: `<Modal animationType="slide" />` + `<SafeAreaView>`
+- Backdrop: `bg-black/60` for sheets, `bg-black/80` for full modals
+
+### Tab bar
+
+- Custom: registry `<BottomTabs />` — 5 tabs max
+- Icon: 22pt, outline when inactive, filled when active
+- Label: 11pt, font-semibold when active
 
 ---
 
-## 16. Do's & Don'ts
+## 7. Iconography
 
-**Do:**
-- Use `tabular-nums` for all money
-- Use the zinc scale for neutrals, indigo for action
-- Rely on borders + subtle shadows for hierarchy
-- Keep generous whitespace
-- Use Lucide icons consistently at standard sizes
-- Reuse shadcn/ui components where possible and restyle via tokens
+`@expo/vector-icons` (Ionicons). Bundled with Expo, zero linking, ~10,000 icons.
 
-**Don't:**
-- Use emoji in UI chrome
-- Use drop shadows heavier than `shadow-md` in-app
-- Use gradients outside of marketing hero / Pro pricing card
-- Mix border radius within a single container
-- Use bright/saturated colors outside the semantic tokens
-- Hardcode `$` — always reference brand currency
-- Use font weights above 600 in app chrome (700 reserved for invoice totals and marketing display)
-- Write custom CSS when a utility class exists
+```tsx
+import { Ionicons } from '@expo/vector-icons';
+
+<Ionicons name="home-outline" size={22} color={colors.textTertiary} />
+<Ionicons name="home" size={22} color={colors.accent} />  // active state
+```
+
+### Rules
+
+- **Outline for inactive, filled for active.** Tab bars, toggles, selection indicators all follow this rule.
+- **Icon sizing scale:** 14 (inline with text), 16 (input affordance), 20 (button), 22 (tab bar / nav), 24 (large action), 32 (empty-state hero).
+- **Color = inherit from text.** `color={colors.textPrimary}` for body, `colors.textSecondary` for muted, `colors.accent` for active.
+- **NEVER decorative icon walls.** Image-first: 80% custom illustration / photo, 20% icons (see Imagery below).
+
+---
+
+## 8. Motion
+
+`react-native-reanimated` 3 + `react-native-gesture-handler` + Moti. NEVER `Animated` from `react-native` (JS thread, janky).
+
+### Standard timings + easings
+
+```ts
+export const motion = {
+  // Durations
+  fast:     150,   // press feedback (Pressable's built-in active state)
+  base:     250,   // state transitions (tab swap, toggle, sheet snap)
+  slow:     400,   // entrance (screen mount, list item appear)
+  slower:   600,   // hero entrance, onboarding card flip
+
+  // Easings (Reanimated)
+  easeOut:  [0.16, 1.0, 0.3, 1.0] as const,  // entrance default
+  easeIn:   [0.42, 0.0, 1.0, 1.0] as const,  // exit
+  spring:   { damping: 18, stiffness: 220 }, // bouncy elements
+} as const;
+```
+
+### Patterns
+
+```tsx
+import Animated, { FadeIn, FadeOut, Layout, useReducedMotion } from 'react-native-reanimated';
+
+const reduce = useReducedMotion();
+
+<Animated.View
+  entering={reduce ? undefined : FadeIn.duration(400).easing(motion.easeOut)}
+  exiting={reduce ? undefined : FadeOut.duration(200)}
+  layout={Layout.springify()}
+>
+  ...
+</Animated.View>
+```
+
+### Rules
+
+- **Always respect `useReducedMotion()`.** Wrap entering/exiting in a ternary that returns `undefined` when reduce is on.
+- **No more than ONE entrance animation per screen.** Don't stagger the list items AND animate the header AND fade in the bottom sheet. Pick one.
+- **Haptics pair with motion.** `Haptics.impactAsync(ImpactFeedbackStyle.Light)` on every primary press, `NotificationFeedbackType.Success` after form submit.
+- **60fps non-negotiable.** Open the React DevTools FPS counter on every animation. If it dips below 55, reduce work — fewer particles, lower blur, simpler shadow.
+
+---
+
+## 9. Imagery
+
+**Image-first, 80/20 ratio.** Images outnumber icons roughly 80% to 20% across the app. Use `expo-image` (NEVER `Image` from `react-native`).
+
+```tsx
+import { Image } from 'expo-image';
+
+<Image
+  source={{ uri: post.imageUrl }}
+  style={{ width: '100%', aspectRatio: 16 / 9, borderRadius: 12 }}
+  contentFit="cover"
+  transition={200}
+  placeholder={{ blurhash: post.blurhash }}
+/>
+```
+
+### Where IMAGES go (not icons)
+
+- Empty states (illustration, not bare icon)
+- Onboarding cards
+- Hero sections on home tab
+- Stat cards (background pattern or illustration)
+- Reward / loyalty cards
+- Marketing banners
+- Profile headers
+- Product cards in commerce
+
+### Sourcing
+
+- **Custom illustrations:** Commission once, use everywhere. Match the accent color.
+- **Stock photos:** Unsplash / Pexels — pick photos with breathing room around the subject so they crop well on different aspect ratios.
+- **App icons / logos:** SVG via `react-native-svg`. Bake into the binary; never load over the network.
+- **User-generated content:** Always set `placeholder={{ blurhash }}` to avoid layout shift.
+- **Asset CDN:** Cloudinary (transforms, auto-format, auto-quality) or Cloudflare R2 + Workers.
+
+---
+
+## 10. Selected / Active States (LOUD)
+
+When a card, radio, tab, filter chip, or option is selected, the contrast must be obvious at a glance from 2 metres away on a phone.
+
+| State | Border | Background | Indicator |
+|---|---|---|---|
+| Unselected | `border border-border` (1px) | `bg-bgElevated` | empty circle / outline icon |
+| Selected | `border-2 border-accent` (2px) | `bg-accentLight` (10% accent opacity) | filled circle / filled icon `text-accent` |
+| Hover / press | `border border-borderStrong` | `bg-bgHover` | (mobile rarely uses hover; use `active:opacity-95`) |
+
+Example:
+
+```tsx
+<Pressable
+  className={cn(
+    'rounded-xl p-4',
+    selected
+      ? 'border-2 border-accent bg-accentLight'
+      : 'border border-border bg-bgElevated',
+  )}
+>
+  ...
+</Pressable>
+```
+
+---
+
+## 11. Accessibility
+
+Mobile a11y is non-negotiable — it's a store-review checklist item, and 20–30% of users have some accessibility need.
+
+### Touch targets
+
+44 × 44 minimum (Apple HIG, Material). If visual size is smaller, add `hitSlop`:
+
+```tsx
+<Pressable hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}>
+  <Ionicons name="close" size={20} />
+</Pressable>
+```
+
+### Labels
+
+Every `Pressable`, every icon button, every form field has an `accessibilityLabel`. If the visible label is descriptive enough, that suffices.
+
+```tsx
+<Pressable accessibilityRole="button" accessibilityLabel="Delete order">
+  <Ionicons name="trash" size={20} />
+</Pressable>
+```
+
+### Roles + states
+
+- Buttons: `accessibilityRole="button"`
+- Toggles: `accessibilityRole="switch"` + `accessibilityState={{ checked }}`
+- Selected items: `accessibilityState={{ selected: true }}`
+- Disabled: `accessibilityState={{ disabled: true }}`
+
+### Color contrast
+
+- Body text: WCAG AA 4.5:1 minimum against background
+- Large text (≥18pt): 3:1 minimum
+- Use https://webaim.org/resources/contrastchecker/ to verify accent vs `textInverse`
+
+### VoiceOver + TalkBack testing
+
+Test EVERY new screen with:
+- **iOS:** Settings → Accessibility → VoiceOver → On (or triple-click home)
+- **Android:** Settings → Accessibility → TalkBack → On
+
+Walk through every interactive element. Every one must announce a label + role.
+
+---
+
+## 12. Safe Area + Status Bar
+
+Always use `react-native-safe-area-context` (NEVER from `react-native`).
+
+```tsx
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+// Screen with its own header
+<SafeAreaView edges={['top']} className="flex-1 bg-bg">
+  ...
+</SafeAreaView>
+
+// Full-bleed screen (no header)
+<SafeAreaView edges={['top', 'bottom']} className="flex-1 bg-bg">
+  ...
+</SafeAreaView>
+```
+
+Status bar:
+
+```tsx
+// app/_layout.tsx
+import { StatusBar } from 'expo-status-bar';
+
+<StatusBar style="light" />  // light text on dark bg (default for dark-only apps)
+```
+
+For Android edge-to-edge: set `"androidStatusBar": { "translucent": true }` in `app.json`.
+
+---
+
+## 13. Platform-Specific Notes
+
+| Concern | iOS | Android |
+|---|---|---|
+| **Back gesture** | Swipe from left edge | System back button or swipe (Android 10+) |
+| **Modal dismiss** | Swipe down on sheet | Hardware back button or swipe down |
+| **Haptics** | Strong — use freely | Weaker — still useful, especially `selectionAsync` for picker scrolls |
+| **Date picker** | `display="spinner"` inside `BottomSheet` | Native dialog from `@react-native-community/datetimepicker` |
+| **Tab bar** | Bottom-rounded, blur background works well | Flat, opaque background; consider Material-style elevation |
+| **Status bar** | Notch + Dynamic Island — leave 44pt top safe area | Notification icons on left; can be translucent |
+| **Default font** | San Francisco | Roboto |
+| **Splash screen** | Single image, fades to app | `splash` config + `adaptiveIcon` for Android-12+ |
+
+The rule: **don't reinvent platform conventions for fun.** A swipe-from-left back gesture on iOS works because iOS users learned it; replacing it with a custom thing breaks muscle memory.
+
+---
+
+## 14. Splash Screen + App Icon + Adaptive Icon
+
+Required assets (all PNG, no transparency on `icon.png`):
+
+| Asset | Size | Notes |
+|---|---|---|
+| `assets/icon.png` | 1024 × 1024 | App icon (iOS + Android fallback) |
+| `assets/splash.png` | 1284 × 2778 minimum | Full-screen splash; auto-letterboxed on smaller screens |
+| `assets/adaptive-icon.png` | 1024 × 1024 | Android 8+ adaptive icon foreground (108dp visual safe zone in the centre 432×432px) |
+| `assets/favicon.png` | 48 × 48 | Web-build only |
+
+`app.json`:
+
+```json
+{
+  "expo": {
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "{{BG}}"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "{{BG}}"
+      }
+    }
+  }
+}
+```
+
+Splash screen logic: pre-load via `expo-splash-screen`, hide once the auth gate has resolved the session.
+
+```tsx
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
+
+// ...later, once session is resolved:
+SplashScreen.hideAsync();
+```
+
+---
+
+## 15. Empty States + Skeletons + Error States
+
+Every list / detail screen needs all three.
+
+### Empty state
+
+Registry `<EmptyState />` component. Always includes:
+- An illustration (not just an icon — image-first rule)
+- A short headline (4–8 words)
+- A 1–2 sentence supportive description
+- A primary CTA when one is possible
+
+### Skeleton loader
+
+Registry `<Skeleton />` component. Pulse animation (`useSharedValue` driving `opacity` between 0.4 and 1). One skeleton per item type — match the real card's silhouette, not generic rectangles.
+
+### Error state
+
+A dedicated component with:
+- A friendly headline ("Something went wrong loading your orders")
+- The error code only in dev (`__DEV__ && <Text>{error.message}</Text>`)
+- A "Try again" button that re-triggers the query
+- Sentry already captured the error — no need to write to the user about it
+
+---
+
+## 16. Do's and Don'ts
+
+### Do
+
+- One accent color across the app.
+- 1px borders, soft shadows (or no shadows on mobile — they cost performance).
+- Image-first 80/20.
+- `react-native-reanimated` for every animation.
+- 44pt minimum touch targets.
+- Respect `useReducedMotion()` everywhere.
+- Test VoiceOver + TalkBack before shipping.
+- `expo-image`, not `Image` from `react-native`.
+- `FlashList`, not `FlatList`.
+- `react-native-safe-area-context`, not `react-native`'s `SafeAreaView`.
+
+### Don't
+
+- Multi-color gradient buttons (purple → pink → orange = AI slop).
+- Multi-color gradient backgrounds.
+- More than ONE entrance animation per screen.
+- Decorative shadows (`shadow-2xl` for no reason).
+- `border-2` unless the element is selected.
+- Multiple radii inside a single card.
+- Native `<Picker>` for any list (use `searchable-select`).
+- Raw `Text` strings without a `<Text>` wrapper.
+- Skip safe area handling — that bottom 34pt notch is a real device.
+- Use Lucide / Heroicons / Phosphor on mobile (use `@expo/vector-icons` — bundled with Expo).
+- Build a "marketing landing page" as the app root — the root is an auth gate.

@@ -23,9 +23,9 @@ import { AgentInstallTabs } from "@/components/agent-install-tabs";
 import { SITE } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "VibeKit Crash Course — build a Hardware POS in one afternoon",
+  title: "VibeKit Native Crash Course — build a Hardware POS mobile app in one afternoon",
   description:
-    "Step-by-step crash course: build HardwarePOS, a real point-of-sale system for a hardware shop, using VibeKit and any AI coding agent. From idea to deployed in ~3 hours. Every prompt copyable inline.",
+    "Step-by-step crash course: build HardwarePOS Mobile, a real Expo / React Native point-of-sale for a hardware shop in Uganda, with DGateway mobile money. From idea to App Store and Play Store in ~4 hours.",
   alternates: { canonical: "/tutorial" },
   openGraph: {
     url: `${SITE.url}/tutorial`,
@@ -34,18 +34,23 @@ export const metadata: Metadata = {
   },
 };
 
-const hardwarePosIdea = `I want to build HardwarePOS — a point-of-sale system for a small hardware shop in
-Uganda. The shop owner uses it to ring up sales of items like nails, paint,
-plumbing fittings, electrical supplies, and hand tools. Single user (the shop
-owner / cashier) — no team features, no customer-facing storefront, no online
-ordering. Strictly in-shop POS.
+const hardwarePosIdea = `I want to build HardwarePOS Mobile — an Expo / React Native point-of-sale app for
+a small hardware shop in Uganda. The shop owner uses it on a phone or tablet to
+ring up sales of items like nails, paint, plumbing fittings, electrical supplies,
+and hand tools. Single user (the shop owner / cashier) — no team features, no
+customer-facing storefront, no online ordering. Strictly in-shop POS that works
+even on a slow connection.
+
+Platforms: iOS + Android (Expo Web optional for testing).
 
 Core flows:
 
-1. POS Sale (the main screen): search products by name or SKU, add to cart,
-   adjust quantities, see live total. Choose payment method (Cash / Mobile Money /
-   Card). Capture optional customer name and phone. Complete sale, then download
-   a receipt PDF.
+1. POS Sale (the main screen): search products by name or SKU, tap to add to
+   cart, adjust quantities with steppers, see live total. Pick payment method
+   (Cash / Mobile Money via DGateway / Card via Stripe). For mobile money,
+   the customer's phone number is captured and an STK push prompt is sent;
+   the cashier sees a "Check your customer's phone" screen until payment
+   completes. Complete sale, then offer a printable / shareable receipt.
 
 2. Inventory: list products with name, SKU, category, price (UGX), and stock
    quantity. Add new products, edit price/stock, delete. Low-stock alerts when
@@ -53,7 +58,7 @@ Core flows:
 
 3. Sales history: list of past sales with date, total, payment method, items
    count, customer (if captured). Filter by date range and payment method. View
-   a single sale's full line items. Export the day's sales to a PDF report.
+   a single sale's full line items.
 
 4. Dashboard: today's sales total + transaction count, top 5 products this week,
    low-stock alert count, weekly revenue chart (last 7 days).
@@ -61,21 +66,34 @@ Core flows:
 Seed the database with these categories on first run: Tools, Hardware, Paint,
 Plumbing, Electrical, Other.
 
-No image uploads — text-only products (name + SKU + category is enough).
-No e-commerce / cart abandonment / online ordering / customer accounts.
-Currency: UGX (Ugandan Shillings) with comma-separated formatting and no decimals
-(e.g., 25,000 not 25,000.00).
+Auth: email + password via Better Auth. Single user role for now.
 
-Single user, single device. Light + dark mode. Aesthetic: clean dashboard like
-Linear or Vercel — bold large numbers so the cashier can read totals at a glance.
-Brand color: indigo (#4F46E5).`;
+Payments:
+- DGateway (mobile money — UGX) for the Ugandan market — required.
+- Stripe (cards / Apple Pay / Google Pay) for tourists / card customers — optional.
+
+No image uploads — text-only products (name + SKU + category is enough).
+Currency: UGX with comma-separated formatting and no decimals (25,000 not 25,000.00).
+
+Dark mode only (faster to ship; the cashier works in dim shop light anyway).
+Push notifications: Yes (low-stock alerts at end of day).
+Deep linking: No (single-user, no shared content).
+Offline support: reads work offline (TanStack Query persister); writes need
+connectivity (sales can't be recorded without confirming payment).
+
+Aesthetic: clean dashboard like Linear / Vercel — bold large numbers so the
+cashier can read totals at a glance. Brand color: indigo (#6366F1).
+
+Deployment: EAS Build production for both iOS + Android, EAS Submit to App
+Store + Google Play, EAS Update for OTA JS-only patches, EAS Hosting for the
+Expo API Routes backend.`;
 
 const modules = [
   {
     Icon: PackageCheck,
     eyebrow: "MODULE 01",
     title: "Set up the accounts you'll need",
-    time: "5 min",
+    time: "8 min",
     intro: "All free tiers cover the entire course. Sign up first so you don't break flow later.",
   },
   {
@@ -83,49 +101,49 @@ const modules = [
     eyebrow: "MODULE 02",
     title: "Plan with Claude (claude.ai)",
     time: "15 min",
-    intro: "Paste the VibeKit planning prompt + the HardwarePOS brief into Claude. Walk away with 4 files that define the entire build.",
+    intro: "Paste the VibeKit Native planning prompt + the HardwarePOS Mobile brief into Claude. Walk away with 4 files that define the entire build.",
   },
   {
     Icon: Layers,
     eyebrow: "MODULE 03",
     title: "Initialize the project",
     time: "10 min",
-    intro: "Scaffold a Next.js 16 project, drop in the 4 generated files plus the 3 framework files, open your coding agent.",
+    intro: "Drop the framework files into the project root. Install the agent rules. Paste prompt.md and let your AI agent take over.",
   },
   {
-    Icon: ShieldCheck,
+    Icon: Code,
     eyebrow: "MODULE 04",
     title: "Phase 1 — Foundation",
     time: "30 min",
-    intro: "Auth, layout shell, design tokens, Prisma + Neon. By the end you can sign in to the empty dashboard.",
+    intro: "Expo + NativeWind + expo-router + Prisma v7 + Neon + Better Auth + Expo plugin + EAS init + Sentry. Sign-in works; you're on a dev build.",
   },
   {
     Icon: Boxes,
     eyebrow: "MODULE 05",
-    title: "Phase 2 — Products & Inventory",
-    time: "30 min",
-    intro: "Categories + Products schema, CRUD API routes, inventory list page with low-stock badges, add/edit forms.",
+    title: "Phase 2 — Inventory + POS screens",
+    time: "35 min",
+    intro: "Install registry categories (commerce, ui, shared). Build inventory list, product create/edit, POS sale screen with cart — all with mock data.",
   },
   {
     Icon: Receipt,
     eyebrow: "MODULE 06",
-    title: "Phase 3 — POS Sale flow + Receipt PDF",
-    time: "45 min",
-    intro: "The core feature. Product search, cart, checkout with payment method, sale persistence, downloadable receipt PDF using @react-pdf/renderer.",
+    title: "Phase 3 — API Routes + DGateway",
+    time: "50 min",
+    intro: "CRUD API routes per entity (Prisma + Zod). Wire DGateway mobile money proxy + HMAC webhook. Atomic stock decrements inside a Prisma transaction.",
   },
   {
     Icon: ChartLine,
     eyebrow: "MODULE 07",
-    title: "Phase 4 — Dashboard + Sales History",
-    time: "25 min",
-    intro: "Today's sales stat cards, weekly revenue chart, top-5 products, low-stock counter, full sales history with date-range filters.",
+    title: "Phase 4 — Dashboard + Polish",
+    time: "30 min",
+    intro: "Stat cards, weekly revenue chart, push notifications for low stock, Reanimated entrance animations, expo-haptics on every CTA.",
   },
   {
-    Icon: Code,
+    Icon: Rocket,
     eyebrow: "MODULE 08",
-    title: "Pre-deploy review + Deploy",
-    time: "40 min",
-    intro: "Run the senior-level audit, fix every Critical, push to GitHub, deploy to Vercel, optional custom domain.",
+    title: "Phase 5 — Pre-deploy + ship",
+    time: "45 min",
+    intro: "Run pre-deploy-review.md. Deploy API routes to EAS Hosting. EAS Build production. EAS Submit to App Store + Play. EAS Update for OTA.",
   },
 ];
 
@@ -136,10 +154,7 @@ export default function TutorialPage() {
       <main className="pt-28">
         {/* Hero */}
         <section className="relative pb-12 sm:pb-20 overflow-hidden">
-          <div
-            className="pointer-events-none absolute inset-0 -z-10 grid-pattern opacity-50"
-            aria-hidden
-          />
+          <div className="pointer-events-none absolute inset-0 -z-10 circuit-grid opacity-50" aria-hidden />
           <div
             className="pointer-events-none absolute inset-0 -z-10"
             aria-hidden
@@ -150,20 +165,20 @@ export default function TutorialPage() {
           />
 
           <div className="mx-auto max-w-4xl px-4 sm:px-6 text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-secondary)]">
+            <div className="inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-secondary)]">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--accent)] opacity-60" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
               </span>
-              Crash course · 8 modules · ~3 hours
+              Crash course · 8 modules · ~4 hours
             </div>
 
-            <h1 className="font-display mt-6 text-[clamp(2.25rem,6.5vw,4.5rem)] leading-[1.04] tracking-tight text-[color:var(--text-primary)]">
-              Build a real <em className="not-italic gradient-text">Hardware POS</em> in one afternoon.
+            <h1 className="headline-display mt-6 text-[clamp(2.25rem,6.5vw,4.5rem)] headline-glow-strong">
+              Build a real <em className="not-italic gradient-text">Hardware POS</em> mobile app in one afternoon.
             </h1>
 
             <p className="mx-auto mt-6 max-w-2xl text-[17px] leading-relaxed text-[color:var(--text-secondary)]">
-              Follow this crash course and ship <strong className="font-medium text-[color:var(--text-primary)]">HardwarePOS</strong> — a point-of-sale system a hardware shop in Kampala could use today. Inventory, sales, payment methods, downloadable receipts, deployed to a custom domain. Powered by VibeKit + your favorite AI coding agent.
+              Follow this crash course and ship <strong className="font-medium text-[color:var(--text-primary)]">HardwarePOS Mobile</strong> — an Expo / React Native point-of-sale app a hardware shop in Kampala could install Monday morning. Inventory, sales, DGateway mobile money, dashboard. Submitted to the App Store + Play Store by sundown. Powered by VibeKit Native + your favourite AI coding agent.
             </p>
 
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
@@ -184,7 +199,7 @@ export default function TutorialPage() {
             <VideoEmbed
               videoId="TvGu_Tu-6UI"
               thumbnail="https://14j7oh8kso.ufs.sh/f/HLxTbDBCDLwf0VdAvuLtvnF3cx4uPCTU9aqg2f0oY8klybGQ"
-              title="VibeKit Crash Course — full walkthrough"
+              title="VibeKit Native Crash Course — full walkthrough"
               caption="Watch the full crash course on YouTube as you follow the modules below"
             />
           </div>
@@ -193,29 +208,29 @@ export default function TutorialPage() {
         {/* What you'll build */}
         <Section
           eyebrow="WHAT YOU'LL BUILD"
-          title="HardwarePOS — a real shop POS."
-          description="Not a tutorial toy. Real auth, real database, real transactions, real receipts. A hardware shop owner could install this Monday morning and start using it."
+          title="HardwarePOS Mobile — a real shop POS."
+          description="Not a tutorial toy. Real auth, real database, real DGateway mobile money, real transactions, real OTA updates. A hardware shop owner could install this from the Play Store and start using it."
           containerClassName="max-w-5xl"
         >
           <div className="grid gap-6 sm:grid-cols-2">
             <div className="reveal rounded-2xl card-glass p-6">
-              <h3 className="font-mono text-[12px] uppercase tracking-wider text-[color:var(--accent)]">
+              <h3 className="font-mono text-[12px] uppercase tracking-[0.14em] text-[color:var(--accent)]">
                 Features you'll ship
               </h3>
               <ul className="mt-4 space-y-2.5 text-[14.5px] text-[color:var(--text-primary)]">
                 {[
-                  "Email + Google OAuth sign-in (Better Auth)",
+                  "Email + password sign-in (Better Auth + Expo plugin)",
                   "Inventory: products with SKU, price (UGX), stock, category",
                   "Six seeded categories: Tools, Hardware, Paint, Plumbing, Electrical, Other",
-                  "Low-stock alerts (configurable per product)",
+                  "Low-stock push notifications via expo-notifications",
                   "POS sale screen: product search, cart, live total",
-                  "Three payment methods: Cash, Mobile Money, Card",
-                  "Optional customer name + phone capture",
-                  "Receipt PDF download (@react-pdf/renderer)",
+                  "Three payment methods: Cash, DGateway mobile money, Stripe card",
+                  "DGateway STK push flow: \"Check customer's phone\" status screen",
+                  "Atomic stock decrement in Prisma transactions",
                   "Sales history with date-range filtering",
                   "Dashboard: today's revenue, top products, weekly chart",
-                  "Light + dark mode",
-                  "Deployed to Vercel + custom domain",
+                  "Dark-mode native UI, 60fps scrolling, haptic feedback",
+                  "Shipped to App Store + Play Store via EAS Submit",
                 ].map((item) => (
                   <li key={item} className="flex gap-2.5">
                     <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[color:var(--accent)]" />
@@ -226,22 +241,24 @@ export default function TutorialPage() {
             </div>
 
             <div className="reveal rounded-2xl card-glass p-6">
-              <h3 className="font-mono text-[12px] uppercase tracking-wider text-[color:var(--accent)]">
+              <h3 className="font-mono text-[12px] uppercase tracking-[0.14em] text-[color:var(--accent)]">
                 Skills you'll learn
               </h3>
               <ul className="mt-4 space-y-2.5 text-[14.5px] text-[color:var(--text-primary)]">
                 {[
-                  "Planning a real product with Claude before any code",
-                  "Reading a phase-by-phase build plan",
-                  "Modeling transactional data in Prisma v7 (Sale + SaleItem pattern)",
-                  "Wiring auth-guarded API routes with Zod validation",
-                  "Atomic stock decrements inside Prisma transactions",
-                  "Building a fast product search with React Query",
-                  "Generating styled PDFs with @react-pdf/renderer",
-                  "Aggregating data with groupBy for dashboards",
-                  "Currency formatting (UGX, no decimals, comma-separated)",
-                  "Running a senior-level pre-deploy audit",
-                  "Deploying with Vercel + Cloudflare DNS + SSL",
+                  "Planning a real mobile product with Claude before any code",
+                  "Reading a phase-by-phase mobile build plan",
+                  "Bootstrapping Expo SDK 55 + NativeWind v4 + expo-router",
+                  "Wiring Prisma v7 with Neon's HTTP serverless driver",
+                  "Better Auth + @better-auth/expo (SecureStore session)",
+                  "Expo API Routes — same repo, no separate backend",
+                  "Modelling transactional data (Sale + SaleItem pattern)",
+                  "Auth-guarded Expo API Routes with Zod validation",
+                  "Installing VibeKit Native registry components on demand",
+                  "DGateway server proxy + HMAC-verified webhook",
+                  "Aggregating data with Prisma groupBy for dashboards",
+                  "EAS Build + EAS Submit + EAS Update + EAS Hosting",
+                  "Running a senior-level mobile pre-submission audit",
                 ].map((item) => (
                   <li key={item} className="flex gap-2.5">
                     <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[color:var(--accent)]" />
@@ -254,16 +271,16 @@ export default function TutorialPage() {
 
           <div className="reveal mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {[
-              { label: "Total time", value: "~3 hrs" },
+              { label: "Total time", value: "~4 hrs" },
               { label: "Modules", value: "8" },
               { label: "Lines you write", value: "~0" },
               { label: "Cost (free tiers)", value: "$0" },
             ].map((s) => (
               <div
                 key={s.label}
-                className="rounded-md border border-[color:var(--border)] bg-[color:var(--bg-subtle)] p-4 text-center"
+                className="rounded-2xl card-glass p-4 text-center"
               >
-                <div className="font-mono text-[10px] uppercase tracking-wider text-[color:var(--text-tertiary)]">
+                <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--text-tertiary)]">
                   {s.label}
                 </div>
                 <div className="mt-1 font-mono text-[20px] font-semibold tabular-nums text-[color:var(--text-primary)]">
@@ -288,17 +305,17 @@ export default function TutorialPage() {
                 <li key={slug}>
                   <a
                     href={`#${slug}`}
-                    className="group flex items-start gap-4 rounded-2xl card-glass p-4 transition-all hover:-translate-y-0.5 hover:border-[color:var(--border-strong)]"
+                    className="group flex items-start gap-4 rounded-2xl card-glass p-4 transition-all hover:-translate-y-0.5"
                   >
                     <span className="grid h-10 w-10 shrink-0 place-items-center rounded-md border border-[color:var(--border)] bg-[color:var(--bg-subtle)] text-[color:var(--text-secondary)] transition-colors group-hover:text-[color:var(--accent)]">
                       <m.Icon className="h-4 w-4" />
                     </span>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between gap-3">
-                        <span className="font-mono text-[10px] uppercase tracking-wider text-[color:var(--text-tertiary)]">
+                        <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--text-tertiary)]">
                           {m.eyebrow}
                         </span>
-                        <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-[color:var(--text-tertiary)]">
+                        <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--text-tertiary)]">
                           <Clock className="h-3 w-3" />
                           {m.time}
                         </span>
@@ -315,13 +332,22 @@ export default function TutorialPage() {
         </Section>
 
         {/* MODULE 00 — pre-flight environment check */}
-        <ModuleSection slug="module-00" eyebrow="MODULE 00 · 2 min · OPTIONAL BUT RECOMMENDED" title="Check your environment first">
+        <ModuleSection slug="module-00" eyebrow="MODULE 00 · 5 min · OPTIONAL BUT RECOMMENDED" title="Check your environment first">
           <p>
-            Before signing up for accounts, make sure your machine has the four tools VibeKit needs: <strong>Node 20+</strong>, <strong>pnpm 9+</strong>, <strong>git</strong>, and <strong>gh CLI</strong>. The fastest way to check is to paste the OS-specific prompt at <a href="/setup">vibekit.desishub.com/setup</a> into your AI coding agent — it scans your machine, reports what's installed, and gives you one-line install commands for anything missing. Without installing anything itself.
+            Before signing up for accounts, make sure your machine has the mobile toolchain VibeKit Native needs. The fastest way to check is to paste the OS-specific prompt at <a href="/setup">native.desishub.com/setup</a> into your AI coding agent — it scans your machine, reports what's installed, and gives you one-line install commands for anything missing.
           </p>
-          <p>
-            If you already have all four installed, skip to Module 01.
-          </p>
+
+          <h3>Minimum tools</h3>
+          <ul>
+            <li><strong>Node 20+</strong>, <strong>pnpm 9+</strong>, <strong>git</strong></li>
+            <li><strong>Expo CLI</strong> (no separate install — comes via <code>npx</code>)</li>
+            <li><strong>EAS CLI</strong>: <code>pnpm add -g eas-cli</code></li>
+            <li><strong>iOS only</strong>: Xcode 16+ with iOS Simulator (macOS only — Windows users skip iOS and use Android)</li>
+            <li><strong>Android</strong>: Android Studio + an emulator OR a real Android phone with USB debugging</li>
+            <li><strong>Optional</strong>: Expo Go app on your phone for quick QR-code testing</li>
+          </ul>
+
+          <p>If everything's installed, skip to Module 01.</p>
 
           <div className="not-prose mt-6 flex flex-wrap gap-3">
             <a
@@ -334,142 +360,72 @@ export default function TutorialPage() {
         </ModuleSection>
 
         {/* MODULE 01 */}
-        <ModuleSection slug="module-01" eyebrow="MODULE 01 · 5 min" title="Set up the accounts you'll need">
-          <p>
-            All of these have free tiers that cover the entire course. Sign up first so you don't break flow later.
-          </p>
+        <ModuleSection slug="module-01" eyebrow="MODULE 01 · 8 min" title="Set up the accounts you'll need">
+          <p>All free tiers cover the entire course. Sign up first so you don't break flow later.</p>
 
           <Checklist
             items={[
               { name: "Anthropic Claude (chat)", url: "https://claude.ai", note: "Free tier works for the planning step" },
               { name: "Claude Code or Cursor", url: "https://www.anthropic.com/claude-code", note: "Pick whichever AI coding agent you prefer" },
-              { name: "Neon", url: "https://neon.tech", note: "Postgres database — free tier" },
-              { name: "Vercel", url: "https://vercel.com", note: "Deployment — free hobby tier" },
-              { name: "Resend", url: "https://resend.com", note: "Transactional email — free tier" },
-              { name: "GitHub account", url: "https://github.com", note: "For pushing your code + Vercel auto-deploy" },
+              { name: "Expo account", url: "https://expo.dev", note: "Required for EAS Build / Submit / Update / Hosting — free tier covers dev" },
+              { name: "Neon (Postgres)", url: "https://neon.tech", note: "Free tier (3 GB storage, autoscale)" },
+              { name: "Resend (email)", url: "https://resend.com", note: "Transactional email — free tier 3,000/mo" },
+              { name: "Sentry", url: "https://sentry.io", note: "Crash reporting — free tier 5K events/mo" },
+              { name: "DGateway sandbox", url: "https://dgateway.com/docs", note: "Mobile money sandbox — request a dgw_test_ key" },
+              { name: "Stripe (optional)", url: "https://stripe.com", note: "Card payments — test keys are free" },
+              { name: "GitHub account", url: "https://github.com", note: "For source control + EAS auto-build hooks" },
+              { name: "Apple Developer ($99/yr)", url: "https://developer.apple.com", note: "Only when you submit to App Store — defer until Module 08" },
+              { name: "Google Play Console ($25 one-time)", url: "https://play.google.com/console", note: "Only when you submit to Play Store — defer until Module 08" },
             ]}
           />
 
-          <h3>Local tools</h3>
-          <ul>
-            <li><strong>Node.js 20+</strong> (or 22+) — <code>node -v</code> to check</li>
-            <li><strong>pnpm</strong> — <code>npm i -g pnpm</code> if missing</li>
-            <li><strong>git</strong> — already installed on most systems</li>
-          </ul>
-
           <Tip>
-            Don't have a Resend account? You can skip it for now and add it during Module 04 — auth still works without email verification in dev.
+            <em>$0 to start.</em> Both store fees can wait until Module 08. You can build, test on simulators, and run dev builds with zero spend.
           </Tip>
         </ModuleSection>
 
         {/* MODULE 02 */}
         <ModuleSection slug="module-02" eyebrow="MODULE 02 · 15 min" title="Plan with Claude (claude.ai)">
           <p>
-            VibeKit's planning step turns a one-line idea into 4 production-ready files. You paste a prompt, answer questions, and Claude does the rest.
+            Open <a href="https://claude.ai" target="_blank" rel="noopener noreferrer">claude.ai</a> and start a new conversation. Paste the contents of <a href={`${SITE.github}/blob/main/CLAUDE_PROMPT.md`} target="_blank" rel="noopener noreferrer"><code>CLAUDE_PROMPT.md</code></a> from the VibeKit Native repo. Then paste the HardwarePOS Mobile brief at the bottom.
           </p>
 
-          <h3>Step 1 — Open the planning prompt</h3>
-          <p>
-            Go to <a href="/docs/quickstart">/docs/quickstart</a> and copy <code>CLAUDE_PROMPT.md</code> from the first code block (or grab it directly from <a href={`${SITE.github}/blob/main/CLAUDE_PROMPT.md`} target="_blank" rel="noopener noreferrer">the repo</a>).
-          </p>
-
-          <h3>Step 2 — Open Claude</h3>
-          <p>
-            Go to <a href="https://claude.ai/new" target="_blank" rel="noopener noreferrer">claude.ai/new</a>. Paste the entire <code>CLAUDE_PROMPT.md</code> as your first message. Then on a new line, paste the HardwarePOS brief:
-          </p>
-
+          <h3>The brief — paste this after CLAUDE_PROMPT.md</h3>
           <CopyBlock
-            filename="Append after CLAUDE_PROMPT.md content"
-            label="HardwarePOS brief"
+            filename="MY IDEA"
+            label="HardwarePOS Mobile brief"
             code={hardwarePosIdea}
           />
 
-          <h3>Step 3 — Paste a Dribbble reference (mandatory)</h3>
-          <p>
-            Claude will now ask for a UI reference image. This is non-skippable — even though the HardwarePOS brief is detailed, words like "clean dashboard" are too vague to design from. A real Dribbble shot tells Claude exactly which color palette, font weight, card style, and button shape to match.
-          </p>
+          <h3>What Claude does next</h3>
           <ol>
-            <li>Claude will suggest 2–3 search terms (e.g. <code>"pos dashboard ui"</code>, <code>"retail point of sale"</code>).</li>
-            <li>Open <a href="https://dribbble.com/search" target="_blank" rel="noopener noreferrer">dribbble.com/search</a> and search one of them.</li>
-            <li>Pick a shot whose aesthetic you'd want HardwarePOS to match. Open the shot in full size.</li>
-            <li><strong>Right-click → Copy Image</strong>, then paste it into the Claude chat. (Don't paste a Dribbble URL — paste the image itself.)</li>
-            <li>Claude will analyze it and echo back the palette + typography + card spec it extracted. Confirm or correct.</li>
+            <li>Confirms it has read the four reference URLs (README, design-style-guide, vibekit-native-components, master_prompt)</li>
+            <li>Asks 6–10 mobile-specific questions: platforms, auth method, payment providers, push notifications, deep links, dark mode, visual reference</li>
+            <li>Summarises what it's going to build and asks you to confirm</li>
+            <li>Generates 4 Artifacts: <code>project-description.md</code>, <code>project-phases.md</code>, <code>design-style-guide.md</code>, <code>prompt.md</code></li>
           </ol>
-          <Tip>
-            For HardwarePOS specifically, look for shots with bold large numbers (cashier-readable totals), clean tables, soft cards. Avoid shots that are too "creative agency" — POS UIs need to be fast and legible, not editorial.
-          </Tip>
-
-          <h3>Step 4 — Wait for Claude's confirmation summary</h3>
-          <p>
-            The HardwarePOS brief above is detailed, so Claude will probably skip the interview. Instead, it will write a structured summary like this:
-          </p>
-          <CopyBlock
-            label="What Claude will produce"
-            code={`## What I understood
-
-App: HardwarePOS — a single-user POS for a hardware shop in Uganda
-Primary user: the shop owner / cashier
-Core features:
-  - POS sale flow (search → cart → payment → receipt)
-  - Inventory with low-stock alerts
-  - Sales history with date filters
-  - Dashboard with daily revenue + top products + weekly chart
-Data model: Category, Product, Sale, SaleItem (with snapshot fields)
-Integrations: Better Auth (email + Google OAuth), Resend (auth emails only),
-  Payments: NONE (payment method is just a captured label),
-  File uploads: NONE, Dark mode: Yes
-Visual design: indigo (#4F46E5), Geist + JetBrains Mono,
-  "fast, focused, large numbers", Linear/Vercel inspiration
-Out of scope (v1): online ordering, customer accounts, multi-cashier roles
-
-Does this match your intent? Reply 'Yes, generate the files' to proceed,
-or tell me what to adjust.`}
-          />
-          <p>If anything's wrong, correct it now (e.g., "Add Excel export to the sales history"). Otherwise, reply:</p>
-          <CopyBlock
-            label="Reply to Claude"
-            code={`Yes, generate the files`}
-          />
-
-          <h3>Step 5 — Download the 4 files</h3>
-          <p>Claude will produce 4 downloadable Artifacts (one per file) in the right-side panel. Each has a download icon — click it to save the file.</p>
-
-          <CopyBlock
-            filename="terminal"
-            label="Create the project folder first"
-            code={`mkdir hardware-pos && cd hardware-pos
-# Then drop the 4 downloaded files into this folder:
-# - project-description.md
-# - project-phases.md
-# - design-style-guide.md
-# - prompt.md`}
-          />
 
           <Tip>
-            <em>Prefer one-shot creation?</em> At the end of Claude's message there's a single bash heredoc block that creates all 4 files at once — copy it, paste into your terminal inside <code>hardware-pos/</code>, hit enter. Done.
+            <em>Visual reference is mandatory.</em> Claude asks for a Dribbble link / app screenshot / competitor app you want to match. Have one ready before you start — examples: <a href="https://dribbble.com/shots/popular/mobile" target="_blank" rel="noopener noreferrer">Dribbble mobile shots</a>, the Square POS app, the Stripe Terminal app, the Shopify POS app.
           </Tip>
 
-          <Tip>
-            If Claude tries to skip the confirmation step and dives straight into generating, paste: <em>"Stop. First show me the structured 'What I understood' summary and wait for my confirmation. Don't generate anything yet."</em>
-          </Tip>
+          <p>Save all 4 generated files into a new project folder on your machine. Name the folder <code>hardware-pos-mobile</code>.</p>
         </ModuleSection>
 
         {/* MODULE 03 */}
         <ModuleSection slug="module-03" eyebrow="MODULE 03 · 10 min" title="Initialize the project">
-          <p>
-            Scaffold the Next.js 16 project, copy the framework's coding constitution into it, open your coding agent.
-          </p>
-
-          <h3>Step 1 — Scaffold Next.js</h3>
+          <h3>Step 1 — Create the folder + open in your editor</h3>
           <CopyBlock
             filename="terminal"
-            label="From inside the hardware-pos folder"
-            code={`pnpm create next-app@latest . --typescript --tailwind --app --eslint --import-alias "@/*" --turbopack --no-src-dir`}
+            label="Project folder"
+            code={`mkdir hardware-pos-mobile && cd hardware-pos-mobile
+
+# Move the 4 generated files (project-description, project-phases,
+# design-style-guide, prompt) from Claude into this folder.`}
           />
-          <p>Accept the prompts. When it finishes, you have a base Next.js 16 project.</p>
 
           <h3>Step 2 — Copy the framework files</h3>
-          <p>Clone the VibeKit repo to grab the framework files:</p>
+          <p>Clone the VibeKit Native repo to grab the framework files:</p>
           <CopyBlock
             filename="terminal"
             label="One-time clone (delete after copying)"
@@ -480,9 +436,9 @@ cp /tmp/vibekit-native/vibekit-native-components.md ./vibekit-native-components.
 cp /tmp/vibekit-native/pre-deploy-review.md ./pre-deploy-review.md`}
           />
 
-          <h3>Step 3 — Install the VibeKit rules for your AI agent</h3>
+          <h3>Step 3 — Install the VibeKit Native rules for your AI agent</h3>
           <p>
-            VibeKit ships rules for every major AI coding agent. Pick your agent below and run the one-line install. The rules auto-load whenever you open the agent in this project — no need to paste long prompts every session.
+            VibeKit Native ships rules for every major AI coding agent. Pick your agent below and run the one-line install. The rules auto-load whenever you open the agent in this project — no need to paste long prompts every session.
           </p>
 
           <AgentInstallTabs />
@@ -496,505 +452,419 @@ cp /tmp/vibekit-native/pre-deploy-review.md ./pre-deploy-review.md`}
           <CopyBlock
             filename="ls -la"
             label="Expected files"
-            code={`hardware-pos/
+            code={`hardware-pos-mobile/
 ├── master_prompt.md                # framework — coding rules
 ├── vibekit-native-components.md    # framework — component registry
-├── pre-deploy-review.md            # framework — security audit prompt
-├── project-description.md      # generated by Claude
-├── project-phases.md           # generated by Claude
-├── design-style-guide.md       # generated by Claude
-├── prompt.md                   # generated by Claude — paste this next
+├── pre-deploy-review.md            # framework — pre-submission audit prompt
+├── project-description.md          # generated by Claude
+├── project-phases.md               # generated by Claude
+├── design-style-guide.md           # generated by Claude
+├── prompt.md                       # generated by Claude — paste this next
 │
 # ONE of these from Step 3 (depending on your agent):
-├── .claude/skills/vibekit/SKILL.md   # Claude Code
-├── .cursor/rules/vibekit.mdc         # Cursor
-├── AGENTS.md                         # Codex CLI / universal
-├── .clinerules                       # Cline
-├── .windsurfrules                    # Windsurf
-├── GEMINI.md                         # Gemini CLI
-└── package.json + Next.js scaffold`}
+├── .claude/skills/vibekit-native/SKILL.md   # Claude Code
+├── .cursor/rules/vibekit-native.mdc         # Cursor
+├── AGENTS.md                                # Codex CLI / universal
+├── .clinerules                              # Cline
+├── .windsurfrules                           # Windsurf
+├── GEMINI.md                                # Gemini CLI
+└── # No Expo scaffold yet — Phase 1 creates it`}
           />
 
           <h3>Step 5 — Open in your coding agent</h3>
           <p>
-            Open the <code>hardware-pos</code> folder in Claude Code (<code>claude</code> in the project terminal), Cursor, Cline, or whichever agent you chose.
+            Open the <code>hardware-pos-mobile</code> folder in Claude Code (<code>claude</code> in the project terminal), Cursor, Cline, or whichever agent you chose.
           </p>
         </ModuleSection>
 
         {/* MODULE 04 */}
         <ModuleSection slug="module-04" eyebrow="MODULE 04 · 30 min" title="Phase 1 — Foundation">
           <p>
-            First big build moment. Your agent reads all 7 files, then executes Phase 1: Prisma + Neon, Better Auth, layout shell, design tokens, custom 404/error pages.
+            First big build moment. Your agent reads the framework files, then executes Phase 1: Expo init + NativeWind + expo-router + Prisma v7 + Neon HTTP adapter + Better Auth + Expo plugin + EAS init + Sentry. Sign-in works, you have a dev build running.
           </p>
 
           <h3>Step 1 — Get a Neon database URL</h3>
           <ol>
             <li>Go to <a href="https://console.neon.tech" target="_blank" rel="noopener noreferrer">console.neon.tech</a> and create a new project.</li>
-            <li>Copy the connection string (starts with <code>postgres://</code>).</li>
-            <li>Use the direct (non-pooled) connection — Prisma migrations require it.</li>
+            <li>Copy the connection string (starts with <code>postgresql://</code>). Use the <strong>pooled</strong> connection — the Neon HTTP serverless driver handles it.</li>
+            <li>Keep the tab open — you'll paste this in a moment.</li>
           </ol>
 
-          <h3>Step 2 — Paste the build prompt</h3>
+          <h3>Step 2 — Get a DGateway sandbox key</h3>
+          <ol>
+            <li>Visit <a href="https://dgatewayadmin.desispay.com" target="_blank" rel="noopener noreferrer">dgatewayadmin.desispay.com</a> and create an app.</li>
+            <li>Generate an API key. Use the <code>dgw_test_*</code> key for development.</li>
+            <li>Save both the key and the webhook secret (shown once at generation).</li>
+          </ol>
+
+          <h3>Step 3 — Paste the build prompt</h3>
           <p>In your coding agent, paste the entire contents of <code>prompt.md</code> as your first message. The agent will:</p>
           <ol>
             <li>Read <code>master_prompt.md</code>, <code>design-style-guide.md</code>, <code>vibekit-native-components.md</code>, <code>project-description.md</code>, <code>project-phases.md</code></li>
-            <li>Execute Phase 1 tasks</li>
+            <li>Execute Phase 1 tasks (Expo init, NativeWind, expo-router, Prisma + Neon, Better Auth + Expo plugin, EAS init, root auth gate, .env files, Sentry)</li>
             <li>Stop after Phase 1 for your confirmation</li>
           </ol>
 
-          <h3>Step 3 — Provide secrets when asked</h3>
+          <h3>Step 4 — Provide secrets when asked</h3>
           <p>The agent creates <code>.env.local</code> and asks for values. Provide:</p>
           <CopyBlock
             filename=".env.local"
             label="Phase 1 minimum env vars"
-            code={`DATABASE_URL="postgres://USER:PASS@ep-xxx.neon.tech/neondb?sslmode=require"
-BETTER_AUTH_SECRET="<run: openssl rand -base64 32>"
-BETTER_AUTH_URL="http://localhost:3000"
+            code={`# Database (Neon — paste the pooled connection string)
+DATABASE_URL=postgresql://user:pass@host-pooler.neon.tech/db?sslmode=require
 
-# Optional but recommended
-RESEND_API_KEY=""
-RESEND_FROM_EMAIL="onboarding@resend.dev"
+# Better Auth (server-side)
+BETTER_AUTH_SECRET=<run: openssl rand -base64 32>
+BETTER_AUTH_URL=http://localhost:8081
 
-# For Google OAuth
-GOOGLE_CLIENT_ID=""
-GOOGLE_CLIENT_SECRET=""`}
+# Mobile app config (safe to bundle — prefix EXPO_PUBLIC_)
+EXPO_PUBLIC_API_URL=http://localhost:8081
+EXPO_PUBLIC_APP_SCHEME=hardwarepos
+
+# DGateway (server-side ONLY — never EXPO_PUBLIC_)
+DGATEWAY_API_KEY=dgw_test_...
+DGATEWAY_API_URL=https://dgatewayapi.desispay.com
+DGATEWAY_WEBHOOK_SECRET=whsec_...
+APP_URL=http://localhost:8081
+
+# Sentry (DSN is safe to bundle)
+EXPO_PUBLIC_SENTRY_DSN=https://...@sentry.io/...`}
           />
 
-          <h3>Step 4 — Push the schema + start dev</h3>
+          <h3>Step 5 — Run the dev build</h3>
           <CopyBlock
             filename="terminal"
-            label="Phase 1 verification"
-            code={`pnpm db:push
-pnpm db:generate
-pnpm dev`}
+            label="Start the Metro bundler + simulator"
+            code={`# Migrate the database
+pnpm prisma migrate dev --name init
+
+# Start Expo
+pnpm expo start
+
+# Then press 'i' to launch iOS simulator, or 'a' for Android emulator,
+# or scan the QR with Expo Go on your physical phone.`}
           />
-          <p>Open <a href="http://localhost:3000" target="_blank" rel="noopener noreferrer">http://localhost:3000</a> and verify:</p>
-          <ul>
-            <li>Landing page redirects unauthenticated users to /auth/sign-in</li>
-            <li>Sign up with email or Google works</li>
-            <li>You land on /dashboard (currently empty)</li>
-            <li>Sidebar layout with theme toggle (light/dark)</li>
-          </ul>
 
           <Tip>
-            Stuck? Tell the agent: <em>"Verify all of Phase 1's tasks are complete. Read project-phases.md and check off what's done."</em> Anything unfinished, it'll fix.
+            <em>Phase 1 confirms when you can sign up, sign in, and land on a placeholder tab screen.</em> If you can't, paste the error into your agent and ask it to fix before moving on.
           </Tip>
         </ModuleSection>
 
         {/* MODULE 05 */}
-        <ModuleSection slug="module-05" eyebrow="MODULE 05 · 30 min" title="Phase 2 — Products & Inventory">
+        <ModuleSection slug="module-05" eyebrow="MODULE 05 · 35 min" title="Phase 2 — Inventory + POS screens">
           <p>
-            Build the inventory side first — the cashier needs products to exist before they can sell. Categories + Products with full CRUD, plus low-stock badges.
+            Your agent installs registry categories and builds every screen listed in <code>project-description.md</code> with mock data. No API calls yet — that's Phase 3.
           </p>
 
-          <h3>Step 1 — Confirm Phase 1 done, start Phase 2</h3>
+          <h3>Registry installs (your agent runs these)</h3>
           <CopyBlock
-            label="Prompt"
-            code={`Phase 1 is verified working. Proceed to Phase 2 — Products & Inventory.
+            filename="terminal"
+            label="Phase 2 component installs"
+            code={`# Foundation primitives
+npx vibekit-native install ui
 
-Build:
-- Category and Product Prisma models (schema below)
-- A seed script that inserts the 6 categories on first run: Tools, Hardware, Paint, Plumbing, Electrical, Other
-- API routes /api/categories and /api/products with auth guards + Zod validation
-- /inventory page using JB Data Table to list products with columns: SKU, Name, Category, Price (UGX), Stock, Status (low-stock badge)
-- /inventory/new and /inventory/[id]/edit pages with React Hook Form + Zod
-- A formatUGX(amount: number) utility in lib/format.ts that returns "UGX 25,000" style strings (no decimals, comma separators)
+# Shared layouts (screen-header, search-bar, filter-sheet, filter-sort-bar)
+npx vibekit-native install shared
 
-Stop after Phase 2 is complete and ask me to verify.`}
+# Commerce (product-card, cart-item, price-display, order-card,
+#   order-summary, checkout-form, wishlist-button, review-card,
+#   order-timeline, product-header)
+npx vibekit-native install commerce
+
+# Bottom tabs + drawer
+npx vibekit-native install nav
+
+# Stat cards + chart-line / chart-bar / chart-pie + dashboard shell + data-table
+npx vibekit-native install dashboard
+
+# Payments (DGateway mobile money + Stripe)
+npx vibekit-native install payments`}
           />
 
-          <h3>Step 2 — Verify the schema</h3>
-          <p>The agent should produce a Prisma schema like this. If it differs, ask for these exact fields:</p>
-          <CopyBlock
-            filename="prisma/schema.prisma"
-            label="Categories + Products"
-            code={`model Category {
-  id        String    @id @default(cuid())
-  name      String    @unique
-  color     String    @default("#4F46E5")
-  products  Product[]
-  userId    String
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime  @default(now())
-}
-
-model Product {
-  id                  String     @id @default(cuid())
-  sku                 String
-  name                String
-  priceUgx            Int        // store as integer, no decimals
-  stockQuantity       Int        @default(0)
-  lowStockThreshold   Int        @default(5)
-  categoryId          String
-  category            Category   @relation(fields: [categoryId], references: [id])
-  saleItems           SaleItem[]
-  userId              String
-  user                User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt           DateTime   @default(now())
-  updatedAt           DateTime   @updatedAt
-
-  @@unique([userId, sku])  // SKUs unique per user
-  @@index([userId])
-  @@index([categoryId])
-}`}
-          />
-
-          <h3>Step 3 — Test inventory CRUD</h3>
-          <ol>
-            <li>Verify the 6 categories appear in the sidebar / category dropdown</li>
-            <li>Add 8–10 products across categories (e.g. <code>NAIL-3IN</code> 3-inch nails 800 UGX stock 200; <code>PAINT-WHT-4L</code> White paint 4L 45,000 UGX stock 12)</li>
-            <li>Edit a product's stock down to 2 — confirm the low-stock badge appears</li>
-            <li>Delete a product — confirm it's removed</li>
-            <li>Search by SKU and by name — both should work in the data table</li>
-          </ol>
+          <h3>Screens your agent builds</h3>
+          <ul>
+            <li><code>(tabs)/index.tsx</code> — POS sale screen (search bar, product grid, cart drawer)</li>
+            <li><code>(tabs)/inventory.tsx</code> — product list with low-stock badges</li>
+            <li><code>(tabs)/history.tsx</code> — sales history with date filter</li>
+            <li><code>(tabs)/dashboard.tsx</code> — stat cards, top products, weekly chart</li>
+            <li><code>inventory/new.tsx</code> + <code>inventory/[id].tsx</code> — product create / edit</li>
+            <li><code>sale/[id].tsx</code> — single sale detail with line items</li>
+            <li><code>checkout.tsx</code> — payment method picker → DGateway / Stripe / Cash</li>
+          </ul>
 
           <Tip>
-            UGX prices stored as integers (not decimals) avoids rounding bugs. The <code>formatUGX()</code> utility handles display. Tell your agent if it tries to use Decimal/Float for currency — that's a foot-gun.
+            <em>Mock data is in <code>src/lib/mocks/</code>.</em> Hardcoded arrays of products and sales — enough to verify every screen renders before wiring real APIs.
           </Tip>
         </ModuleSection>
 
         {/* MODULE 06 */}
-        <ModuleSection slug="module-06" eyebrow="MODULE 06 · 45 min" title="Phase 3 — POS Sale flow + Receipt PDF">
+        <ModuleSection slug="module-06" eyebrow="MODULE 06 · 50 min" title="Phase 3 — API Routes + DGateway">
           <p>
-            The core of the app. Cashier searches a product, adds to cart, sets quantity, picks payment, completes sale. Stock decrements atomically. PDF receipt downloads immediately.
+            Every entity gets a CRUD <code>+api.ts</code> route under <code>app/api/</code>. Zod-validated, cursor-paginated, auth-gated. Then the DGateway proxy + HMAC-verified webhook. Then every screen swaps its mock data for a TanStack Query hook.
           </p>
 
-          <h3>Step 1 — Add the Sale + SaleItem schema</h3>
+          <h3>API routes your agent creates</h3>
+          <ul>
+            <li><code>app/api/products/+api.ts</code> — GET (list with cursor + search), POST (create)</li>
+            <li><code>app/api/products/[id]+api.ts</code> — GET / PATCH / DELETE single product</li>
+            <li><code>app/api/sales/+api.ts</code> — GET (list with date filter), POST (atomic stock decrement inside a Prisma transaction)</li>
+            <li><code>app/api/sales/[id]+api.ts</code> — GET single sale + line items</li>
+            <li><code>app/api/dashboard/+api.ts</code> — aggregations via Prisma groupBy</li>
+            <li><code>app/api/checkout/start+api.ts</code> — DGateway STK push proxy</li>
+            <li><code>app/api/checkout/status/[reference]+api.ts</code> — payment status proxy</li>
+            <li><code>app/api/webhooks/dgateway+api.ts</code> — HMAC-SHA256 verified webhook with idempotent dedupe</li>
+          </ul>
+
+          <h3>The atomic stock decrement pattern</h3>
           <CopyBlock
-            label="Prompt"
-            code={`Phase 2 is verified. Proceed to Phase 3 — POS Sale flow.
+            filename="app/api/sales/+api.ts (POST)"
+            label="Prisma transaction — never sell what you don't have"
+            code={`export async function POST(request: Request) {
+  const session = await auth.api.getSession({ headers: request.headers });
+  if (!session) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-Add to the Prisma schema:
+  const parsed = CreateSaleSchema.safeParse(await request.json());
+  if (!parsed.success) return Response.json({ error: 'Invalid input' }, { status: 400 });
 
-model Sale {
-  id              String        @id @default(cuid())
-  totalUgx        Int
-  paymentMethod   PaymentMethod
-  customerName    String?
-  customerPhone   String?
-  items           SaleItem[]
-  userId          String
-  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt       DateTime      @default(now())
-  @@index([userId, createdAt])
-}
+  const { items, paymentMethod, customerName, customerPhone, total } = parsed.data;
 
-model SaleItem {
-  id          String   @id @default(cuid())
-  saleId      String
-  sale        Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
-  productId   String
-  product     Product  @relation(fields: [productId], references: [id])
-  productName String   // snapshot of product name at sale time
-  productSku  String   // snapshot of SKU at sale time
-  unitPriceUgx Int     // snapshot of price at sale time
-  quantity     Int
-  lineTotalUgx Int
-  @@index([saleId])
-  @@index([productId])
-}
+  // Single transaction: check stock + decrement + create sale, all-or-nothing
+  const sale = await prisma.$transaction(async (tx) => {
+    for (const item of items) {
+      const product = await tx.product.findUnique({ where: { id: item.productId } });
+      if (!product) throw new Error('Product not found');
+      if (product.stock < item.quantity) throw new Error(\`Insufficient stock for \${product.name}\`);
+    }
 
-enum PaymentMethod { CASH MOBILE_MONEY CARD }
+    // Decrement in one shot
+    await Promise.all(
+      items.map((item) =>
+        tx.product.update({
+          where: { id: item.productId },
+          data: { stock: { decrement: item.quantity } },
+        }),
+      ),
+    );
 
-Then run pnpm db:push and pnpm db:generate.`}
+    return tx.sale.create({
+      data: {
+        userId: session.user.id,
+        total,
+        paymentMethod,
+        customerName,
+        customerPhone,
+        items: { create: items.map((i) => ({ productId: i.productId, quantity: i.quantity, unitPrice: i.unitPrice })) },
+      },
+      include: { items: true },
+    });
+  });
+
+  return Response.json({ data: sale }, { status: 201 });
+}`}
           />
+
+          <h3>The DGateway webhook with HMAC verification</h3>
+          <CopyBlock
+            filename="app/api/webhooks/dgateway+api.ts"
+            label="Constant-time HMAC compare + idempotent dedupe"
+            code={`import crypto from 'node:crypto';
+import { prisma } from '@/src/lib/prisma';
+
+export async function POST(request: Request) {
+  const rawBody = await request.text();
+  const signature = request.headers.get('X-DGateway-Signature') ?? '';
+
+  const expected = crypto
+    .createHmac('sha256', process.env.DGATEWAY_WEBHOOK_SECRET!)
+    .update(rawBody)
+    .digest('hex');
+
+  if (
+    !signature ||
+    !crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))
+  ) {
+    return new Response('Invalid signature', { status: 401 });
+  }
+
+  const event = JSON.parse(rawBody);
+
+  // Dedupe — DGateway retries up to 3 times
+  const existing = await prisma.paymentEvent.findUnique({
+    where: { reference: event.reference },
+  });
+  if (existing) return new Response(null, { status: 200 });
+
+  await prisma.$transaction([
+    prisma.paymentEvent.create({
+      data: {
+        reference: event.reference,
+        status: event.status,
+        provider: event.provider,
+        providerRef: event.provider_ref,
+        payload: event,
+      },
+    }),
+    prisma.sale.updateMany({
+      where: { paymentReference: event.reference },
+      data: { paymentStatus: event.status },
+    }),
+  ]);
+
+  return new Response(null, { status: 200 });
+}`}
+          />
+
+          <h3>Test with DGateway sandbox phone numbers</h3>
+          <p>DGateway provides deterministic phone numbers when you use a <code>dgw_test_*</code> key:</p>
+          <ul>
+            <li><code>256111777111</code> — always succeeds (use this for the happy path)</li>
+            <li><code>256111777222</code> — always fails (test the error UX)</li>
+            <li><code>256111777333</code> — times out / expires (test the 5-minute ceiling)</li>
+          </ul>
 
           <Tip>
-            Why snapshot productName/productSku/unitPriceUgx on each SaleItem? Because product details change over time, but a historical sale receipt should reflect what was sold at that moment. This is a real-world pattern that AI agents often skip — make sure it's there.
+            <em>Phase 3 confirms when:</em> you can create a product, ring up a sale with the test phone number, see the "Check customer's phone" screen, and watch the sale move from pending → completed in the history list when the webhook fires.
           </Tip>
-
-          <h3>Step 2 — Build the POS screen</h3>
-          <CopyBlock
-            label="Prompt"
-            code={`Build /pos as the main POS screen with this layout:
-
-LEFT (60%) — Product search + grid:
-- Search input at top (search by SKU or product name)
-- Product grid below: each card shows SKU, name, price (UGX), stock. Click adds 1 to cart (or increments quantity if already in cart). Out-of-stock products are visually disabled.
-- Use React Query for product data with staleTime 30000.
-
-RIGHT (40%) — Cart:
-- "New Sale" header
-- List of cart items: product name, qty controls (+/-), unit price, line total, remove button
-- Optional customer name + phone fields
-- Payment method select: Cash / Mobile Money / Card
-- Live total in big numbers (32px font, accent color)
-- "Complete Sale" button (disabled when cart is empty)
-
-API:
-POST /api/sales accepts { items: [{ productId, quantity }], paymentMethod, customerName?, customerPhone? } and:
-1. Validates with Zod
-2. Wraps everything in db.$transaction:
-   a. Reads each product (FOR UPDATE not needed — Prisma handles this with the txn)
-   b. Verifies stock >= quantity for each item; throws 400 if not
-   c. Creates the Sale with snapshot SaleItems (copy productName, sku, unitPriceUgx)
-   d. Decrements product stockQuantity by quantity for each item
-3. Returns the new sale id
-
-After successful sale, redirect to /sales/[id] which shows the sale detail + a "Download Receipt" button.
-
-Use the existing JB Searchable Select for the payment method dropdown.`}
-          />
-
-          <h3>Step 3 — Receipt PDF with @react-pdf/renderer</h3>
-          <CopyBlock
-            label="Prompt"
-            code={`Build /api/sales/[id]/receipt that returns a PDF response using @react-pdf/renderer.
-
-The receipt should look like a real till receipt:
-- Centered header: shop name placeholder ("HARDWARE POS"), "RECEIPT" subtitle, date/time
-- Sale ID (last 8 chars), payment method, optional customer name/phone
-- Line items table: SKU | Item | Qty | Unit Price | Line Total
-- Total row in bold
-- Footer: "Thank you for your purchase"
-- Use Helvetica or the closest equivalent in @react-pdf — small fonts (10–11pt)
-- A4 portrait page size
-- Currency formatted via formatUGX()
-
-Wire the "Download Receipt" button on the sale detail page to fetch this endpoint and download the file as receipt-<saleId>.pdf.`}
-          />
-
-          <h3>Step 4 — Test a real sale end-to-end</h3>
-          <ol>
-            <li>Open /pos, search "nail", add to cart</li>
-            <li>Adjust quantity to 5, search "paint", add to cart</li>
-            <li>Verify the live total matches manually (5 × nail price + 1 × paint price)</li>
-            <li>Type a customer name and phone</li>
-            <li>Pick "Mobile Money" as payment method</li>
-            <li>Click Complete Sale → you land on /sales/[id]</li>
-            <li>Download the receipt PDF and open it</li>
-            <li>Go to /inventory — verify stock decremented for both products</li>
-          </ol>
         </ModuleSection>
 
         {/* MODULE 07 */}
-        <ModuleSection slug="module-07" eyebrow="MODULE 07 · 25 min" title="Phase 4 — Dashboard + Sales History">
+        <ModuleSection slug="module-07" eyebrow="MODULE 07 · 30 min" title="Phase 4 — Dashboard + Polish">
           <p>
-            With sales flowing, the dashboard becomes useful. Today's revenue, top products, low-stock counter, weekly chart. Plus the full sales history.
+            Wire the dashboard with real aggregations. Add Reanimated entrance animations to lists. Wire <code>expo-haptics</code> on every CTA. Configure <code>expo-notifications</code> for the end-of-day low-stock push.
           </p>
 
-          <h3>Step 1 — Dashboard analytics</h3>
-          <CopyBlock
-            label="Prompt"
-            code={`Build /dashboard with these sections:
+          <h3>Dashboard aggregations</h3>
+          <ul>
+            <li>Today's revenue: <code>prisma.sale.aggregate({`{ _sum: { total: true }, where: { createdAt: { gte: startOfDay() } } }`})</code></li>
+            <li>Top 5 products this week: <code>prisma.saleItem.groupBy({`{ by: ['productId'], _sum: { quantity: true }, orderBy: { _sum: { quantity: 'desc' } }, take: 5 }`})</code></li>
+            <li>Low-stock count: <code>prisma.product.count({`{ where: { stock: { lte: prisma.product.fields.lowStockThreshold } } }`})</code></li>
+            <li>Weekly revenue chart: 7-day cursor query → group by day → feed to <code>chart-line</code></li>
+          </ul>
 
-STAT CARDS ROW (4 cards across):
-- Today's Revenue (UGX) — sum of Sale.totalUgx where DATE(createdAt) = today
-- Today's Transactions — count of sales today
-- Low-Stock Alerts — count of products where stockQuantity <= lowStockThreshold
-- This Week's Revenue — sum of Sale.totalUgx where createdAt >= start of current ISO week
+          <h3>Polish checklist</h3>
+          <ul>
+            <li>Reanimated <code>FadeIn</code> stagger on product list rows (respects <code>useReducedMotion</code>)</li>
+            <li><code>Haptics.impactAsync(ImpactFeedbackStyle.Light)</code> on every primary button</li>
+            <li><code>Haptics.notificationAsync(NotificationFeedbackType.Success)</code> on sale complete</li>
+            <li>Pull-to-refresh on every list</li>
+            <li>Empty states with custom illustration (image-first 80/20)</li>
+            <li>Skeleton loaders matching each card's silhouette</li>
+            <li><code>expo-notifications</code> permission request after first sign-in, not on cold start</li>
+            <li>Background task that fires the low-stock push at 6 PM</li>
+            <li>Splash screen, adaptive icon, status bar style</li>
+          </ul>
 
-Each card: label (uppercase mono 11px), big number (28px semibold), small comparison vs yesterday/last week (12px secondary).
-
-WEEKLY REVENUE CHART:
-- Bar chart of daily revenue for the last 7 days
-- Use a simple SVG bar chart in a custom component (no external chart library needed for 7 bars)
-- Labels: day name (Mon, Tue, ...). Y-axis: UGX values formatted with formatUGX.
-- Bar color: var(--accent), with bg-muted fill for the active day's bar
-
-TOP 5 PRODUCTS THIS WEEK:
-- Aggregate SaleItem rows where Sale.createdAt >= start of week
-- groupBy productId, sum quantity, sum lineTotalUgx
-- Display as a table: rank, name, units sold, revenue
-- Order by units sold descending
-
-LOW-STOCK LIST:
-- List of products where stockQuantity <= lowStockThreshold
-- Show name, SKU, current stock, threshold
-- Link to /inventory/[id]/edit
-
-All queries should be in API routes, scoped to session.user.id, served via React Query.`}
-          />
-
-          <h3>Step 2 — Sales history page</h3>
-          <CopyBlock
-            label="Prompt"
-            code={`Build /sales — full sales history list:
-
-- JB Data Table with columns: Date (formatted "Jan 15, 2024 14:30"), Sale ID (last 8 chars), Items count, Payment Method (badge), Total (UGX, right-aligned monospace), Customer (if any), Action (View)
-- Server-side pagination via /api/sales (page, limit, default 20)
-- Filters above the table:
-  - Date range picker (default: last 30 days)
-  - Payment method dropdown (All / Cash / Mobile Money / Card)
-- Filter state lives in URL query params so refresh preserves it
-- "Export today's sales as PDF" button at the top — generates a daily report PDF with a header summary + sales table
-
-Clicking a row goes to /sales/[id] (already exists from Phase 3) showing full line items and the receipt download button.`}
-          />
-
-          <h3>Step 3 — Test the analytics</h3>
-          <ol>
-            <li>Make 3–5 sales of varying amounts and payment methods</li>
-            <li>Refresh /dashboard — verify the 4 stat cards reflect those sales</li>
-            <li>Check the weekly revenue chart — today's bar should be highlighted</li>
-            <li>Verify the top-5 products list orders correctly</li>
-            <li>Drop a product's stock to below threshold — verify it appears in low-stock list</li>
-            <li>On /sales, filter to "Mobile Money only" — verify the URL updates and the table filters</li>
-            <li>Export today's sales as PDF — open the file, verify totals match the dashboard</li>
-          </ol>
+          <Tip>
+            <em>Test on a real device.</em> Simulators don't show haptics, simulators run hot (often hiding perf issues), and push notifications need a real device + APNs / FCM tokens. Plug in an iPhone or Android phone before signing off Phase 4.
+          </Tip>
         </ModuleSection>
 
         {/* MODULE 08 */}
-        <ModuleSection slug="module-08" eyebrow="MODULE 08 · 40 min" title="Pre-deploy review + Deploy">
-          <p>The two highest-leverage steps: catch security holes before launch, then ship.</p>
-
-          <h3>Step 1 — Run the pre-deploy audit</h3>
+        <ModuleSection slug="module-08" eyebrow="MODULE 08 · 45 min" title="Phase 5 — Pre-deploy + ship">
           <p>
-            Open <a href="/docs/quickstart#step-7">Step 7 of the quickstart</a> (or open <code>pre-deploy-review.md</code> in your project root). Paste the entire prompt into your coding agent.
+            Pre-deploy audit. Deploy the Expo API Routes to EAS Hosting. Build production binaries with EAS Build. Submit to TestFlight + Internal Testing. Promote to production.
           </p>
-          <p>The agent writes findings to <code>pre-deploy-review-report.md</code>. Expected for HardwarePOS:</p>
-          <ul>
-            <li><strong>Critical</strong> — missing rate limiting on auth, possibly missing transaction wrapping on the sale endpoint (this would let stock go negative under concurrent sales)</li>
-            <li><strong>High</strong> — missing index on Sale.createdAt for the dashboard date queries, N+1 on the sales history when fetching items count</li>
-            <li><strong>Medium</strong> — missing Zod refinements (e.g. quantity must be &gt; 0), verbose console.log on success paths</li>
-          </ul>
 
-          <h3>Step 2 — Fix every Critical</h3>
-          <p>For each Critical, paste back to the agent:</p>
-          <CopyBlock
-            label="Prompt"
-            code={`Fix Critical issue #1 from pre-deploy-review-report.md. Apply the suggested fix exactly, run a quick test, confirm the issue is resolved. Do not introduce changes outside the scope of this fix.`}
-          />
-          <p>Re-run the audit until Critical count = 0. High and Medium can wait until after launch.</p>
+          <h3>Step 1 — Run the pre-deploy review</h3>
+          <p>
+            Open Claude Code (or your agent) and paste the contents of <a href={`${SITE.github}/blob/main/pre-deploy-review.md`} target="_blank" rel="noopener noreferrer"><code>pre-deploy-review.md</code></a>. It performs a 24-section senior audit covering cold-start perf, native correctness, auth, DB, API routes, webhooks, accessibility, env vars, Sentry, push, deep links, store-ready assets, EAS config.
+          </p>
 
-          <h3>Step 3 — Push to GitHub</h3>
+          <p>Fix every 🔴 Critical and 🟠 High before moving on.</p>
+
+          <h3>Step 2 — Migrate the production database</h3>
           <CopyBlock
             filename="terminal"
-            label="Initial commit + push"
-            code={`git init
-git add .
-git commit -m "Initial commit — HardwarePOS built with VibeKit"
-gh repo create hardware-pos --private --source=. --push
-# OR manually create on github.com and:
-# git remote add origin https://github.com/YOU/hardware-pos.git
-# git push -u origin main`}
+            label="Apply Prisma migrations to the production Neon database"
+            code={`# Switch DATABASE_URL to the production Neon URL temporarily
+export DATABASE_URL="postgresql://..."
+
+pnpm prisma migrate deploy
+pnpm prisma db seed`}
           />
 
-          <h3>Step 4 — Import to Vercel + set env vars</h3>
-          <ol>
-            <li>Go to <a href="https://vercel.com/new" target="_blank" rel="noopener noreferrer">vercel.com/new</a></li>
-            <li>Import the <code>hardware-pos</code> repo. Framework auto-detects as Next.js.</li>
-            <li>Build command: <code>prisma generate &amp;&amp; prisma migrate deploy &amp;&amp; next build</code></li>
-            <li>Don't deploy yet — set env vars first.</li>
-          </ol>
+          <h3>Step 3 — Set production env vars in EAS</h3>
           <CopyBlock
-            filename="Vercel → Settings → Environment Variables"
-            label="Production env"
-            code={`DATABASE_URL=<your Neon prod connection string>
-BETTER_AUTH_SECRET=<a NEW 32+ char string, NOT the dev one>
-BETTER_AUTH_URL=https://hardware-pos.vercel.app
-RESEND_API_KEY=<from resend.com>
-RESEND_FROM_EMAIL=noreply@yourshop.com
-GOOGLE_CLIENT_ID=<from Google Cloud Console>
-GOOGLE_CLIENT_SECRET=<from Google Cloud Console>
-NEXT_PUBLIC_APP_URL=https://hardware-pos.vercel.app`}
+            filename="terminal"
+            label="Push secrets to EAS Secret (never commit them)"
+            code={`eas secret:create --scope project --name DATABASE_URL --value "postgresql://..." --type string
+eas secret:create --scope project --name BETTER_AUTH_SECRET --value "$(openssl rand -base64 32)" --type string
+eas secret:create --scope project --name DGATEWAY_API_KEY --value "dgw_live_..." --type string
+eas secret:create --scope project --name DGATEWAY_WEBHOOK_SECRET --value "whsec_..." --type string
+# ... and any others`}
           />
 
-          <h3>Step 5 — Add OAuth redirect URI</h3>
-          <p>In Google Cloud Console → APIs & Services → Credentials → your OAuth client → Authorized redirect URIs, add:</p>
+          <h3>Step 4 — Deploy the API routes to EAS Hosting</h3>
           <CopyBlock
-            label="Production redirect"
-            code={`https://hardware-pos.vercel.app/api/auth/callback/google`}
+            filename="terminal"
+            label="One command, returns a stable URL"
+            code={`eas deploy --prod
+
+# Copy the returned URL (e.g., https://hardware-pos-mobile.expo.app)
+# Update app.json:
+#   "extra": { "apiUrl": "https://hardware-pos-mobile.expo.app" }`}
           />
 
-          <h3>Step 6 — Deploy + smoke test</h3>
-          <p>Hit <strong>Deploy</strong>. Wait ~2 min. Visit the URL and run through the full flow:</p>
-          <ul>
-            <li>Sign up + verify welcome email</li>
-            <li>Add 5 products in /inventory</li>
-            <li>Make a real sale via /pos with Mobile Money payment</li>
-            <li>Download the receipt PDF</li>
-            <li>Verify the dashboard updated</li>
-            <li>Toggle dark mode on a phone</li>
-          </ul>
+          <h3>Step 5 — Build production binaries</h3>
+          <CopyBlock
+            filename="terminal"
+            label="EAS Build — iOS + Android together"
+            code={`eas build --profile production --platform all
 
-          <h3>Step 7 — Custom domain (optional)</h3>
-          <ol>
-            <li>Buy a domain on Cloudflare Registrar (or your provider)</li>
-            <li>Vercel → Settings → Domains → add your domain</li>
-            <li>Cloudflare DNS → add the records Vercel shows (set to <strong>DNS only</strong>, grey cloud, not orange)</li>
-            <li>Update <code>BETTER_AUTH_URL</code> and <code>NEXT_PUBLIC_APP_URL</code> to the custom domain</li>
-            <li>Add the new redirect URI in Google Cloud Console</li>
-            <li>Redeploy</li>
-          </ol>
+# Takes 20-30 minutes. EAS handles signing for both stores.
+# When done you'll get .ipa (iOS) + .aab (Android) downloadable from the EAS dashboard.`}
+          />
 
-          <div className="my-8 rounded-md border-2 border-[color:var(--accent)]/40 bg-[color:var(--accent-soft)] p-6">
-            <h3 className="font-mono text-[12px] uppercase tracking-wider text-[color:var(--accent)] mt-0">
-              You shipped it.
-            </h3>
-            <p className="mt-3 text-[15px] text-[color:var(--text-primary)]">
-              That's a real POS — auth, transactions, atomic stock decrements, downloadable receipts, audited for security, deployed to a custom domain. A hardware shop owner could actually use this.
-            </p>
-            <p className="mt-3 text-[14px] text-[color:var(--text-secondary)]">
-              Share what you built in the <a href={SITE.community} target="_blank" rel="noopener noreferrer" className="text-[color:var(--accent)] underline">community</a> — and tag it with <code>#shipped-with-vibekit</code>.
-            </p>
-          </div>
+          <h3>Step 6 — Submit to the stores</h3>
+          <CopyBlock
+            filename="terminal"
+            label="EAS Submit — push the latest build to TestFlight + Play Internal"
+            code={`eas submit --profile production --platform ios
+eas submit --profile production --platform android
+
+# iOS goes to TestFlight Internal Testing first.
+# Android goes to Play Console Internal Testing.
+# Walk through both with 3+ humans before promoting to production.`}
+          />
+
+          <h3>Step 7 — OTA updates for the small stuff</h3>
+          <CopyBlock
+            filename="terminal"
+            label="EAS Update — no store review for JS-only changes"
+            code={`# Fixed a typo? Renamed a button?
+eas update --branch production --message "Fix checkout button label"
+
+# Users get the patch on next app open. No 24-72hr review wait.
+# (Native changes — new permissions, new deps — still require a rebuild + resubmit.)`}
+          />
+
+          <Tip>
+            <em>Apple review takes 24–72 hours.</em> Google Play Internal Testing is instant; promotion to production takes a few hours. Plan accordingly — the first submission is the slow one; after that, OTA + EAS Build covers 95% of changes.
+          </Tip>
+
+          <h3>You're live</h3>
+          <p>
+            Once approved, your app is in the App Store and Google Play. The hardware shop downloads it, signs in, starts ringing up sales. DGateway proceeds settle to the merchant account within 24 hours. You ship updates via OTA without ever waiting for review.
+          </p>
+
+          <p>Welcome to mobile dev.</p>
         </ModuleSection>
-
-        {/* Next steps */}
-        <Section
-          eyebrow="WHAT'S NEXT"
-          title="Take it further."
-          description="The patterns you just learned scale to anything. Some natural next steps for HardwarePOS or your next build:"
-          containerClassName="max-w-3xl"
-        >
-          <ul className="grid gap-3 sm:grid-cols-2">
-            {[
-              { title: "Add real Mobile Money", body: "Install JB DGateway Shop and wire actual MoMo settlement to the sale flow. ~45 min." },
-              { title: "Multi-cashier support", body: "Add a 'cashier' role + sale.cashierId so you can see who rang up which sales. ~30 min." },
-              { title: "Barcode scanner input", body: "Hook a USB scanner into the SKU search — it's just keyboard input. ~15 min." },
-              { title: "Stock-in / restock flow", body: "Track inventory deliveries with a separate StockMovement model. ~45 min." },
-              { title: "Daily Z-report (end of day)", body: "Closing report with sales by payment method + cash drawer reconciliation. ~30 min." },
-              { title: "Build something else", body: "Restart from Module 02 with a new app idea. The flow is fully repeatable." },
-            ].map((n) => (
-              <li
-                key={n.title}
-                className="rounded-2xl card-glass p-5"
-              >
-                <h3 className="font-mono text-[13px] uppercase tracking-tight text-[color:var(--text-primary)]">
-                  {n.title}
-                </h3>
-                <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--text-secondary)]">
-                  {n.body}
-                </p>
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
-            <Button href="/components" variant="accent" size="md">
-              Browse all components
-            </Button>
-            <Button href="/contribute" variant="outline" size="md">
-              <Rocket className="h-4 w-4" />
-              Contribute a component
-            </Button>
-            <Button href={SITE.community} variant="outline" size="md">
-              Join the community
-            </Button>
-          </div>
-        </Section>
       </main>
       <Footer />
 
-      {/* HowTo schema for AEO */}
+      {/* Structured data — HowTo */}
       <Script
-        id="ld-tutorial"
+        id="ld-howto-tutorial"
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "HowTo",
-            name: "Build HardwarePOS — a real point-of-sale system — with VibeKit",
+            name: "Build HardwarePOS Mobile with VibeKit Native",
             description:
-              "Build and deploy HardwarePOS, a point-of-sale system for a small hardware shop, with auth, inventory, atomic sales transactions, receipt PDFs, and a dashboard — using VibeKit + any AI coding agent.",
-            totalTime: "PT3H",
-            tool: [
-              { "@type": "HowToTool", name: "Claude (claude.ai)" },
-              { "@type": "HowToTool", name: "Claude Code or Cursor" },
-              { "@type": "HowToTool", name: "Neon Postgres" },
-              { "@type": "HowToTool", name: "Vercel" },
-            ],
+              "8-module crash course on building a production-grade Expo / React Native point-of-sale app with DGateway mobile money, from idea to App Store + Play Store, in one afternoon.",
+            totalTime: "PT4H",
+            estimatedCost: { "@type": "MonetaryAmount", currency: "USD", value: "0" },
             step: modules.map((m, i) => ({
               "@type": "HowToStep",
               position: i + 1,
@@ -1031,10 +901,10 @@ function ModuleSection({
     >
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <header className="border-b border-[color:var(--border)] pb-8">
-          <div className="font-mono text-[11px] uppercase tracking-wider text-[color:var(--accent)]">
+          <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--accent)]">
             {eyebrow}
           </div>
-          <h2 className="mt-3 font-mono text-[clamp(1.75rem,4vw,2.5rem)] font-bold uppercase tracking-tight text-[color:var(--text-primary)]">
+          <h2 className="mt-3 headline-display text-[clamp(1.75rem,4vw,2.5rem)] headline-glow">
             {title}
           </h2>
         </header>
@@ -1057,7 +927,7 @@ function ModuleSection({
 function Tip({ children }: { children: React.ReactNode }) {
   return (
     <div className="mt-6 rounded-md border-l-2 border-[color:var(--accent)] bg-[color:var(--accent-soft)] p-4">
-      <div className="font-mono text-[10px] uppercase tracking-wider text-[color:var(--accent)]">
+      <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--accent)]">
         Tip
       </div>
       <div className="mt-2 text-[14px] leading-relaxed text-[color:var(--text-primary)] [&_em]:not-italic [&_em]:rounded [&_em]:bg-[color:var(--bg-elevated)] [&_em]:px-1.5 [&_em]:py-0.5 [&_em]:font-mono [&_em]:text-[12.5px]">
