@@ -92,8 +92,8 @@ Open a PR. The `new-component.md` template will walk you through the checklist.
 
 We review weekly. Most PRs need one or two iterations on copy, schema, or installation testing. Once merged:
 
-- Your component appears at `https://vibekit.desishub.com/components/<slug>`
-- It's listed in `jb-components.md`, which every Claude Code session reads
+- Your component appears at `https://native.desishub.com/components/<slug>`
+- It's listed in `vibekit-native-components.md`, which every Claude Code session reads
 - It becomes part of the agent's default toolkit across thousands of builds
 
 ---

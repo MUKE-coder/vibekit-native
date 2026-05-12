@@ -25,7 +25,7 @@ Building a React Native app from scratch means re-inventing the same screens —
 npx vibekit-native
 
 # 2. Install any component
-npx vibekit-native install login-form
+npx vibekit-native install login-screen
 ```
 
 To see every available component:
@@ -33,6 +33,68 @@ To see every available component:
 ```bash
 npx vibekit-native list
 ```
+
+---
+
+## How To Use (the 7-step workflow)
+
+VibeKit Native pairs a planning prompt with a build prompt. You go from idea → shipped app in a single Claude Code session, with components installed on demand from the registry.
+
+### Step 1 — Copy the planning prompt
+
+Copy the contents of [`CLAUDE_PROMPT.md`](./CLAUDE_PROMPT.md) from this repository.
+
+### Step 2 — Open Claude
+
+Go to [claude.ai](https://claude.ai) and start a new conversation.
+
+### Step 3 — Paste and add your idea
+
+Paste the contents of `CLAUDE_PROMPT.md` into Claude, then add your app idea at the bottom:
+
+```
+[CLAUDE_PROMPT.md contents pasted here]
+
+MY IDEA: I want to build a delivery driver app where drivers receive jobs,
+navigate to the pickup location, mark the delivery as complete, and get paid
+weekly via mobile money. Customers track their order in real time.
+```
+
+### Step 4 — Answer Claude's questions
+
+Claude will ask you 6–10 mobile-specific questions: iOS / Android / both? auth method? mobile money (DGateway) or Stripe? push notifications? offline support? a visual reference (Dribbble link / competitor app)? Answer honestly and completely.
+
+### Step 5 — Get your 4 project files
+
+Claude will generate:
+
+| File | Purpose |
+|---|---|
+| `project-description.md` | Complete description of your app — features, data model, screens, API routes, integrations |
+| `project-phases.md` | Build blueprint with 5 phases, tasks, and install commands |
+| `design-style-guide.md` | Fully customized visual design system (colors, typography, spacing, mobile component specs) |
+| `prompt.md` | The prompt you paste into Claude Code to start building |
+
+Save all 4 files into your project root folder.
+
+### Step 6 — Copy the framework files
+
+Copy these 2 files from this repository into your project root:
+
+- [`master_prompt.md`](./master_prompt.md) — Tech stack rules, Prisma v7 + Neon patterns, Better Auth + Expo plugin wiring, Expo Router structure, mobile performance budget, form rules, image-first rule, DGateway + Stripe patterns, EAS Build / Submit / Update / Hosting (rename to `CLAUDE.md` for auto-loading)
+- [`vibekit-native-components.md`](./vibekit-native-components.md) — The registry reference. Claude Code checks this before writing any screen from scratch.
+
+> **Pro tip:** Claude Code auto-loads a `CLAUDE.md` file at the project root. Rename (or symlink) `master_prompt.md` → `CLAUDE.md` so it's loaded automatically every session — no more copy-pasting.
+
+### Step 7 — Start building with Claude Code
+
+Open Claude Code in your project directory and paste the contents of `prompt.md`. Claude Code will:
+
+- Read `master_prompt.md` (or `CLAUDE.md`), `design-style-guide.md`, `vibekit-native-components.md`, `project-description.md`, and `project-phases.md`
+- Start with **Phase 1 (Foundation)** — Expo bootstrap + NativeWind + Prisma + Better Auth + EAS init
+- **Install VibeKit Native components before writing from scratch** (`npx vibekit-native install <name>`)
+- Stop after each phase for your confirmation
+- Follow the design system and coding standards exactly
 
 ---
 

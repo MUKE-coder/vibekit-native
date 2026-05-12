@@ -72,7 +72,7 @@ cat >> .aider.conf.yml << 'EOF'
 read:
   - AGENTS.md
   - master_prompt.md
-  - jb-components.md
+  - vibekit-native-components.md
 EOF`,
     note: "Aider doesn't auto-load — the read: config tells it which files are always in context.",
   },
