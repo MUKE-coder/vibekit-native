@@ -1,10 +1,18 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Animated } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, type DimensionValue } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+  Easing,
+  useReducedMotion,
+} from 'react-native-reanimated';
 import { cn } from '../lib/utils';
 
 interface SkeletonProps {
-  width?: number | string;
-  height?: number | string;
+  width?: DimensionValue;
+  height?: DimensionValue;
   borderRadius?: number;
   className?: string;
 }
@@ -15,23 +23,27 @@ export function Skeleton({
   borderRadius = 8,
   className,
 }: SkeletonProps) {
-  const opacity = useRef(new Animated.Value(0.3)).current;
+  const reduce = useReducedMotion();
+  const opacity = useSharedValue(0.3);
 
   useEffect(() => {
-    const animation = Animated.loop(
-      Animated.sequence([
-        Animated.timing(opacity, { toValue: 0.6, duration: 800, useNativeDriver: true }),
-        Animated.timing(opacity, { toValue: 0.3, duration: 800, useNativeDriver: true }),
-      ]),
+    if (reduce) {
+      opacity.value = 0.5;
+      return;
+    }
+    opacity.value = withRepeat(
+      withTiming(0.6, { duration: 800, easing: Easing.inOut(Easing.ease) }),
+      -1,
+      true,
     );
-    animation.start();
-    return () => animation.stop();
-  }, []);
+  }, [reduce, opacity]);
+
+  const animatedStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
 
   return (
     <Animated.View
       className={cn('bg-bgHover', className)}
-      style={{ width, height, borderRadius, opacity }}
+      style={[{ width, height, borderRadius }, animatedStyle]}
     />
   );
 }

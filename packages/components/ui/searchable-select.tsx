@@ -4,9 +4,9 @@ import {
   Text,
   TextInput,
   Pressable,
-  FlatList,
   Modal,
 } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { Ionicons } from '@expo/vector-icons';
 import { cn } from '../lib/utils';
 import { colors } from '../lib/theme';
@@ -105,9 +105,10 @@ export function SearchableSelect({
               ) : null}
             </View>
           </View>
-          <FlatList
+          <FlashList
             data={filtered}
             keyExtractor={(item) => item.value}
+            estimatedItemSize={options.some((o) => o.description) ? 70 : 52}
             contentContainerStyle={{ paddingHorizontal: 16 }}
             renderItem={({ item }) => (
               <Pressable

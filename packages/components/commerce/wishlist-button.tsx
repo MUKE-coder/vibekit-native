@@ -1,5 +1,13 @@
 import React from 'react';
-import { Pressable, Animated, Easing, type ViewStyle } from 'react-native';
+import { Pressable, type ViewStyle } from 'react-native';
+import * as Haptics from 'expo-haptics';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSequence,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { cn } from '../lib/utils';
 import { colors } from '../lib/theme';
@@ -33,14 +41,19 @@ export function WishlistButton({
   style,
   className,
 }: WishlistButtonProps) {
-  const scale = React.useRef(new Animated.Value(1)).current;
+  const scale = useSharedValue(1);
   const dim = SIZE_MAP[size];
 
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
   function handlePress() {
-    Animated.sequence([
-      Animated.timing(scale, { toValue: 1.25, duration: 130, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
-      Animated.timing(scale, { toValue: 1, duration: 130, easing: Easing.in(Easing.cubic), useNativeDriver: true }),
-    ]).start();
+    scale.value = withSequence(
+      withTiming(1.25, { duration: 130, easing: Easing.out(Easing.cubic) }),
+      withTiming(1, { duration: 130, easing: Easing.in(Easing.cubic) }),
+    );
+    Haptics.selectionAsync().catch(() => {});
     onToggle(!active);
   }
 
@@ -66,7 +79,7 @@ export function WishlistButton({
         style,
       ]}
     >
-      <Animated.View style={{ transform: [{ scale }] }}>
+      <Animated.View style={animatedStyle}>
         <Ionicons
           name={active ? 'heart' : 'heart-outline'}
           size={dim.icon}

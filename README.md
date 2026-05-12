@@ -131,7 +131,7 @@ Once Phase 5 is done, paste [`pre-deploy-review.md`](./pre-deploy-review.md) int
 | **Nav** | 2 | `bottom-tabs`, `app-drawer` |
 | **Profile** | 2 | `points-card`, `coupon-card` |
 
-Plus 4 **library** modules (auto-installed as dependencies of other components, or installable individually):
+Plus 7 **library** modules (auto-installed as dependencies of other components, or installable individually):
 
 | Module | Purpose |
 |---|---|
@@ -139,6 +139,9 @@ Plus 4 **library** modules (auto-installed as dependencies of other components, 
 | `api-client` | TanStack Query provider with mobile-first defaults (retries, focus-refetch, online/offline tracking via `expo-network`) |
 | `dgateway` | Typed DGateway client (talks to YOUR backend proxy, never the gateway directly) |
 | `storage` | MMKV-backed key-value storage — 30× faster than `AsyncStorage` |
+| `secure-storage` | Encrypted key-value storage (iOS Keychain + Android EncryptedSharedPreferences) for auth tokens, biometric secrets |
+| `haptics` | Typed `expo-haptics` wrapper — tap / select / success / warning / error |
+| `push-notifications` | `usePushNotifications` hook — permission flow, Expo Push Token registration, foreground/tap handlers |
 
 Install individually or by category:
 

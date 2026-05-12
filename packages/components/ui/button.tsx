@@ -6,6 +6,7 @@ import {
   type ViewStyle,
   type GestureResponderEvent,
 } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
 import { cn } from '../lib/utils';
 
@@ -23,6 +24,8 @@ interface ButtonProps {
   icon?: keyof typeof Ionicons.glyphMap;
   iconPosition?: 'left' | 'right';
   accessibilityLabel?: string;
+  /** Override default haptic feedback. Defaults to "light" on primary/destructive, "selection" on others, false to disable. */
+  haptic?: 'light' | 'medium' | 'heavy' | 'selection' | false;
   className?: string;
 }
 
@@ -66,15 +69,38 @@ export function Button({
   icon,
   iconPosition = 'left',
   accessibilityLabel,
+  haptic,
   className,
 }: ButtonProps) {
   const v = variantStyles[variant];
   const s = sizeStyles[size];
   const isDisabled = disabled || loading;
 
+  // Resolve haptic style — defaults to "light" for primary/destructive, "selection" elsewhere.
+  const resolvedHaptic =
+    haptic ?? (variant === 'primary' || variant === 'destructive' ? 'light' : 'selection');
+
+  function handlePress(e: GestureResponderEvent) {
+    if (resolvedHaptic && resolvedHaptic !== false) {
+      const fn =
+        resolvedHaptic === 'selection'
+          ? Haptics.selectionAsync()
+          : Haptics.impactAsync(
+              resolvedHaptic === 'heavy'
+                ? Haptics.ImpactFeedbackStyle.Heavy
+                : resolvedHaptic === 'medium'
+                  ? Haptics.ImpactFeedbackStyle.Medium
+                  : Haptics.ImpactFeedbackStyle.Light,
+            );
+      // Don't await — fire-and-forget. Swallow errors (e.g., simulator).
+      fn.catch(() => {});
+    }
+    onPress(e);
+  }
+
   return (
     <Pressable
-      onPress={onPress}
+      onPress={handlePress}
       disabled={isDisabled}
       accessibilityLabel={accessibilityLabel ?? title}
       accessibilityRole="button"

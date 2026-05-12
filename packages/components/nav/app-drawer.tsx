@@ -1,6 +1,13 @@
 import React from 'react';
-import { View, Text, Pressable, Modal, Animated, Dimensions, type GestureResponderEvent } from 'react-native';
+import { View, Text, Pressable, Modal, Dimensions, type GestureResponderEvent } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+  useReducedMotion,
+} from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { cn } from '../lib/utils';
 import { colors } from '../lib/theme';
@@ -45,38 +52,28 @@ export function AppDrawer({
   footer,
   width = 304,
 }: AppDrawerProps) {
-  const translateX = React.useRef(new Animated.Value(-width)).current;
-  const backdropOpacity = React.useRef(new Animated.Value(0)).current;
+  const reduce = useReducedMotion();
+  const translateX = useSharedValue(-width);
+  const backdropOpacity = useSharedValue(0);
 
   React.useEffect(() => {
+    const openDuration = reduce ? 0 : 240;
+    const closeDuration = reduce ? 0 : 200;
     if (visible) {
-      Animated.parallel([
-        Animated.timing(translateX, {
-          toValue: 0,
-          duration: 240,
-          useNativeDriver: true,
-        }),
-        Animated.timing(backdropOpacity, {
-          toValue: 1,
-          duration: 240,
-          useNativeDriver: true,
-        }),
-      ]).start();
+      translateX.value = withTiming(0, { duration: openDuration, easing: Easing.out(Easing.cubic) });
+      backdropOpacity.value = withTiming(1, { duration: openDuration });
     } else {
-      Animated.parallel([
-        Animated.timing(translateX, {
-          toValue: -width,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(backdropOpacity, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ]).start();
+      translateX.value = withTiming(-width, { duration: closeDuration, easing: Easing.in(Easing.cubic) });
+      backdropOpacity.value = withTiming(0, { duration: closeDuration });
     }
-  }, [visible, width, translateX, backdropOpacity]);
+  }, [visible, width, translateX, backdropOpacity, reduce]);
+
+  const drawerStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }));
+  const backdropStyle = useAnimatedStyle(() => ({
+    opacity: backdropOpacity.value,
+  }));
 
   function handleItemPress(item: DrawerItem) {
     return (_e: GestureResponderEvent) => {
@@ -90,12 +87,10 @@ export function AppDrawer({
       <View style={{ flex: 1, flexDirection: 'row' }}>
         {/* Animated drawer */}
         <Animated.View
-          style={{
-            width,
-            height: SCREEN.height,
-            transform: [{ translateX }],
-            backgroundColor: colors.bgElevated,
-          }}
+          style={[
+            { width, height: SCREEN.height, backgroundColor: colors.bgElevated },
+            drawerStyle,
+          ]}
           className="border-r border-border"
         >
           <SafeAreaView edges={['top', 'bottom', 'left']} className="flex-1">
@@ -181,7 +176,7 @@ export function AppDrawer({
         </Animated.View>
 
         {/* Backdrop */}
-        <Animated.View style={{ flex: 1, opacity: backdropOpacity }}>
+        <Animated.View style={[{ flex: 1 }, backdropStyle]}>
           <Pressable onPress={onClose} accessibilityLabel="Close menu" className="flex-1 bg-black/60" />
         </Animated.View>
       </View>

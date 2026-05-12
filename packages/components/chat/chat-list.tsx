@@ -1,5 +1,6 @@
 import React from 'react';
-import { FlatList, View, Text, RefreshControl, type ListRenderItem } from 'react-native';
+import { View, Text, RefreshControl } from 'react-native';
+import { FlashList, type ListRenderItem } from '@shopify/flash-list';
 import { ChatBubble } from './chat-bubble';
 import { colors } from '../lib/theme';
 
@@ -19,6 +20,8 @@ interface ChatListProps {
   onEndReached?: () => void;
   ListHeaderComponent?: React.ComponentType | React.ReactElement | null;
   emptyText?: string;
+  /** Average bubble height. FlashList uses this to recycle rows. Default 72. */
+  estimatedItemSize?: number;
   className?: string;
 }
 
@@ -29,6 +32,7 @@ export function ChatList({
   onEndReached,
   ListHeaderComponent,
   emptyText = 'No messages yet. Say hi 👋',
+  estimatedItemSize = 72,
   className,
 }: ChatListProps) {
   const renderItem: ListRenderItem<ChatMessage> = ({ item }) => (
@@ -40,11 +44,14 @@ export function ChatList({
   );
 
   return (
-    <FlatList
+    <FlashList
       data={messages}
       keyExtractor={(m) => m.id}
       renderItem={renderItem}
       inverted
+      estimatedItemSize={estimatedItemSize}
+      // Different recycling pool for own vs. other bubbles — they have different layouts.
+      getItemType={(item) => (item.isOwn ? 'own' : 'other')}
       contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 12 }}
       onEndReached={onEndReached}
       onEndReachedThreshold={0.4}

@@ -15,8 +15,8 @@ const COMPONENT_META: Record<string, {
   // UI
   'ui/button.tsx': {
     category: 'ui',
-    description: 'Dark-only pressable button with primary, secondary, ghost, destructive, and text variants.',
-    dependencies: ['@expo/vector-icons', 'clsx', 'tailwind-merge'],
+    description: 'Dark-only pressable button with primary/secondary/ghost/destructive/text variants. Built-in haptic feedback on press (configurable via the haptic prop).',
+    dependencies: ['@expo/vector-icons', 'expo-haptics', 'clsx', 'tailwind-merge'],
   },
   'ui/input.tsx': {
     category: 'ui',
@@ -29,12 +29,24 @@ const COMPONENT_META: Record<string, {
   'ui/bottom-sheet.tsx': { category: 'ui', description: 'Modal bottom sheet with backdrop, drag handle, snap points, and smooth animation.' },
   'ui/empty-state.tsx': { category: 'ui', description: 'Empty state with icon, title, message, and optional action button.', dependencies: ['@expo/vector-icons'] },
   'ui/loading-spinner.tsx': { category: 'ui', description: 'Full-screen or inline loading spinner with ActivityIndicator.' },
-  'ui/toast.tsx': { category: 'ui', description: 'Animated toast notifications with success, error, warning, info variants.', dependencies: ['@expo/vector-icons'] },
+  'ui/toast.tsx': {
+    category: 'ui',
+    description: 'Reanimated toast notifications with success, error, warning, info variants — runs on UI thread, respects reduced-motion.',
+    dependencies: ['@expo/vector-icons', 'react-native-reanimated'],
+  },
   'ui/rating.tsx': { category: 'ui', description: 'Interactive star rating with half-star precision and touch selection.', dependencies: ['@expo/vector-icons'] },
   'ui/custom-radio.tsx': { category: 'ui', description: 'Styled radio button group with animated selection indicator.', dependencies: ['@expo/vector-icons'] },
   'ui/divider.tsx': { category: 'ui', description: 'Thin horizontal or vertical divider line with optional label inset.' },
-  'ui/skeleton.tsx': { category: 'ui', description: 'Pulsing placeholder shapes for card, text, avatar, and custom layouts.' },
-  'ui/searchable-select.tsx': { category: 'ui', description: 'Modal searchable picker with type-to-filter and multi-select support.', dependencies: ['@expo/vector-icons'] },
+  'ui/skeleton.tsx': {
+    category: 'ui',
+    description: 'Pulsing placeholder shapes (Reanimated, UI-thread, reduced-motion-aware) for card, text, avatar, and custom layouts.',
+    dependencies: ['react-native-reanimated'],
+  },
+  'ui/searchable-select.tsx': {
+    category: 'ui',
+    description: 'Modal searchable picker with type-to-filter (FlashList-backed for fast scroll through long option lists).',
+    dependencies: ['@expo/vector-icons', '@shopify/flash-list'],
+  },
   'ui/countdown-timer.tsx': { category: 'ui', description: 'Countdown timer with days, hours, minutes, seconds display.' },
   'ui/otp-input.tsx': { category: 'ui', description: 'One-time password input with individual digit boxes and auto-advance.' },
 
@@ -65,8 +77,8 @@ const COMPONENT_META: Record<string, {
   },
   'commerce/wishlist-button.tsx': {
     category: 'commerce',
-    description: 'Animated heart toggle for wishlists — floating variant for over-image overlay, three sizes, full a11y state.',
-    dependencies: ['@expo/vector-icons'],
+    description: 'Animated heart toggle (Reanimated bounce + haptic selection) for wishlists — floating variant for over-image overlay, three sizes, full a11y state.',
+    dependencies: ['@expo/vector-icons', 'react-native-reanimated', 'expo-haptics'],
   },
   'commerce/review-card.tsx': {
     category: 'commerce',
@@ -158,7 +170,8 @@ const COMPONENT_META: Record<string, {
   },
   'chat/chat-list.tsx': {
     category: 'chat',
-    description: 'Inverted FlatList of chat messages with pull-to-refresh, pagination, and empty state.',
+    description: 'Inverted FlashList of chat messages with pull-to-refresh, pagination, recycled rows (different recycling pool for own vs other bubbles), and empty state.',
+    dependencies: ['@shopify/flash-list'],
     registryDependencies: ['chat-bubble'],
   },
   'chat/chat-header.tsx': {
@@ -223,8 +236,8 @@ const COMPONENT_META: Record<string, {
   },
   'nav/app-drawer.tsx': {
     category: 'nav',
-    description: 'Animated left-edge drawer with header (avatar + name), items with icons + badges, dividers, destructive variant, and backdrop tap-to-close.',
-    dependencies: ['@expo/vector-icons', 'react-native-safe-area-context'],
+    description: 'Reanimated left-edge drawer (UI-thread translate + opacity, reduced-motion aware) with header, items with icons + badges, dividers, destructive variant, backdrop tap-to-close.',
+    dependencies: ['@expo/vector-icons', 'react-native-safe-area-context', 'react-native-reanimated'],
   },
 
   // Dashboard
@@ -388,6 +401,42 @@ async function generateRegistry() {
       category: 'lib',
       files: [{ path: 'lib/storage.ts', content: await fs.readFile(storagePath, 'utf-8') }],
       dependencies: ['react-native-mmkv'],
+    });
+  }
+
+  // secure-storage — Keychain/EncryptedSharedPreferences for auth tokens + biometric secrets
+  const secureStoragePath = path.resolve(PACKAGES_DIR, 'lib/secure-storage.ts');
+  if (fs.existsSync(secureStoragePath)) {
+    entries.push({
+      name: 'secure-storage',
+      description: 'Encrypted key-value storage for sensitive data — iOS Keychain + Android EncryptedSharedPreferences. Use for auth tokens (when not using Better Auth\'s built-in storage), biometric secrets, 2FA seeds.',
+      category: 'lib',
+      files: [{ path: 'lib/secure-storage.ts', content: await fs.readFile(secureStoragePath, 'utf-8') }],
+      dependencies: ['expo-secure-store'],
+    });
+  }
+
+  // haptics — wrapped expo-haptics with sensible mobile-first defaults
+  const hapticsPath = path.resolve(PACKAGES_DIR, 'lib/haptics.ts');
+  if (fs.existsSync(hapticsPath)) {
+    entries.push({
+      name: 'haptics',
+      description: 'Typed wrapper around expo-haptics — tap / select / success / warning / error / medium / heavy. Swallows simulator errors. Use on every primary CTA + form completion.',
+      category: 'lib',
+      files: [{ path: 'lib/haptics.ts', content: await fs.readFile(hapticsPath, 'utf-8') }],
+      dependencies: ['expo-haptics'],
+    });
+  }
+
+  // push-notifications — hook that registers an Expo Push Token with your backend
+  const pushPath = path.resolve(PACKAGES_DIR, 'lib/push-notifications.ts');
+  if (fs.existsSync(pushPath)) {
+    entries.push({
+      name: 'push-notifications',
+      description: 'usePushNotifications hook — requests permission post-signin (polite), gets Expo Push Token, registers with your backend, wires foreground + tap handlers. Device.isDevice guarded.',
+      category: 'lib',
+      files: [{ path: 'lib/push-notifications.ts', content: await fs.readFile(pushPath, 'utf-8') }],
+      dependencies: ['expo-notifications', 'expo-device', 'expo-constants'],
     });
   }
 

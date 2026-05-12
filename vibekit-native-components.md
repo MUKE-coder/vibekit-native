@@ -284,7 +284,7 @@ Reusable bits that show up across many screens.
 
 ---
 
-## 11. Library / Infrastructure (4)
+## 11. Library / Infrastructure (7)
 
 These don't render UI — they're typed helpers you import. Install once per project.
 
@@ -329,7 +329,249 @@ const user = storage.getObject<User>('user');
 
 **Native deps:** `react-native-mmkv`
 
-> **For sensitive data (auth tokens, biometric secrets), use `expo-secure-store` directly**, not `storage`. Better Auth's Expo plugin already wires `expo-secure-store` for session storage.
+> **For sensitive data, use `secure-storage` instead** (see below). Better Auth's Expo plugin already wires `expo-secure-store` for session storage.
+
+### `secure-storage`
+
+Encrypted key-value storage for sensitive data — iOS Keychain Services + Android EncryptedSharedPreferences (AES-256). Use for auth tokens (when NOT using Better Auth's built-in storage), biometric secrets, 2FA seeds, saved-card references.
+
+```ts
+import { secureStorage } from '@/components/lib/secure-storage';
+
+await secureStorage.setString('refresh_token', token);
+const token = await secureStorage.getString('refresh_token');
+
+await secureStorage.setObject('biometric', { key: '…', enabled: true });
+await secureStorage.delete('refresh_token');
+```
+
+Web fallback uses `localStorage` (NOT encrypted) — never store real secrets in the web build.
+
+**Native deps:** `expo-secure-store`
+
+### `haptics`
+
+Typed wrapper around `expo-haptics` with sensible defaults. Use on every primary CTA + every form-completion success/error. Swallows errors silently (simulators, accessibility-disabled).
+
+```ts
+import { haptics } from '@/components/lib/haptics';
+
+haptics.tap();      // primary button press
+haptics.select();   // picker change, toggle
+haptics.success();  // form submit success
+haptics.error();    // form submit failure
+haptics.warning();  // confirmation prompt
+haptics.medium();   // swipe action
+haptics.heavy();    // long-press confirm
+```
+
+> The registry `button` component already calls `Haptics.impactAsync(Light)` by default — you only need this helper for custom interactive elements (gesture handlers, swipe rows, etc.).
+
+**Native deps:** `expo-haptics`
+
+### `push-notifications`
+
+`usePushNotifications` hook. Wires `expo-notifications`: requests permission AFTER sign-in (not on cold start — Apple rejects apps that demand permission immediately), gets the Expo Push Token, posts it to YOUR backend at `/api/push/register`, optionally wires foreground + tap handlers.
+
+```tsx
+// app/(tabs)/_layout.tsx
+import { usePushNotifications } from '@/components/lib/push-notifications';
+
+export default function TabsLayout() {
+  usePushNotifications({
+    endpoint: '/api/push/register',
+    onNotificationTapped: (response) => {
+      // Deep-link to the relevant screen
+      const orderId = response.notification.request.content.data?.orderId;
+      if (orderId) router.push(`/orders/${orderId}`);
+    },
+  });
+  return <Tabs ... />;
+}
+```
+
+Your backend stores the token against the signed-in user (Better Auth session). To send a push, hit Expo's Push Service REST API (`https://exp.host/--/api/v2/push/send`).
+
+**Native deps:** `expo-notifications`, `expo-device`, `expo-constants`
+
+---
+
+## End-to-end wiring example
+
+The 30-second mental model for a fresh VibeKit Native project: install the lib helpers + the screens you need, wire them to your Expo API Routes (Prisma + Better Auth + DGateway), and you have a working app.
+
+### Sign-in flow (Better Auth + login-screen)
+
+```bash
+npx vibekit-native install auth api-client
+```
+
+```ts
+// src/lib/auth.ts (server)
+import { betterAuth } from 'better-auth';
+import { prismaAdapter } from 'better-auth/adapters/prisma';
+import { expo } from '@better-auth/expo';
+import { prisma } from './prisma';
+
+export const auth = betterAuth({
+  database: prismaAdapter(prisma, { provider: 'postgresql' }),
+  baseURL: process.env.BETTER_AUTH_URL,
+  secret: process.env.BETTER_AUTH_SECRET,
+  emailAndPassword: { enabled: true },
+  plugins: [expo()],
+});
+```
+
+```ts
+// app/api/auth/[...auth]+api.ts
+import { auth } from '@/src/lib/auth';
+const handler = (req: Request) => auth.handler(req);
+export const GET = handler;
+export const POST = handler;
+```
+
+```tsx
+// src/lib/auth-client.ts (mobile)
+import { createAuthClient } from 'better-auth/react';
+import { expoClient } from '@better-auth/expo/client';
+import * as SecureStore from 'expo-secure-store';
+
+export const authClient = createAuthClient({
+  baseURL: process.env.EXPO_PUBLIC_API_URL,
+  plugins: [expoClient({ scheme: 'myapp', storage: SecureStore })],
+});
+```
+
+```tsx
+// app/(auth)/sign-in.tsx
+import { LoginScreen } from '@/src/components/auth/login-screen';
+import { authClient } from '@/src/lib/auth-client';
+import { useRouter } from 'expo-router';
+
+export default function SignIn() {
+  const router = useRouter();
+  return (
+    <LoginScreen
+      onSubmit={async ({ email, password }) => {
+        const { error } = await authClient.signIn.email({ email, password });
+        if (error) throw new Error(error.message);
+        router.replace('/(tabs)');
+      }}
+    />
+  );
+}
+```
+
+### A CRUD list (Prisma + API Route + FlashList)
+
+```bash
+npx vibekit-native install ui api-client
+```
+
+```ts
+// src/lib/schemas/post.ts — shared by API route + form
+import { z } from 'zod';
+export const CreatePostSchema = z.object({ title: z.string().min(1) });
+export type CreatePost = z.infer<typeof CreatePostSchema>;
+```
+
+```ts
+// app/api/posts/+api.ts
+import { auth } from '@/src/lib/auth';
+import { prisma } from '@/src/lib/prisma';
+
+export async function GET(request: Request) {
+  const session = await auth.api.getSession({ headers: request.headers });
+  if (!session) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const url = new URL(request.url);
+  const cursor = url.searchParams.get('cursor') ?? undefined;
+  const items = await prisma.post.findMany({
+    where: { userId: session.user.id },
+    take: 21,
+    ...(cursor && { cursor: { id: cursor }, skip: 1 }),
+    orderBy: { createdAt: 'desc' },
+  });
+  const hasMore = items.length > 20;
+  return Response.json({
+    data: hasMore ? items.slice(0, -1) : items,
+    nextCursor: hasMore ? items[19].id : null,
+  });
+}
+```
+
+```tsx
+// app/(tabs)/posts.tsx
+import { FlashList } from '@shopify/flash-list';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { Card } from '@/src/components/ui/card';
+import { EmptyState } from '@/src/components/ui/empty-state';
+
+export default function Posts() {
+  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery({
+    queryKey: ['posts'],
+    queryFn: ({ pageParam }) => fetch(`/api/posts?cursor=${pageParam ?? ''}`).then((r) => r.json()),
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (last) => last.nextCursor ?? undefined,
+  });
+  const items = data?.pages.flatMap((p) => p.data) ?? [];
+
+  return (
+    <FlashList
+      data={items}
+      estimatedItemSize={120}
+      renderItem={({ item }) => <Card>{/* … */}</Card>}
+      onEndReached={hasNextPage ? () => fetchNextPage() : undefined}
+      onEndReachedThreshold={0.5}
+      ListEmptyComponent={<EmptyState title="No posts yet" />}
+    />
+  );
+}
+```
+
+### DGateway mobile money checkout (3 components + 3 routes)
+
+```bash
+npx vibekit-native install payments
+```
+
+```tsx
+// app/checkout.tsx
+import { MobileMoneyPayScreen } from '@/src/components/payments/mobile-money-pay-screen';
+import { useRouter } from 'expo-router';
+
+export default function Checkout() {
+  const router = useRouter();
+  return (
+    <MobileMoneyPayScreen
+      defaultAmount={5000}
+      description="Order #1234"
+      metadata={{ orderId: '1234' }}
+      onStarted={(ref) => router.push(`/payment-status?ref=${ref}`)}
+    />
+  );
+}
+```
+
+```tsx
+// app/payment-status.tsx
+import { PaymentStatusScreen } from '@/src/components/payments/payment-status-screen';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+
+export default function Status() {
+  const { ref } = useLocalSearchParams<{ ref: string }>();
+  const router = useRouter();
+  return (
+    <PaymentStatusScreen
+      reference={ref}
+      onSuccess={() => router.replace('/orders')}
+      onFailure={() => router.back()}
+    />
+  );
+}
+```
+
+The 3 server routes (`/api/checkout/start`, `/api/checkout/status/[reference]`, `/api/webhooks/dgateway`) are documented in full in [`master_prompt.md`](./master_prompt.md) → DGATEWAY PATTERN. Each is ~20 lines.
 
 ---
 
