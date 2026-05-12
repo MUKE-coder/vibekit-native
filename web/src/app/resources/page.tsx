@@ -57,7 +57,7 @@ export default function ResourcesPage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "ItemList",
-            name: "VibeKit Curated shadcn/ui Resources",
+            name: "VibeKit Native — Curated Expo & React Native Resources",
             url: `${SITE.url}/resources`,
             numberOfItems: resources.length,
             itemListElement: resources.slice(0, 50).map((r, i) => ({

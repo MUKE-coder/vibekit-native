@@ -155,12 +155,12 @@ export function Testimonials() {
 
       <div className="mx-auto max-w-3xl px-4 sm:px-6 text-center">
         <div className="testimonials-header">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-secondary)]">
+          <div className="inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-secondary)]">
             <Star className="h-3 w-3 text-[color:var(--accent)]" fill="currentColor" />
             From the people shipping with it
           </div>
-          <h2 className="font-display mt-6 text-[clamp(2rem,5vw,3.5rem)] leading-[1.05] tracking-tight text-[color:var(--text-primary)]">
-            Real builders. <em className="not-italic gradient-text">Real shipping.</em>
+          <h2 className="headline-display mt-6 text-[clamp(2rem,5vw,3.5rem)] headline-glow">
+            Real builders. Real shipping.
           </h2>
           <p className="mt-5 text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
             VibeKit Native is used by indie hackers, founders, and agencies shipping React Native apps across East Africa and beyond — anyone who'd rather install than write from scratch.

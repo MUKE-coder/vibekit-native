@@ -129,6 +129,22 @@ const COMPONENT_META: Record<string, {
 
   // Chat
   'chat/chat-bubble.tsx': { category: 'chat', description: 'Chat message bubble with own/other alignment, text, time, and read status.' },
+  'chat/chat-input.tsx': {
+    category: 'chat',
+    description: 'Chat message composer with multiline input, attach button, send button, and KeyboardAvoidingView.',
+    dependencies: ['@expo/vector-icons', 'react-native-safe-area-context'],
+  },
+  'chat/chat-list.tsx': {
+    category: 'chat',
+    description: 'Inverted FlatList of chat messages with pull-to-refresh, pagination, and empty state.',
+    registryDependencies: ['chat-bubble'],
+  },
+  'chat/chat-header.tsx': {
+    category: 'chat',
+    description: 'Chat screen header with avatar, name, online/typing status, back, call, video, and more actions.',
+    dependencies: ['@expo/vector-icons', 'react-native-safe-area-context'],
+    registryDependencies: ['avatar'],
+  },
 
   // Profile
   'profile/points-card.tsx': { category: 'profile', description: 'Loyalty points card with balance, tier progress bar, and history action.', dependencies: ['@expo/vector-icons'] },
@@ -227,6 +243,18 @@ async function generateRegistry() {
       category: 'lib',
       files: coreFiles,
       dependencies: CORE_LIB_DEPENDENCIES,
+    });
+  }
+
+  // api-client — TanStack Query provider with mobile-first defaults
+  const apiClientPath = path.resolve(PACKAGES_DIR, 'lib/api-client.tsx');
+  if (fs.existsSync(apiClientPath)) {
+    entries.push({
+      name: 'api-client',
+      description: 'TanStack Query provider with mobile-first defaults — retries, focus-refetch, online/offline tracking via expo-network.',
+      category: 'lib',
+      files: [{ path: 'lib/api-client.tsx', content: await fs.readFile(apiClientPath, 'utf-8') }],
+      dependencies: ['@tanstack/react-query', 'expo-network'],
     });
   }
 

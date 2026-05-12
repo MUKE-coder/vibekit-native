@@ -54,15 +54,15 @@ export function TerminalPhoneDemo() {
     <section ref={root} id="demo" className="relative py-24 sm:py-32 overflow-hidden">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="text-center max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-secondary)]">
+          <div className="inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-secondary)]">
             <span className="relative flex h-1.5 w-1.5">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--accent)] opacity-60" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
             </span>
             See the flow
           </div>
-          <h2 className="font-display mt-6 text-[clamp(2rem,5vw,3.5rem)] leading-[1.05] tracking-tight text-[color:var(--text-primary)]">
-            Install. Import. <em className="not-italic gradient-text">Render.</em>
+          <h2 className="headline-display mt-6 text-[clamp(2rem,5vw,3.5rem)] headline-glow">
+            Install. Import. Render.
           </h2>
           <p className="mt-5 text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
             One command drops a production-ready component into your project. Import it, wire your data, and see it live.

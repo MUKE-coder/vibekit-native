@@ -56,7 +56,7 @@ export function CommunityBanner() {
   return (
     <section ref={root} id="community" className="relative py-20 sm:py-24 overflow-hidden">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="community-card relative overflow-hidden rounded-[var(--radius-2xl)] border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-6 sm:p-12">
+        <div className="community-card relative overflow-hidden rounded-3xl card-glass p-6 sm:p-12">
           {/* Ambient glow */}
           <div
             aria-hidden
@@ -65,12 +65,12 @@ export function CommunityBanner() {
               background: `radial-gradient(ellipse 60% 70% at 20% 30%, color-mix(in srgb, ${WHATSAPP_GREEN} 18%, transparent), transparent 70%)`,
             }}
           />
-          {/* Faded grid */}
-          <div className="pointer-events-none absolute inset-0 grid-pattern opacity-50" aria-hidden />
+          {/* Circuit grid */}
+          <div className="pointer-events-none absolute inset-0 circuit-grid opacity-50" aria-hidden />
 
           <div className="relative grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
             <div>
-              <div className="community-eyebrow inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--bg)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-secondary)]">
+              <div className="community-eyebrow inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-secondary)]">
                 <span
                   className="grid h-4 w-4 place-items-center rounded-full text-white"
                   style={{ backgroundColor: WHATSAPP_GREEN }}
@@ -80,7 +80,7 @@ export function CommunityBanner() {
                 Community · WhatsApp
               </div>
 
-              <h2 className="community-headline font-display mt-5 text-[clamp(1.75rem,4vw,2.75rem)] leading-[1.05] tracking-tight text-[color:var(--text-primary)]">
+              <h2 className="community-headline headline-display mt-5 text-[clamp(1.75rem,4vw,2.75rem)] headline-glow">
                 Join builders shipping with VibeKit Native.
               </h2>
 

@@ -10,12 +10,12 @@ import { SITE } from "@/lib/utils";
 export const metadata: Metadata = {
   title: "Components — React Native component registry",
   description:
-    "Browse the VibeKit Native component registry: 38 production-ready React Native components for auth, commerce, chat, profile, home, and UI. Install with one npx command.",
+    "Browse the VibeKit Native component registry: 42 production-ready React Native components for auth, commerce, chat, profile, home, and UI. Install with one npx command.",
   alternates: { canonical: "/components" },
   openGraph: {
     title: "VibeKit Native Components — React Native registry",
     description:
-      "38 production-ready React Native components for Expo apps. Auth, commerce, chat, profile, and UI primitives. Install with npx.",
+      "42 production-ready React Native components for Expo apps. Auth, commerce, chat, profile, and UI primitives. Install with npx.",
     url: `${SITE.url}/components`,
     images: ["/og.png"],
   },

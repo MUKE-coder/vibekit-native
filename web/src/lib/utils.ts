@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 export const SITE = {
   name: "VibeKit",
   fullName: "VibeKit Native",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://vibekit-native.desishub.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://native.desishub.com",
   tagline: "React Native components, one npx command",
   description:
     "VibeKit Native is a React Native / Expo component registry with a dark-only design system. Install production-ready components into any Expo project with a single npx command.",

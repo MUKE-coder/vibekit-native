@@ -165,13 +165,13 @@ export function Creator() {
 
           {/* Content */}
           <div>
-            <div className="creator-eyebrow inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-secondary)]">
+            <div className="creator-eyebrow inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-secondary)]">
               <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
               Built by JB · Desishub
             </div>
 
-            <h2 className="creator-headline font-display mt-6 text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.05] tracking-tight text-[color:var(--text-primary)]">
-              Hi, I'm <em className="not-italic gradient-text">JB</em>.
+            <h2 className="creator-headline headline-display mt-6 text-[clamp(2rem,4.5vw,3.5rem)] headline-glow">
+              Hi, I&apos;m JB.
               <br />
               <span className="text-[color:var(--text-secondary)]">I built VibeKit Native</span>
             </h2>

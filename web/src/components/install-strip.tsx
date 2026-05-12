@@ -4,6 +4,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef } from "react";
+import { CopyableCommand } from "./copy-command";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -78,27 +79,14 @@ export function InstallStrip() {
         <div className="mx-auto max-w-2xl text-center">
           <div className="install-eyebrow inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-secondary)]">
             <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
-            38 components · One npx command
+            42 components · One npx command
           </div>
           <h2 className="install-headline headline-display mt-6 text-[clamp(2rem,4.5vw,3rem)] headline-glow">
-            Install any component in one command.
+            42 production components. One command each.
           </h2>
           <p className="install-sub mt-5 text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
             No provider wrappers. No config files. No dependency bloat. Every component is a single editable file that drops into your Expo project.
           </p>
-        </div>
-
-        {/* Terminal command */}
-        <div className="install-command mx-auto mt-10 max-w-xl">
-          <div className="flex items-center gap-3 rounded-full pill-chip px-5 py-3 text-left font-mono text-[13px]">
-            <span className="text-[color:var(--accent)] shrink-0">$</span>
-            <code className="flex-1 truncate text-[color:var(--text-primary)]">
-              npx vibekit-native install login-screen product-card chat-bubble
-            </code>
-            <span className="text-[10px] uppercase tracking-[0.14em] text-[color:var(--text-tertiary)] shrink-0">
-              copy
-            </span>
-          </div>
         </div>
 
         {/* Component grid */}
@@ -120,7 +108,7 @@ export function InstallStrip() {
 
         {/* Footnote */}
         <p className="mt-8 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-tertiary)]">
-           38 components across 7 categories · Install individually, all compatible together
+           42 components across 7 categories · Install individually, all compatible together
         </p>
       </div>
     </section>

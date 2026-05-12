@@ -54,19 +54,18 @@ export function ContributeBanner() {
                 "radial-gradient(ellipse 60% 50% at 80% 20%, color-mix(in srgb, var(--accent) 15%, transparent), transparent 70%)",
             }}
           />
-          {/* Faded grid */}
-          <div className="pointer-events-none absolute inset-0 grid-pattern opacity-50" aria-hidden />
+          {/* Circuit grid */}
+          <div className="pointer-events-none absolute inset-0 circuit-grid opacity-50" aria-hidden />
 
           <div className="relative grid gap-10 md:grid-cols-[1fr_auto] md:items-center">
             <div>
-              <div className="contrib-eyebrow inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--bg)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-secondary)]">
+              <div className="contrib-eyebrow inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-secondary)]">
                 <GitBranch className="h-3 w-3 text-[color:var(--accent)]" />
                 Open source · MIT licensed
               </div>
 
-              <h2 className="contrib-headline font-display mt-6 text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] tracking-tight text-[color:var(--text-primary)]">
-                Got a React Native component?{" "}
-                <em className="not-italic gradient-text">Add it to the registry.</em>
+              <h2 className="contrib-headline headline-display mt-6 text-[clamp(2rem,4.5vw,3.25rem)] headline-glow">
+                Got a React Native component? Add it to the registry.
               </h2>
 
               <p className="contrib-body mt-5 max-w-xl text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
@@ -84,7 +83,7 @@ export function ContributeBanner() {
                 ].map((s) => (
                   <div
                     key={s.label}
-                    className="contrib-stat rounded-md border border-[color:var(--border)] bg-[color:var(--bg)] p-3"
+                    className="contrib-stat rounded-xl card-glass p-3"
                   >
                     <dt className="font-mono text-[10px] uppercase tracking-wider text-[color:var(--text-tertiary)]">
                       {s.label}

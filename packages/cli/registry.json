@@ -642,6 +642,58 @@
       ]
     },
     {
+      "name": "chat-input",
+      "description": "Chat message composer with multiline input, attach button, send button, and KeyboardAvoidingView.",
+      "category": "chat",
+      "files": [
+        {
+          "path": "chat/chat-input.tsx",
+          "content": "import React from 'react';\nimport { View, TextInput, Pressable, Platform, KeyboardAvoidingView } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { SafeAreaView } from 'react-native-safe-area-context';\nimport { cn } from '../lib/utils';\nimport { colors } from '../lib/theme';\n\ninterface ChatInputProps {\n  value: string;\n  onChangeText: (text: string) => void;\n  onSend: () => void;\n  placeholder?: string;\n  disabled?: boolean;\n  onAttach?: () => void;\n  className?: string;\n}\n\nexport function ChatInput({\n  value,\n  onChangeText,\n  onSend,\n  placeholder = 'Message…',\n  disabled = false,\n  onAttach,\n  className,\n}: ChatInputProps) {\n  const canSend = value.trim().length > 0 && !disabled;\n\n  return (\n    <KeyboardAvoidingView\n      behavior={Platform.OS === 'ios' ? 'padding' : undefined}\n      keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}\n    >\n      <SafeAreaView edges={['bottom']} className=\"bg-bg\">\n        <View\n          className={cn(\n            'flex-row items-end gap-2 px-3 py-2 bg-bg border-t border-border',\n            className,\n          )}\n        >\n          {onAttach ? (\n            <Pressable\n              onPress={onAttach}\n              accessibilityLabel=\"Attach\"\n              accessibilityRole=\"button\"\n              hitSlop={8}\n              className=\"h-10 w-10 items-center justify-center rounded-full bg-bgElevated\"\n            >\n              <Ionicons name=\"add\" size={22} color={colors.textSecondary} />\n            </Pressable>\n          ) : null}\n\n          <View className=\"flex-1 min-h-[40px] max-h-[120px] rounded-2xl border border-border bg-bgElevated px-4 py-2 flex-row items-center\">\n            <TextInput\n              value={value}\n              onChangeText={onChangeText}\n              placeholder={placeholder}\n              placeholderTextColor={colors.textTertiary}\n              editable={!disabled}\n              multiline\n              className=\"flex-1 text-[15px] text-textPrimary\"\n              style={{ outlineStyle: 'none', paddingTop: 4, paddingBottom: 4 }}\n            />\n          </View>\n\n          <Pressable\n            onPress={canSend ? onSend : undefined}\n            disabled={!canSend}\n            accessibilityLabel=\"Send message\"\n            accessibilityRole=\"button\"\n            accessibilityState={{ disabled: !canSend }}\n            className={cn(\n              'h-10 w-10 items-center justify-center rounded-full',\n              canSend ? 'bg-accent' : 'bg-bgElevated',\n            )}\n          >\n            <Ionicons\n              name=\"arrow-up\"\n              size={20}\n              color={canSend ? '#FFFFFF' : colors.textTertiary}\n            />\n          </Pressable>\n        </View>\n      </SafeAreaView>\n    </KeyboardAvoidingView>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons",
+        "react-native-safe-area-context"
+      ],
+      "registryDependencies": [
+        "core"
+      ]
+    },
+    {
+      "name": "chat-list",
+      "description": "Inverted FlatList of chat messages with pull-to-refresh, pagination, and empty state.",
+      "category": "chat",
+      "files": [
+        {
+          "path": "chat/chat-list.tsx",
+          "content": "import React from 'react';\nimport { FlatList, View, Text, RefreshControl, type ListRenderItem } from 'react-native';\nimport { ChatBubble } from './chat-bubble';\nimport { colors } from '../lib/theme';\n\nexport interface ChatMessage {\n  id: string;\n  message: string;\n  timestamp: string;\n  isOwn: boolean;\n  senderName?: string;\n  senderAvatar?: string;\n}\n\ninterface ChatListProps {\n  messages: ChatMessage[];\n  onRefresh?: () => void;\n  refreshing?: boolean;\n  onEndReached?: () => void;\n  ListHeaderComponent?: React.ComponentType | React.ReactElement | null;\n  emptyText?: string;\n  className?: string;\n}\n\nexport function ChatList({\n  messages,\n  onRefresh,\n  refreshing = false,\n  onEndReached,\n  ListHeaderComponent,\n  emptyText = 'No messages yet. Say hi 👋',\n  className,\n}: ChatListProps) {\n  const renderItem: ListRenderItem<ChatMessage> = ({ item }) => (\n    <ChatBubble\n      message={item.message}\n      timestamp={item.timestamp}\n      isOwn={item.isOwn}\n    />\n  );\n\n  return (\n    <FlatList\n      data={messages}\n      keyExtractor={(m) => m.id}\n      renderItem={renderItem}\n      inverted\n      contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 12 }}\n      onEndReached={onEndReached}\n      onEndReachedThreshold={0.4}\n      ListHeaderComponent={ListHeaderComponent}\n      refreshControl={\n        onRefresh ? (\n          <RefreshControl\n            refreshing={refreshing}\n            onRefresh={onRefresh}\n            tintColor={colors.accent}\n          />\n        ) : undefined\n      }\n      ListEmptyComponent={\n        <View className=\"flex-1 items-center justify-center py-16\">\n          <Text className=\"text-textTertiary text-[14px]\">{emptyText}</Text>\n        </View>\n      }\n      className={className}\n      showsVerticalScrollIndicator={false}\n      keyboardShouldPersistTaps=\"handled\"\n    />\n  );\n}\n"
+        }
+      ],
+      "registryDependencies": [
+        "core",
+        "chat-bubble"
+      ]
+    },
+    {
+      "name": "chat-header",
+      "description": "Chat screen header with avatar, name, online/typing status, back, call, video, and more actions.",
+      "category": "chat",
+      "files": [
+        {
+          "path": "chat/chat-header.tsx",
+          "content": "import React from 'react';\nimport { View, Text, Pressable } from 'react-native';\nimport { Ionicons } from '@expo/vector-icons';\nimport { SafeAreaView } from 'react-native-safe-area-context';\nimport { Avatar } from '../ui/avatar';\nimport { cn } from '../lib/utils';\nimport { colors } from '../lib/theme';\n\ninterface ChatHeaderProps {\n  name: string;\n  avatarUrl?: string;\n  status?: 'online' | 'offline' | 'typing';\n  lastSeen?: string;\n  onBack?: () => void;\n  onCall?: () => void;\n  onVideoCall?: () => void;\n  onMore?: () => void;\n  className?: string;\n}\n\nconst statusText: Record<'online' | 'offline' | 'typing', string> = {\n  online: 'Online',\n  typing: 'Typing…',\n  offline: 'Offline',\n};\n\nexport function ChatHeader({\n  name,\n  avatarUrl,\n  status,\n  lastSeen,\n  onBack,\n  onCall,\n  onVideoCall,\n  onMore,\n  className,\n}: ChatHeaderProps) {\n  const subtitle = status === 'offline' && lastSeen ? lastSeen : status ? statusText[status] : undefined;\n\n  return (\n    <SafeAreaView edges={['top']} className={cn('bg-bg', className)}>\n      <View className=\"flex-row items-center gap-3 border-b border-border px-3 py-2.5\">\n        {onBack ? (\n          <Pressable\n            onPress={onBack}\n            accessibilityLabel=\"Back\"\n            accessibilityRole=\"button\"\n            hitSlop={8}\n            className=\"h-9 w-9 items-center justify-center\"\n          >\n            <Ionicons name=\"chevron-back\" size={24} color={colors.textPrimary} />\n          </Pressable>\n        ) : null}\n\n        <Avatar source={avatarUrl} name={name} size=\"md\" />\n\n        <View className=\"flex-1\">\n          <Text numberOfLines={1} className=\"text-[15px] font-semibold text-textPrimary\">\n            {name}\n          </Text>\n          {subtitle ? (\n            <View className=\"flex-row items-center gap-1.5 mt-0.5\">\n              {status === 'online' ? (\n                <View className=\"h-2 w-2 rounded-full bg-success\" />\n              ) : null}\n              <Text className=\"text-[12px] text-textTertiary\">{subtitle}</Text>\n            </View>\n          ) : null}\n        </View>\n\n        {onCall ? (\n          <Pressable\n            onPress={onCall}\n            accessibilityLabel=\"Voice call\"\n            accessibilityRole=\"button\"\n            hitSlop={8}\n            className=\"h-9 w-9 items-center justify-center\"\n          >\n            <Ionicons name=\"call-outline\" size={22} color={colors.textPrimary} />\n          </Pressable>\n        ) : null}\n\n        {onVideoCall ? (\n          <Pressable\n            onPress={onVideoCall}\n            accessibilityLabel=\"Video call\"\n            accessibilityRole=\"button\"\n            hitSlop={8}\n            className=\"h-9 w-9 items-center justify-center\"\n          >\n            <Ionicons name=\"videocam-outline\" size={22} color={colors.textPrimary} />\n          </Pressable>\n        ) : null}\n\n        {onMore ? (\n          <Pressable\n            onPress={onMore}\n            accessibilityLabel=\"More options\"\n            accessibilityRole=\"button\"\n            hitSlop={8}\n            className=\"h-9 w-9 items-center justify-center\"\n          >\n            <Ionicons name=\"ellipsis-vertical\" size={22} color={colors.textPrimary} />\n          </Pressable>\n        ) : null}\n      </View>\n    </SafeAreaView>\n  );\n}\n"
+        }
+      ],
+      "dependencies": [
+        "@expo/vector-icons",
+        "react-native-safe-area-context"
+      ],
+      "registryDependencies": [
+        "core",
+        "avatar"
+      ]
+    },
+    {
       "name": "points-card",
       "description": "Loyalty points card with balance, tier progress bar, and history action.",
       "category": "profile",
@@ -696,6 +748,21 @@
       "dependencies": [
         "clsx",
         "tailwind-merge"
+      ]
+    },
+    {
+      "name": "api-client",
+      "description": "TanStack Query provider with mobile-first defaults — retries, focus-refetch, online/offline tracking via expo-network.",
+      "category": "lib",
+      "files": [
+        {
+          "path": "lib/api-client.tsx",
+          "content": "import React from 'react';\nimport { QueryClient, QueryClientProvider, focusManager, onlineManager } from '@tanstack/react-query';\nimport { AppState, type AppStateStatus, Platform } from 'react-native';\nimport * as Network from 'expo-network';\n\n/**\n * VibeKit Native API client + provider.\n *\n * Wraps your app in a TanStack Query provider with sensible mobile defaults:\n *   - retries network errors with exponential backoff\n *   - refetches when the app comes back to the foreground\n *   - tracks online/offline state via expo-network\n *\n * Wire into your root `_layout.tsx`:\n *\n *   import { ApiProvider } from '@/components/lib/api-client';\n *\n *   export default function RootLayout() {\n *     return (\n *       <ApiProvider>\n *         <Slot />\n *       </ApiProvider>\n *     );\n *   }\n */\n\nconst queryClient = new QueryClient({\n  defaultOptions: {\n    queries: {\n      retry: 2,\n      retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 30_000),\n      staleTime: 60_000,\n      gcTime: 5 * 60_000,\n      refetchOnWindowFocus: true,\n    },\n    mutations: {\n      retry: 1,\n    },\n  },\n});\n\nfunction onAppStateChange(status: AppStateStatus) {\n  if (Platform.OS !== 'web') {\n    focusManager.setFocused(status === 'active');\n  }\n}\n\ninterface ApiProviderProps {\n  children: React.ReactNode;\n}\n\nexport function ApiProvider({ children }: ApiProviderProps) {\n  React.useEffect(() => {\n    const sub = AppState.addEventListener('change', onAppStateChange);\n    return () => sub.remove();\n  }, []);\n\n  React.useEffect(() => {\n    return onlineManager.subscribe(() => {\n      // no-op — we set onlineManager via the effect below\n    });\n  }, []);\n\n  React.useEffect(() => {\n    let mounted = true;\n\n    const setOnlineFromNetwork = async () => {\n      try {\n        const state = await Network.getNetworkStateAsync();\n        if (mounted) {\n          onlineManager.setOnline(Boolean(state.isConnected && state.isInternetReachable !== false));\n        }\n      } catch {\n        // expo-network not available — assume online\n        onlineManager.setOnline(true);\n      }\n    };\n\n    setOnlineFromNetwork();\n    const interval = setInterval(setOnlineFromNetwork, 30_000);\n\n    return () => {\n      mounted = false;\n      clearInterval(interval);\n    };\n  }, []);\n\n  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;\n}\n\nexport { queryClient };\n"
+        }
+      ],
+      "dependencies": [
+        "@tanstack/react-query",
+        "expo-network"
       ]
     }
   ]

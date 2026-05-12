@@ -6,6 +6,7 @@ import { ArrowUpRight, Github, Terminal, Layers } from "lucide-react";
 import { useRef } from "react";
 import { Button } from "./ui/button";
 import { HeroEffects } from "./hero-effects";
+import { CopyableCommand } from "./copy-command";
 
 const stackChips = [
   "Expo SDK 55",
@@ -123,15 +124,7 @@ export function Hero() {
 
         {/* Install command */}
         <div className="mx-auto mt-12 max-w-md px-2 sm:px-0">
-          <div className="hero-cta flex items-center gap-2 sm:gap-3 rounded-full pill-chip px-4 sm:px-5 py-2.5 sm:py-3 text-left font-mono text-[12px] sm:text-[13px] min-w-0">
-            <span className="text-[color:var(--accent)] shrink-0">$</span>
-            <code className="flex-1 truncate text-[color:var(--text-primary)]">
-              npx vibekit-native install button
-            </code>
-            <span className="hidden sm:inline text-[10px] uppercase tracking-[0.14em] text-[color:var(--text-tertiary)] shrink-0">
-              copy
-            </span>
-          </div>
+          <CopyableCommand command="npx vibekit-native install button" />
         </div>
 
         {/* Stack chips */}
@@ -282,7 +275,7 @@ function CardMockSecondary({ variant }: { variant: "left" | "right" }) {
         {variant === "left" ? "Welcome to the kit" : "Pick a category"}
       </p>
       <p className="mt-1 text-center text-[11px] text-[color:var(--text-tertiary)]">
-        {variant === "left" ? "Log in to continue" : "All 38 components"}
+        {variant === "left" ? "Log in to continue" : "All 42 components"}
       </p>
       <div className="mt-6 space-y-3">
         <div className="h-9 rounded-md border border-[color:var(--border)] bg-[color:var(--bg)]" />

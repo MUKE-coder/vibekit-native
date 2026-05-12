@@ -98,27 +98,27 @@ export function HowItWorksFlow() {
       id="how-it-works"
       className="relative py-24 sm:py-32 overflow-hidden"
     >
-      {/* Faded grid background */}
-      <div className="pointer-events-none absolute inset-0 grid-pattern opacity-50" aria-hidden />
-      {/* Soft accent bloom */}
+      {/* Circuit grid background */}
+      <div className="pointer-events-none absolute inset-0 circuit-grid opacity-50" aria-hidden />
+      {/* Top spotlight */}
       <div
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute inset-x-0 top-0 h-80"
         aria-hidden
         style={{
           background:
-            "radial-gradient(ellipse 50% 60% at 50% 30%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 70%)",
+            "radial-gradient(ellipse 60% 100% at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 80%)",
         }}
       />
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         {/* Header */}
         <div className="mx-auto max-w-2xl text-center">
-          <div className="flow-eyebrow inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-secondary)]">
+          <div className="flow-eyebrow inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-secondary)]">
             <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
             How it works
           </div>
-          <h2 className="flow-headline font-display mt-6 text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] tracking-tight text-[color:var(--text-primary)]">
-            Install. Customize. <em className="not-italic gradient-text">Ship.</em>
+          <h2 className="flow-headline headline-display mt-6 text-[clamp(2rem,4.5vw,3.25rem)] headline-glow">
+            Install. Customize. Ship.
           </h2>
           <p className="flow-sub mt-5 text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
             Three steps from zero to a production React Native app. No boilerplate, no config, no context providers to wrap.
@@ -145,7 +145,7 @@ function FlowFragment({ step, isLast }: { step: Step; isLast: boolean }) {
   return (
     <>
       {/* Step card */}
-      <article className="flow-step relative flex flex-col rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-6 sm:p-7 transition-colors hover:border-[color:var(--border-strong)]">
+      <article className="flow-step relative flex flex-col rounded-2xl card-glass p-6 sm:p-7 transition-all hover:-translate-y-0.5">
         {/* Step number + eyebrow */}
         <div className="flex items-baseline justify-between gap-3">
           <span className="font-mono text-[36px] sm:text-[48px] font-light leading-none text-[color:var(--accent)] tabular-nums">

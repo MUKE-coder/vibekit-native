@@ -162,6 +162,11 @@ function ParticleField() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    // Respect prefers-reduced-motion — don't run the animation at all
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reducedMotion) return;
+
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
@@ -172,6 +177,7 @@ function ParticleField() {
     let mouseX = 0;
     let mouseY = 0;
     let scrollOffset = 0;
+    let visible = true;
 
     const accentColor = () =>
       getComputedStyle(document.documentElement)
@@ -224,6 +230,12 @@ function ParticleField() {
     };
 
     const draw = () => {
+      // Skip work entirely when hero is offscreen
+      if (!visible) {
+        raf = requestAnimationFrame(draw);
+        return;
+      }
+
       ctx.clearRect(0, 0, width, height);
 
       const accent = accentColor();
@@ -281,6 +293,22 @@ function ParticleField() {
     window.addEventListener("resize", resize);
     window.addEventListener("pointermove", handleMove, { passive: true });
     window.addEventListener("scroll", handleScroll, { passive: true });
+
+    // Pause animation when hero scrolls offscreen
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+      },
+      { threshold: 0.01 }
+    );
+    observer.observe(canvas);
+
+    // Pause when tab is hidden
+    const onVisibility = () => {
+      visible = !document.hidden && canvas.getBoundingClientRect().bottom > 0;
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
     draw();
 
     return () => {
@@ -288,6 +316,8 @@ function ParticleField() {
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", handleMove);
       window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("visibilitychange", onVisibility);
+      observer.disconnect();
     };
   }, []);
 

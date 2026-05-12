@@ -151,11 +151,25 @@ body { overflow-x: hidden; }
 .font-display { font-family: var(--font-display); letter-spacing: -0.02em; }
 .font-mono { font-family: var(--font-mono); }
 
+/* In light mode: subtle accent emphasis. In dark: matches .headline-glow
+   exactly so <em className="gradient-text"> fragments inside a .headline-glow
+   parent stay visually unified. */
 .gradient-text {
   background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.dark .gradient-text {
+  background: linear-gradient(180deg, #FFFFFF 0%, #D4DFF2 35%, #A8BCE0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow:
+    0 0 30px rgba(200, 215, 245, 0.45),
+    0 0 80px rgba(140, 170, 230, 0.25);
+  filter: drop-shadow(0 0 20px rgba(184, 202, 232, 0.28));
 }
 
 .glass {
@@ -203,9 +217,11 @@ body { overflow-x: hidden; }
   filter: blur(40px);
 }
 
-/* Glowing headline — bright icy-blue with soft outer halo */
+/* Glowing headline — bright icy-blue in dark, deep ink in light */
 .headline-glow {
-  color: #E6EEFB;
+  color: var(--text-primary);
+}
+.dark .headline-glow {
   background: linear-gradient(180deg, #FFFFFF 0%, #D4DFF2 35%, #A8BCE0 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -218,6 +234,9 @@ body { overflow-x: hidden; }
 }
 
 .headline-glow-strong {
+  color: var(--text-primary);
+}
+.dark .headline-glow-strong {
   background: linear-gradient(180deg, #FFFFFF 0%, #DCE6F5 30%, #93AEDB 100%);
   -webkit-background-clip: text;
   background-clip: text;

@@ -14,7 +14,7 @@ const GITHUB_URL = "https://github.com/MUKE-coder/vibekit-native";
 const navLinks = [
   { href: "/components", label: "Components" },
   { href: "/docs", label: "Docs" },
-  { href: "/install", label: "Install" },
+  { href: "/setup", label: "Setup" },
 ];
 
 export function Nav() {
