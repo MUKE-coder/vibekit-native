@@ -58,6 +58,10 @@ export function HowItWorksFlow() {
 
   useGSAP(
     () => {
+      // Only animate the header text. The 3 step cards + arrows were
+      // previously animated via a chained .from() timeline that occasionally
+      // left them stuck at opacity:0 (race with ScrollTrigger registration).
+      // Cards now render at their natural CSS state — visible immediately.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: root.current,
@@ -67,22 +71,9 @@ export function HowItWorksFlow() {
         defaults: { ease: "power3.out" },
       });
 
-      tl.from(".flow-eyebrow", { y: 14, opacity: 0, duration: 0.5 })
-        .from(".flow-headline", { y: 18, opacity: 0, duration: 0.6 }, "-=0.3")
-        .from(".flow-sub", { y: 12, opacity: 0, duration: 0.5 }, "-=0.3")
-        .from(".flow-step", {
-          y: 24,
-          opacity: 0,
-          stagger: 0.18,
-          duration: 0.7,
-          ease: "power3.out",
-        }, "-=0.2")
-        .from(".flow-arrow", {
-          opacity: 0,
-          x: -8,
-          stagger: 0.18,
-          duration: 0.4,
-        }, "-=0.9");
+      tl.fromTo(".flow-eyebrow", { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 })
+        .fromTo(".flow-headline", { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, "-=0.3")
+        .fromTo(".flow-sub", { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 }, "-=0.3");
     },
     { scope: root }
   );
