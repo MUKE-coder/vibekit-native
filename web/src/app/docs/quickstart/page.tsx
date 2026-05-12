@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
+import { CopyableCommand } from "@/components/copy-command";
 import { SITE } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -78,10 +79,11 @@ export default function Quickstart() {
           </Link>
 
           <header className="mt-8 border-b border-[color:var(--border)] pb-10">
-            <div className="font-mono text-[11px] uppercase tracking-wider text-[color:var(--accent)]">
+            <div className="inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--accent)]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
               Guide · 7 steps · ~5 min read
             </div>
-            <h1 className="mt-3 font-mono text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase tracking-tight text-[color:var(--text-primary)]">
+            <h1 className="mt-5 headline-display text-[clamp(2.25rem,5vw,3.75rem)] headline-glow-strong">
               Quickstart
             </h1>
             <p className="mt-5 text-[18px] leading-relaxed text-[color:var(--text-secondary)]">
@@ -90,7 +92,7 @@ export default function Quickstart() {
           </header>
 
           {/* Prerequisites */}
-          <div className="mt-8 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-5">
+          <div className="mt-8 rounded-2xl card-glass p-5">
             <h2 className="font-mono text-[11px] uppercase tracking-wider text-[color:var(--accent)]">
               Prerequisites
             </h2>
@@ -125,20 +127,19 @@ export default function Quickstart() {
           </ol>
 
           {/* Example install block */}
-          <div className="mt-14 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-6">
-            <h3 className="font-mono text-[12px] uppercase tracking-wider text-[color:var(--accent)]">
+          <div className="mt-14 rounded-2xl card-glass p-6">
+            <h3 className="font-mono text-[12px] uppercase tracking-[0.14em] text-[color:var(--accent)]">
               One-command example
             </h3>
-            <div className="mt-4 flex items-center gap-3 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-subtle)] px-4 py-3 font-mono text-[13px]">
-              <span className="text-[color:var(--text-tertiary)]">$</span>
-              <code className="text-[color:var(--text-primary)]">npx vibekit-native install login-screen register-screen product-card chat-bubble</code>
+            <div className="mt-4">
+              <CopyableCommand command="npx vibekit-native install login-screen register-screen product-card chat-bubble" />
             </div>
             <p className="mt-3 text-[13px] text-[color:var(--text-tertiary)]">
               Four components, four features, one command. Each file drops into your project ready to edit and ship.
             </p>
           </div>
 
-          <div className="mt-14 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-6">
+          <div className="mt-14 rounded-2xl card-glass p-6">
             <h3 className="font-mono text-[12px] uppercase tracking-wider text-[color:var(--accent)]">
               That's it
             </h3>

@@ -88,7 +88,7 @@ export default function FAQ() {
           description="Everything you might want to know about VibeKit Native, how the CLI works, and how it fits into your Expo workflow."
           containerClassName="max-w-3xl"
         >
-          <ol className="reveal divide-y divide-[color:var(--border)] rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)]">
+          <ol className="reveal divide-y divide-[color:var(--border)] rounded-2xl card-glass">
             {faqs.map((f, i) => (
               <li key={f.q} className="p-6 sm:p-8">
                 <div className="flex items-start gap-5">

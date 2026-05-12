@@ -63,7 +63,7 @@ export default function SetupPage() {
         <Section eyebrow="WHAT YOU NEED" title="Three tools. That's it." containerClassName="max-w-4xl">
           <div className="grid gap-3 sm:grid-cols-2">
             {requirements.map((r) => (
-              <div key={r.name} className="reveal flex items-start gap-4 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-5">
+              <div key={r.name} className="reveal flex items-start gap-4 rounded-2xl card-glass p-5">
                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-md border border-[color:var(--border)] bg-[color:var(--bg-subtle)] text-[color:var(--accent)]">
                   <Package className="h-4 w-4" />
                 </span>

@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowUpRight, Check, ExternalLink, X } from "lucide-react";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
+import { CopyableCommand } from "@/components/copy-command";
 import {
   components,
   getAllComponentSlugs,
@@ -77,10 +78,11 @@ export default async function ComponentDetailPage({
 
           {/* Header */}
           <header className="mt-8 border-b border-[color:var(--border)] pb-12">
-            <div className="font-mono text-[11px] uppercase tracking-wider text-[color:var(--accent)]">
+            <div className="inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--accent)]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
               {c.categoryLabel} component
             </div>
-            <h1 className="mt-3 font-mono text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase tracking-tight text-[color:var(--text-primary)]">
+            <h1 className="mt-5 headline-display text-[clamp(2.25rem,5vw,3.75rem)] headline-glow-strong">
               {c.name}
             </h1>
             <p className="mt-5 max-w-2xl text-[18px] leading-relaxed text-[color:var(--text-secondary)]">
@@ -88,7 +90,7 @@ export default async function ComponentDetailPage({
             </p>
 
             {c.sourceLabel ? (
-              <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-secondary)]">
+              <div className="mt-6 inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-secondary)]">
                 <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
                 Source: {c.sourceLabel}
               </div>
@@ -109,14 +111,7 @@ export default async function ComponentDetailPage({
 
           {/* Install command */}
           <Block title="Install">
-            <div className="rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-5">
-              <div className="font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-tertiary)]">
-                $ Run in your project root
-              </div>
-              <pre className="mt-3 overflow-x-auto font-mono text-[13px] leading-relaxed text-[color:var(--text-primary)]">
-                <code>{c.install}</code>
-              </pre>
-            </div>
+            <CopyableCommand command={c.install} />
           </Block>
 
           {/* Features */}
@@ -134,16 +129,16 @@ export default async function ComponentDetailPage({
           {/* When to use / not to use */}
           <Block title="When to use">
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-5">
-                <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-[color:var(--accent)]">
+              <div className="rounded-2xl card-glass p-5">
+                <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--accent)]">
                   <Check className="h-3.5 w-3.5" aria-hidden /> Use it
                 </div>
                 <p className="mt-3 text-[14.5px] leading-relaxed text-[color:var(--text-primary)]">
                   {c.whenToUse}
                 </p>
               </div>
-              <div className="rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-5">
-                <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-tertiary)]">
+              <div className="rounded-2xl card-glass p-5">
+                <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-tertiary)]">
                   <X className="h-3.5 w-3.5" aria-hidden /> Skip it
                 </div>
                 <p className="mt-3 text-[14.5px] leading-relaxed text-[color:var(--text-primary)]">
@@ -160,7 +155,7 @@ export default async function ComponentDetailPage({
                 {c.prerequisites.map((p) => (
                   <li
                     key={p}
-                    className="rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-4 py-3 font-mono text-[13px] text-[color:var(--text-primary)]"
+                    className="rounded-xl card-glass px-4 py-3 font-mono text-[13px] text-[color:var(--text-primary)]"
                   >
                     {p}
                   </li>
@@ -172,7 +167,7 @@ export default async function ComponentDetailPage({
           {/* Env vars */}
           {c.envVars && c.envVars.length > 0 ? (
             <Block title="Environment variables">
-              <div className="overflow-hidden rounded-md border border-[color:var(--border)]">
+              <div className="overflow-hidden rounded-2xl card-glass">
                 <table className="w-full text-left">
                   <thead className="border-b border-[color:var(--border)] bg-[color:var(--bg-subtle)]">
                     <tr>
@@ -215,7 +210,7 @@ export default async function ComponentDetailPage({
                 {c.filesAdded.map((f) => (
                   <li
                     key={f}
-                    className="rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-4 py-2.5 font-mono text-[13px] text-[color:var(--text-primary)]"
+                    className="rounded-xl card-glass px-4 py-2.5 font-mono text-[13px] text-[color:var(--text-primary)]"
                   >
                     {f}
                   </li>
@@ -232,7 +227,7 @@ export default async function ComponentDetailPage({
                   <Link
                     key={r.slug}
                     href={`/components/${r.slug}`}
-                    className="group rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-4 transition-all hover:border-[color:var(--border-strong)]"
+                    className="group rounded-2xl card-glass p-4 transition-all hover:-translate-y-0.5"
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-[10px] uppercase tracking-wider text-[color:var(--text-tertiary)]">

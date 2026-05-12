@@ -1131,6 +1131,20 @@
       "dependencies": [
         "expo-constants"
       ]
+    },
+    {
+      "name": "storage",
+      "description": "Fast key-value storage backed by MMKV (~30x faster than AsyncStorage). Typed getters/setters for strings, booleans, numbers, and JSON objects.",
+      "category": "lib",
+      "files": [
+        {
+          "path": "lib/storage.ts",
+          "content": "import { MMKV } from 'react-native-mmkv';\n\n/**\n * VibeKit Native — fast key-value storage backed by MMKV.\n *\n * MMKV is ~30× faster than AsyncStorage, runs on the JS thread without\n * crossing the bridge, and supports encryption. Use it for tokens,\n * preferences, cached responses, and anything else AsyncStorage was\n * doing.\n *\n * For sensitive secrets (auth tokens, biometric data), pair MMKV with\n * expo-secure-store via the `encryptionKey` option below or store the\n * sensitive value in SecureStore and a non-sensitive reference here.\n *\n * Docs: https://github.com/mrousavy/react-native-mmkv\n *\n * Usage:\n *   import { storage } from '@/lib/storage';\n *\n *   storage.setString('theme', 'dark');\n *   const theme = storage.getString('theme');           // 'dark'\n *\n *   storage.setObject('user', { id: 1, name: 'Jane' });\n *   const user = storage.getObject<{ id: number; name: string }>('user');\n *\n *   storage.delete('user');\n *   storage.clearAll();\n */\n\nconst mmkv = new MMKV({\n  id: 'vibekit-native',\n  // To encrypt the entire instance, derive a key (e.g., from expo-secure-store)\n  // and pass it here. Don't hard-code the key.\n  // encryptionKey: someKeyFromSecureStore,\n});\n\nexport const storage = {\n  /* String */\n  setString(key: string, value: string): void {\n    mmkv.set(key, value);\n  },\n  getString(key: string): string | undefined {\n    return mmkv.getString(key);\n  },\n\n  /* Boolean */\n  setBoolean(key: string, value: boolean): void {\n    mmkv.set(key, value);\n  },\n  getBoolean(key: string): boolean | undefined {\n    return mmkv.getBoolean(key);\n  },\n\n  /* Number */\n  setNumber(key: string, value: number): void {\n    mmkv.set(key, value);\n  },\n  getNumber(key: string): number | undefined {\n    return mmkv.getNumber(key);\n  },\n\n  /* JSON */\n  setObject<T>(key: string, value: T): void {\n    mmkv.set(key, JSON.stringify(value));\n  },\n  getObject<T>(key: string): T | undefined {\n    const raw = mmkv.getString(key);\n    if (raw == null) return undefined;\n    try {\n      return JSON.parse(raw) as T;\n    } catch {\n      return undefined;\n    }\n  },\n\n  /* Maintenance */\n  delete(key: string): void {\n    mmkv.delete(key);\n  },\n  clearAll(): void {\n    mmkv.clearAll();\n  },\n  contains(key: string): boolean {\n    return mmkv.contains(key);\n  },\n  getAllKeys(): string[] {\n    return mmkv.getAllKeys();\n  },\n};\n\nexport { mmkv };\n"
+        }
+      ],
+      "dependencies": [
+        "react-native-mmkv"
+      ]
     }
   ]
 }

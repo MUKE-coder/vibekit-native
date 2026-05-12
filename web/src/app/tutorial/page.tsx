@@ -198,7 +198,7 @@ export default function TutorialPage() {
           containerClassName="max-w-5xl"
         >
           <div className="grid gap-6 sm:grid-cols-2">
-            <div className="reveal rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-6">
+            <div className="reveal rounded-2xl card-glass p-6">
               <h3 className="font-mono text-[12px] uppercase tracking-wider text-[color:var(--accent)]">
                 Features you'll ship
               </h3>
@@ -225,7 +225,7 @@ export default function TutorialPage() {
               </ul>
             </div>
 
-            <div className="reveal rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-6">
+            <div className="reveal rounded-2xl card-glass p-6">
               <h3 className="font-mono text-[12px] uppercase tracking-wider text-[color:var(--accent)]">
                 Skills you'll learn
               </h3>
@@ -288,7 +288,7 @@ export default function TutorialPage() {
                 <li key={slug}>
                   <a
                     href={`#${slug}`}
-                    className="group flex items-start gap-4 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-4 transition-all hover:-translate-y-0.5 hover:border-[color:var(--border-strong)]"
+                    className="group flex items-start gap-4 rounded-2xl card-glass p-4 transition-all hover:-translate-y-0.5 hover:border-[color:var(--border-strong)]"
                   >
                     <span className="grid h-10 w-10 shrink-0 place-items-center rounded-md border border-[color:var(--border)] bg-[color:var(--bg-subtle)] text-[color:var(--text-secondary)] transition-colors group-hover:text-[color:var(--accent)]">
                       <m.Icon className="h-4 w-4" />
@@ -949,7 +949,7 @@ NEXT_PUBLIC_APP_URL=https://hardware-pos.vercel.app`}
             ].map((n) => (
               <li
                 key={n.title}
-                className="rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-5"
+                className="rounded-2xl card-glass p-5"
               >
                 <h3 className="font-mono text-[13px] uppercase tracking-tight text-[color:var(--text-primary)]">
                   {n.title}
@@ -1077,7 +1077,7 @@ function Checklist({
       {items.map((item) => (
         <li
           key={item.name}
-          className="rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-4"
+          className="rounded-2xl card-glass p-4"
         >
           <a
             href={item.url}

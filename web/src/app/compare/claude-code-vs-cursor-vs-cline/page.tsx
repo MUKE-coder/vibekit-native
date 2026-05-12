@@ -183,7 +183,7 @@ export default function CompareClaudeCursorCline() {
           </section>
 
           {/* Verdict */}
-          <section className="mt-14 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-8">
+          <section className="mt-14 rounded-2xl card-glass p-8">
             <h2 className="font-mono text-[14px] uppercase tracking-tight text-[color:var(--text-primary)]">
               Our take
             </h2>
@@ -229,7 +229,7 @@ export default function CompareClaudeCursorCline() {
 
 function Pick({ title, points }: { title: string; points: string[] }) {
   return (
-    <div className="rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-5">
+    <div className="rounded-2xl card-glass p-5">
       <h3 className="font-mono text-[12px] uppercase tracking-wider text-[color:var(--accent)]">
         {title}
       </h3>

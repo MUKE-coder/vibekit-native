@@ -83,7 +83,7 @@ export default function CompareVibeKitCNA() {
 
           {/* TL;DR */}
           <section className="mt-12 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-6">
+            <div className="rounded-2xl card-glass p-6">
               <h3 className="font-mono text-[12px] uppercase tracking-wider text-[color:var(--text-tertiary)]">
                 Pick create-next-app if...
               </h3>
@@ -148,7 +148,7 @@ export default function CompareVibeKitCNA() {
           </section>
 
           {/* Combined approach */}
-          <section className="mt-14 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-8">
+          <section className="mt-14 rounded-2xl card-glass p-8">
             <h2 className="font-mono text-[14px] uppercase tracking-tight text-[color:var(--text-primary)]">
               They're not mutually exclusive
             </h2>

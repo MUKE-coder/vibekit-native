@@ -379,6 +379,18 @@ async function generateRegistry() {
     });
   }
 
+  // storage — MMKV-backed fast key-value storage (30x faster than AsyncStorage)
+  const storagePath = path.resolve(PACKAGES_DIR, 'lib/storage.ts');
+  if (fs.existsSync(storagePath)) {
+    entries.push({
+      name: 'storage',
+      description: 'Fast key-value storage backed by MMKV (~30x faster than AsyncStorage). Typed getters/setters for strings, booleans, numbers, and JSON objects.',
+      category: 'lib',
+      files: [{ path: 'lib/storage.ts', content: await fs.readFile(storagePath, 'utf-8') }],
+      dependencies: ['react-native-mmkv'],
+    });
+  }
+
   await fs.ensureDir(path.dirname(CLI_REGISTRY_PATH));
   await fs.writeJson(CLI_REGISTRY_PATH, { components: entries }, { spaces: 2 });
 

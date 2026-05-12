@@ -125,7 +125,7 @@ export default function PerformancePage() {
           description="Every component ships meeting these baselines. No jank, no lag, no surprises on real devices."
           containerClassName="max-w-5xl"
         >
-          <div className="reveal overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--bg-elevated)]">
+          <div className="reveal overflow-hidden rounded-2xl card-glass">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead className="bg-[color:var(--bg-subtle)] text-[11px] font-mono uppercase tracking-wider text-[color:var(--text-tertiary)]">
@@ -161,7 +161,7 @@ export default function PerformancePage() {
               {perfFeatures.map((f) => (
                 <article
                   key={f.title}
-                  className="reveal group rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-6 transition-all hover:border-[color:var(--border-strong)] sm:p-8"
+                  className="reveal group rounded-2xl card-glass p-6 transition-all hover:border-[color:var(--border-strong)] sm:p-8"
                 >
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-[var(--radius)] bg-[color:var(--accent)]/10">
@@ -202,7 +202,7 @@ export default function PerformancePage() {
             description="Same feature set. Same framework. The difference is whether performance patterns are built into the components or left to chance."
             containerClassName="max-w-5xl"
           >
-            <div className="reveal overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--bg-elevated)]">
+            <div className="reveal overflow-hidden rounded-2xl card-glass">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-[color:var(--bg-subtle)] text-[11px] font-mono uppercase tracking-wider text-[color:var(--text-tertiary)]">

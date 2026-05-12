@@ -83,10 +83,11 @@ Begin with section 1 now.`;
           </Link>
 
           <header className="mt-8 border-b border-[color:var(--border)] pb-12">
-            <div className="font-mono text-[11px] uppercase tracking-wider text-[color:var(--accent)]">
+            <div className="inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--accent)]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
               {t.categoryLabel} template
             </div>
-            <h1 className="mt-3 font-mono text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase tracking-tight text-[color:var(--text-primary)]">
+            <h1 className="mt-5 headline-display text-[clamp(2.25rem,5vw,3.75rem)] headline-glow-strong">
               {t.name}
             </h1>
             <p className="mt-5 max-w-2xl text-[18px] leading-relaxed text-[color:var(--text-secondary)]">
@@ -97,7 +98,7 @@ Begin with section 1 now.`;
               {t.stack.map((s) => (
                 <span
                   key={s}
-                  className="rounded border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-2 py-0.5 font-mono text-[11px] text-[color:var(--text-secondary)]"
+                  className="pill-chip rounded-full px-2.5 py-0.5 font-mono text-[11px] text-[color:var(--text-secondary)]"
                 >
                   {s}
                 </span>
@@ -156,7 +157,7 @@ pnpm dev`}
           {/* When to use / not to use */}
           <Block title="When to use">
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-5">
+              <div className="rounded-2xl card-glass p-5">
                 <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-[color:var(--accent)]">
                   <Check className="h-3.5 w-3.5" /> Use it
                 </div>
@@ -164,7 +165,7 @@ pnpm dev`}
                   {t.whenToUse}
                 </p>
               </div>
-              <div className="rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-5">
+              <div className="rounded-2xl card-glass p-5">
                 <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-tertiary)]">
                   <X className="h-3.5 w-3.5" /> Skip it
                 </div>
@@ -184,7 +185,7 @@ pnpm dev`}
               {t.sections.map((s, i) => (
                 <li
                   key={s.id}
-                  className="rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-5"
+                  className="rounded-2xl card-glass p-5"
                 >
                   <div className="flex items-baseline justify-between gap-3">
                     <span className="font-mono text-[12px] uppercase tracking-wider text-[color:var(--accent)] tabular-nums">
@@ -233,7 +234,7 @@ pnpm dev`}
                   <Link
                     key={r.slug}
                     href={`/templates/${r.slug}`}
-                    className="group rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-4 transition-all hover:border-[color:var(--border-strong)]"
+                    className="group rounded-2xl card-glass p-4 transition-all hover:border-[color:var(--border-strong)]"
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-[10px] uppercase tracking-wider text-[color:var(--text-tertiary)]">

@@ -81,7 +81,7 @@ export default function ContributePage() {
         <Section eyebrow="WHY CONTRIBUTE" title="Build once. Ship in every project." description="A merged component ships with every npx vibekit-native install — not just yours." containerClassName="max-w-4xl">
           <div className="grid gap-4 sm:grid-cols-3">
             {whyItems.map((c) => (
-              <div key={c.title} className="reveal rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-6">
+              <div key={c.title} className="reveal rounded-2xl card-glass p-6">
                 <h3 className="font-mono text-[13px] uppercase tracking-tight text-[color:var(--text-primary)]">{c.title}</h3>
                 <p className="mt-3 text-[14px] leading-relaxed text-[color:var(--text-secondary)]">{c.body}</p>
               </div>
@@ -106,7 +106,7 @@ export default function ContributePage() {
         </Section>
 
         <Section eyebrow="DESIGN REQUIREMENTS" title="Must match the system." description="Every component must follow the dark-only design tokens. See the reference guide on GitHub for exact colors, spacing, and radius." containerClassName="max-w-3xl">
-          <div className="reveal rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-6">
+          <div className="reveal rounded-2xl card-glass p-6">
             <ul className="space-y-3">
               {[
                 "Dark background (#0A0A0A), elevated surface (#121212), indigo accent (#6366F1)",

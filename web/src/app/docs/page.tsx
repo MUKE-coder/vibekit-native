@@ -50,7 +50,7 @@ export default function DocsHub() {
               <Link
                 key={g.slug}
                 href={`/docs/${g.slug}`}
-                className="group flex flex-col rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-6 transition-all hover:-translate-y-0.5 hover:border-[color:var(--border-strong)]"
+                className="group flex flex-col rounded-2xl card-glass p-6 transition-all hover:-translate-y-0.5"
               >
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-[10px] uppercase tracking-wider text-[color:var(--text-tertiary)]">
@@ -79,7 +79,7 @@ export default function DocsHub() {
                   href={g.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-start gap-4 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-4 transition-colors hover:border-[color:var(--border-strong)]"
+                  className="group flex items-start gap-4 rounded-xl card-glass p-4 transition-all hover:-translate-y-0.5"
                 >
                   <div className="flex-1">
                     <div className="font-mono text-[13px] uppercase text-[color:var(--text-primary)]">

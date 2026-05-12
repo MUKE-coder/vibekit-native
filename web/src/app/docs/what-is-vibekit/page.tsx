@@ -34,10 +34,11 @@ export default function WhatIsVibeKit() {
           </Link>
 
           <header className="mt-8 border-b border-[color:var(--border)] pb-10">
-            <div className="font-mono text-[11px] uppercase tracking-wider text-[color:var(--accent)]">
+            <div className="inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--accent)]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
               Guide
             </div>
-            <h1 className="mt-3 font-mono text-[clamp(2rem,5vw,3.5rem)] font-bold uppercase tracking-tight text-[color:var(--text-primary)]">
+            <h1 className="mt-5 headline-display text-[clamp(2.25rem,5vw,3.75rem)] headline-glow-strong">
               What is VibeKit Native?
             </h1>
             <p className="mt-5 text-[18px] leading-relaxed text-[color:var(--text-secondary)]">

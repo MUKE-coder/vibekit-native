@@ -43,7 +43,7 @@ export default function CompareHub() {
               <Link
                 key={c.slug}
                 href={`/compare/${c.slug}`}
-                className="group flex flex-col rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-6 transition-all hover:-translate-y-0.5 hover:border-[color:var(--border-strong)]"
+                className="group flex flex-col rounded-2xl card-glass p-6 transition-all hover:-translate-y-0.5"
               >
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-[10px] uppercase tracking-wider text-[color:var(--text-tertiary)]">
