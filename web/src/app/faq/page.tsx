@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 const faqs: { q: string; a: string }[] = [
   {
     q: "What is VibeKit Native?",
-    a: "VibeKit Native is a registry of 42 production-ready React Native components for Expo apps. Each component installs with a single npx command (npx vibekit-native install <name>) and drops into your project as an editable TypeScript file. All components share a dark-only design system with NativeWind v4 styling — consistent out of the box.",
+    a: "VibeKit Native is a registry of 52 production-ready React Native components for Expo apps. Each component installs with a single npx command (npx vibekit-native install <name>) and drops into your project as an editable TypeScript file. All components share a dark-only design system with NativeWind v4 styling — consistent out of the box.",
   },
   {
     q: "How is this different from a component library like NativeBase or Tamagui?",

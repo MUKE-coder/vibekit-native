@@ -13,7 +13,10 @@ export type ComponentCategory =
   | "home"
   | "shared"
   | "chat"
-  | "profile";
+  | "profile"
+  | "payments"
+  | "nav"
+  | "dashboard";
 
 export type ComponentSource =
   | "JB"
@@ -792,6 +795,171 @@ export const components: JBComponent[] = [
     whenNotToUse: "Promotional banners (use a card with full-width styling instead).",
     filesAdded: ["components/profile/coupon-card.tsx"],
   },
+
+  // ─── Payments (DGateway) ────────────────────
+  {
+    slug: "mobile-money-pay-screen",
+    name: "Mobile Money Pay Screen",
+    tagline: "Pay screen for East African mobile money (UGX, KES, TZS, RWF) — starts a DGateway STK push via your backend.",
+    category: "payments" as ComponentCategory,
+    categoryLabel: "Payments",
+    install: "npx vibekit-native install mobile-money-pay-screen",
+    features: [
+      "Amount + phone-number form with Zod validation",
+      "Currency switcher: UGX / KES / TZS / RWF",
+      "Auto-provider routing (Iotec for UGX, Relworx for KES/TZS/RWF)",
+      "Calls your backend at /api/checkout/start — never touches the API key",
+      "Helpful copy explaining the STK push flow",
+    ],
+    whenToUse: "Any in-app checkout, donation, or one-time payment in East African currencies.",
+    whenNotToUse: "Pure-USD card payments (use a Stripe component instead).",
+    filesAdded: ["components/payments/mobile-money-pay-screen.tsx"],
+  },
+  {
+    slug: "payment-status-screen",
+    name: "Payment Status Screen",
+    tagline: "Post-STK-push polling screen with \"Check your phone\" UX, 5s cadence, 5-minute ceiling.",
+    category: "payments" as ComponentCategory,
+    categoryLabel: "Payments",
+    install: "npx vibekit-native install payment-status-screen",
+    features: [
+      "Foreground 5-second polling via use-payment-status hook",
+      "5-minute hard ceiling — escapes stuck polls",
+      "Pauses when the app is backgrounded",
+      "Terminal-state branching: completed / failed / cancelled / expired",
+      "Cancel button while polling",
+    ],
+    whenToUse: "Immediately after starting a mobile money charge — show this until status resolves.",
+    whenNotToUse: "Card payments (Stripe gives the result inline, no polling needed).",
+    filesAdded: ["components/payments/payment-status-screen.tsx"],
+  },
+  {
+    slug: "subscription-plan-card",
+    name: "Subscription Plan Card",
+    tagline: "Selectable subscription plan with price, interval, trial badge, features, and highlight variant.",
+    category: "payments" as ComponentCategory,
+    categoryLabel: "Payments",
+    install: "npx vibekit-native install subscription-plan-card",
+    features: [
+      "Price with currency + interval (per month / every 3 months)",
+      "Trial-days badge",
+      "Feature checklist",
+      "Selected and highlight (most-popular) variants",
+    ],
+    whenToUse: "Pricing pages, paywalls, upgrade screens.",
+    whenNotToUse: "Comparison tables (those need a wider/different layout).",
+    filesAdded: ["components/payments/subscription-plan-card.tsx"],
+  },
+  {
+    slug: "subscription-manage-screen",
+    name: "Subscription Manage Screen",
+    tagline: "Active subscription view — plan, state badge, past-due banner, next charge, cancel flow.",
+    category: "payments" as ComponentCategory,
+    categoryLabel: "Payments",
+    install: "npx vibekit-native install subscription-manage-screen",
+    features: [
+      "State badge: trialing / active / past_due / cancelled / expired",
+      "Past-due warning banner with 'Pay now' CTA",
+      "Next-charge date, trial end, payment method rows",
+      "Confirmation alert before cancel",
+      "Calls your backend at /api/subscriptions/:id/cancel",
+    ],
+    whenToUse: "Settings → Subscription screen, billing center.",
+    whenNotToUse: "Pricing or upgrade flows (use subscription-plan-card).",
+    filesAdded: ["components/payments/subscription-manage-screen.tsx"],
+  },
+
+  // ─── Nav ────────────────────────────────────
+  {
+    slug: "bottom-tabs",
+    name: "Bottom Tabs",
+    tagline: "Custom tab bar with active state, icon swap, numeric + dot badges, and safe-area inset.",
+    category: "shared" as ComponentCategory,
+    categoryLabel: "Nav",
+    install: "npx vibekit-native install bottom-tabs",
+    features: [
+      "Works standalone or as a custom tabBar for expo-router <Tabs>",
+      "Optional iconActive variant per tab",
+      "Numeric badge (capped at 99+) or boolean dot badge",
+      "Android ripple feedback",
+    ],
+    whenToUse: "Bottom of any tab-based app (e-commerce, social, dashboard).",
+    whenNotToUse: "Top-tab swipers (those need a pager view).",
+    filesAdded: ["components/nav/bottom-tabs.tsx"],
+  },
+  {
+    slug: "app-drawer",
+    name: "App Drawer",
+    tagline: "Animated left-edge drawer — header, items with icons + badges, dividers, destructive variant.",
+    category: "shared" as ComponentCategory,
+    categoryLabel: "Nav",
+    install: "npx vibekit-native install app-drawer",
+    features: [
+      "Native Animated translateX + backdrop fade",
+      "Header with avatar + name + subtitle",
+      "Items with icon, label, badge, divider, destructive variant",
+      "Active item highlighted with accent",
+      "Backdrop tap-to-close",
+    ],
+    whenToUse: "Hamburger menu in apps with many infrequently-used sections.",
+    whenNotToUse: "Apps with ≤5 main sections (use bottom-tabs instead).",
+    filesAdded: ["components/nav/app-drawer.tsx"],
+  },
+
+  // ─── Dashboard ──────────────────────────────
+  {
+    slug: "stat-card",
+    name: "Stat Card",
+    tagline: "KPI card with label, value, unit, delta % (up/down), and optional sparkline.",
+    category: "ui" as ComponentCategory,
+    categoryLabel: "Dashboard",
+    install: "npx vibekit-native install stat-card",
+    features: [
+      "Big tabular-numeric value with optional unit",
+      "Up/down trend with colored arrow + label",
+      "Tiny inline sparkline (View-based — no extra deps)",
+      "Optional accent variant for the hero metric",
+      "Tappable for drill-down",
+    ],
+    whenToUse: "Dashboards, analytics screens, KPI grids.",
+    whenNotToUse: "Text content (use Card instead).",
+    filesAdded: ["components/dashboard/stat-card.tsx"],
+  },
+  {
+    slug: "dashboard-shell",
+    name: "Dashboard Shell",
+    tagline: "Scrollable dashboard layout with eyebrow + title + actions header, greeting strip, stats row.",
+    category: "ui" as ComponentCategory,
+    categoryLabel: "Dashboard",
+    install: "npx vibekit-native install dashboard-shell",
+    features: [
+      "Header with eyebrow, title, subtitle, and icon actions (with badges)",
+      "Optional 'Welcome back, {name}' strip",
+      "Slot for a horizontal stats row",
+      "Pull-to-refresh built in",
+      "Safe-area top inset",
+    ],
+    whenToUse: "Any dashboard or home-screen layout that needs a consistent header pattern.",
+    whenNotToUse: "Modal or full-bleed screens.",
+    filesAdded: ["components/dashboard/dashboard-shell.tsx"],
+  },
+  {
+    slug: "data-table",
+    name: "Data Table",
+    tagline: "Horizontally scrollable, sortable mobile data table with custom cell renderers.",
+    category: "ui" as ComponentCategory,
+    categoryLabel: "Dashboard",
+    install: "npx vibekit-native install data-table",
+    features: [
+      "Per-column fixed widths; auto horizontal scroll when total > viewport",
+      "Tap header to toggle sort (asc/desc)",
+      "Custom cell renderers with left/center/right alignment",
+      "Sticky header, empty state, optional row press",
+    ],
+    whenToUse: "Admin orders list, transaction history, attendance, lineups.",
+    whenNotToUse: "Long content rows (use a card list instead — tables don't read well on phones with >7 cols).",
+    filesAdded: ["components/dashboard/data-table.tsx"],
+  },
 ];
 
 export const categories: { value: ComponentCategory | "all"; label: string }[] = [
@@ -802,15 +970,10 @@ export const categories: { value: ComponentCategory | "all"; label: string }[] =
   { value: "home", label: "Home" },
   { value: "shared", label: "Shared" },
   { value: "chat", label: "Chat" },
+  { value: "payments", label: "Payments" },
+  { value: "nav", label: "Nav" },
+  { value: "dashboard", label: "Dashboard" },
   { value: "profile", label: "Profile" },
-  { value: "hero", label: "Hero" },
-  { value: "marketing", label: "Marketing" },
-  { value: "data", label: "Data" },
-  { value: "forms", label: "Forms" },
-  { value: "content", label: "Content" },
-  { value: "api", label: "API" },
-  { value: "files", label: "Files" },
-  { value: "saas", label: "SaaS" },
 ];
 
 export function getComponentBySlug(slug: string): JBComponent | undefined {

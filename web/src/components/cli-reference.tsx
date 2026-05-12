@@ -10,6 +10,9 @@ const commands = [
   { command: "npx vibekit-native install profile", desc: "Install all profile components (points-card, coupon-card)" },
   { command: "npx vibekit-native install ui", desc: "Install all UI primitives (button, input, card, toast, skeleton, etc.)" },
   { command: "npx vibekit-native install home", desc: "Install all home screen components (hero-banner, section-header, etc.)" },
+  { command: "npx vibekit-native install payments", desc: "Install DGateway payment + subscription screens (mobile money UGX/KES/TZS/RWF + Stripe)" },
+  { command: "npx vibekit-native install nav", desc: "Install bottom-tabs and app-drawer navigation" },
+  { command: "npx vibekit-native install dashboard", desc: "Install dashboard primitives (stat-card, dashboard-shell, data-table)" },
 ];
 
 const categories = [
@@ -19,6 +22,9 @@ const categories = [
   { name: "Home", count: 4, desc: "hero-banner, section-header, category-circles, flash-sale-timer" },
   { name: "Shared", count: 4, desc: "screen-header, filter-sheet, filter-sort-bar, search-bar" },
   { name: "Chat", count: 4, desc: "chat-bubble, chat-input, chat-list, chat-header" },
+  { name: "Payments", count: 5, desc: "mobile-money-pay-screen, payment-status-screen, subscription-plan-card, subscription-manage-screen, use-payment-status (DGateway)" },
+  { name: "Nav", count: 2, desc: "bottom-tabs, app-drawer" },
+  { name: "Dashboard", count: 3, desc: "stat-card, dashboard-shell, data-table" },
   { name: "Profile", count: 2, desc: "points-card, coupon-card" },
 ];
 
@@ -68,7 +74,7 @@ export function CLIReference() {
 
       <div className="reveal mt-10 rounded-2xl card-glass p-6">
         <div className="text-[11px] font-mono uppercase tracking-wider text-[color:var(--text-tertiary)]">
-          7 categories · 42 components
+          10 categories · 52 components
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((cat) => (

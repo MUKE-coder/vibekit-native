@@ -82,7 +82,7 @@ export function Hero() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--accent)] opacity-50" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
           </span>
-          Introducing VibeKit Native
+          Mobile money payments · One npx install
         </div>
 
         {/* Lens flare behind headline */}
@@ -102,8 +102,8 @@ export function Hero() {
         </div>
 
         <p className="hero-sub mx-auto mt-7 max-w-xl text-[15px] sm:text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
-          The world&apos;s most polished React Native component registry,
-          <br className="hidden sm:inline" /> powered by Expo + NativeWind.
+          Production-ready Expo components — auth, commerce, chat, dashboards,
+          <br className="hidden sm:inline" /> and DGateway mobile-money payments (UGX, KES, TZS, RWF).
         </p>
 
         <div className="hero-cta mt-9 flex flex-wrap items-center justify-center gap-3">
@@ -275,7 +275,7 @@ function CardMockSecondary({ variant }: { variant: "left" | "right" }) {
         {variant === "left" ? "Welcome to the kit" : "Pick a category"}
       </p>
       <p className="mt-1 text-center text-[11px] text-[color:var(--text-tertiary)]">
-        {variant === "left" ? "Log in to continue" : "All 42 components"}
+        {variant === "left" ? "Log in to continue" : "All 52 components"}
       </p>
       <div className="mt-6 space-y-3">
         <div className="h-9 rounded-md border border-[color:var(--border)] bg-[color:var(--bg)]" />

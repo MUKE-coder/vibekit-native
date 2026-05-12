@@ -41,7 +41,7 @@ export default function WhatIsVibeKit() {
               What is VibeKit Native?
             </h1>
             <p className="mt-5 text-[18px] leading-relaxed text-[color:var(--text-secondary)]">
-              A registry of 42 production-ready React Native components for Expo apps — installable with a single <span className="font-mono text-[color:var(--accent)]">npx</span> command. Dark-only, AI-optimized, and completely yours to edit.
+              A registry of 52 production-ready React Native components for Expo apps — installable with a single <span className="font-mono text-[color:var(--accent)]">npx</span> command. Dark-only, AI-optimized, and completely yours to edit.
             </p>
           </header>
 
@@ -73,7 +73,7 @@ export default function WhatIsVibeKit() {
             </ul>
 
             <h2>What you get</h2>
-            <p>42 components across 7 categories — every screen your app needs:</p>
+            <p>52 components across 10 categories — every screen your app needs:</p>
             <ul>
               <li><strong>Auth:</strong> login-screen, register-screen, forgot-password-screen, verify-otp-screen, new-password-screen, complete-profile-screen — full auth flow with react-hook-form + Zod.</li>
               <li><strong>Commerce:</strong> product-card, cart-item, price-display, order-card, order-timeline, product-header — ship a store in an afternoon.</li>

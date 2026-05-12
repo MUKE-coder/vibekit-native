@@ -149,6 +149,66 @@ const COMPONENT_META: Record<string, {
   // Profile
   'profile/points-card.tsx': { category: 'profile', description: 'Loyalty points card with balance, tier progress bar, and history action.', dependencies: ['@expo/vector-icons'] },
   'profile/coupon-card.tsx': { category: 'profile', description: 'Discount coupon card with left accent bar, code, description, expiry, and apply.', dependencies: ['@expo/vector-icons'] },
+
+  // Payments — DGateway integration (East Africa mobile money + Stripe)
+  'payments/use-payment-status.ts': {
+    category: 'payments',
+    description: 'Hook for foreground 5-second status polling with 5-minute ceiling, AppState pause, and cleanup. Pair with dgateway.',
+    registryDependencies: ['dgateway'],
+  },
+  'payments/mobile-money-pay-screen.tsx': {
+    category: 'payments',
+    description: 'Mobile-money payment screen: amount, phone, currency switcher (UGX/KES/TZS/RWF). Starts a DGateway STK push via your backend.',
+    dependencies: ['@expo/vector-icons', 'react-native-safe-area-context', 'react-hook-form', '@hookform/resolvers', 'zod'],
+    registryDependencies: ['input', 'button', 'screen-header', 'dgateway'],
+  },
+  'payments/payment-status-screen.tsx': {
+    category: 'payments',
+    description: 'Post-STK-push status screen with "Check your phone" UX, 5s polling, success/failure terminal states, and cancel.',
+    dependencies: ['@expo/vector-icons', 'react-native-safe-area-context'],
+    registryDependencies: ['button', 'screen-header', 'use-payment-status', 'dgateway'],
+  },
+  'payments/subscription-plan-card.tsx': {
+    category: 'payments',
+    description: 'Selectable subscription plan card with price, interval, trial badge, feature list, and highlight variant.',
+    dependencies: ['@expo/vector-icons'],
+    registryDependencies: ['dgateway'],
+  },
+  'payments/subscription-manage-screen.tsx': {
+    category: 'payments',
+    description: 'Active subscription management — plan summary, state badge, past-due banner, next-charge details, cancel flow.',
+    dependencies: ['@expo/vector-icons', 'react-native-safe-area-context'],
+    registryDependencies: ['button', 'badge', 'screen-header', 'dgateway'],
+  },
+
+  // Nav
+  'nav/bottom-tabs.tsx': {
+    category: 'nav',
+    description: 'Custom bottom tab bar with active state, icon swap, badges, and safe-area inset. Works standalone or with expo-router <Tabs>.',
+    dependencies: ['@expo/vector-icons', 'react-native-safe-area-context'],
+  },
+  'nav/app-drawer.tsx': {
+    category: 'nav',
+    description: 'Animated left-edge drawer with header (avatar + name), items with icons + badges, dividers, destructive variant, and backdrop tap-to-close.',
+    dependencies: ['@expo/vector-icons', 'react-native-safe-area-context'],
+  },
+
+  // Dashboard
+  'dashboard/stat-card.tsx': {
+    category: 'dashboard',
+    description: 'KPI card with label, value, unit, delta % (up/down), optional sparkline, and accent variant.',
+    dependencies: ['@expo/vector-icons'],
+  },
+  'dashboard/dashboard-shell.tsx': {
+    category: 'dashboard',
+    description: 'Scrollable dashboard layout with eyebrow + title + actions header, optional greeting strip, stats row, and pull-to-refresh.',
+    dependencies: ['@expo/vector-icons', 'react-native-safe-area-context'],
+  },
+  'dashboard/data-table.tsx': {
+    category: 'dashboard',
+    description: 'Horizontally scrollable, sortable data table with custom cell renderers, alignment, and empty state.',
+    dependencies: ['@expo/vector-icons'],
+  },
 };
 
 // All components implicitly depend on core (cn, theme tokens, etc.)
@@ -255,6 +315,18 @@ async function generateRegistry() {
       category: 'lib',
       files: [{ path: 'lib/api-client.tsx', content: await fs.readFile(apiClientPath, 'utf-8') }],
       dependencies: ['@tanstack/react-query', 'expo-network'],
+    });
+  }
+
+  // dgateway — typed client for your backend proxy to DGateway (mobile money + Stripe via REST)
+  const dgatewayLibPath = path.resolve(PACKAGES_DIR, 'lib/dgateway.ts');
+  if (fs.existsSync(dgatewayLibPath)) {
+    entries.push({
+      name: 'dgateway',
+      description: 'Typed DGateway client — talks to your backend proxy (never the gateway directly). Handles collect, status polling, subscriptions, cancel.',
+      category: 'lib',
+      files: [{ path: 'lib/dgateway.ts', content: await fs.readFile(dgatewayLibPath, 'utf-8') }],
+      dependencies: ['expo-constants'],
     });
   }
 

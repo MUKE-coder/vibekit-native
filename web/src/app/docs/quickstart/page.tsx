@@ -29,7 +29,7 @@ const steps = [
   {
     n: 1,
     title: "Run the CLI",
-    body: 'Open your Expo project in the terminal and run <code class="font-mono text-[13.5px] rounded border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-1.5 py-0.5 text-[color:var(--text-primary)]">npx vibekit-native</code>. This launches the interactive menu where you can browse all 42 components, see descriptions, and install what you need. No global install required — npx handles everything.',
+    body: 'Open your Expo project in the terminal and run <code class="font-mono text-[13.5px] rounded border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-1.5 py-0.5 text-[color:var(--text-primary)]">npx vibekit-native</code>. This launches the interactive menu where you can browse all 52 components, see descriptions, and install what you need. No global install required — npx handles everything.',
   },
   {
     n: 2,
@@ -147,7 +147,7 @@ export default function Quickstart() {
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Button href="/components" variant="accent" size="md">
-                Browse all 42 components
+                Browse all 52 components
               </Button>
               <Button href="/faq" variant="outline" size="md">
                 Read the FAQ

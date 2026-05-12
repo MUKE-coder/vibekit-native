@@ -28,7 +28,7 @@ const guides = [
 ];
 
 const externalGuides = [
-  { name: "Component Registry (GitHub)", href: SITE.github, blurb: "Browse all 42 components, see source code, and open issues." },
+  { name: "Component Registry (GitHub)", href: SITE.github, blurb: "Browse all 52 components, see source code, and open issues." },
   { name: "CLI Documentation", href: `${SITE.github}#usage`, blurb: "Full CLI reference: every command, flag, and category install." },
   { name: "Contributing", href: `${SITE.github}/blob/main/CONTRIBUTING.md`, blurb: "Add your own components to the registry. Open a PR." },
   { name: "Design System", href: `${SITE.github}/blob/main/design-style-guide.md`, blurb: "Dark-only design tokens: colors, typography, spacing, radius." },
