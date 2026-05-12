@@ -37,26 +37,32 @@ export function CTA() {
   );
 
   return (
-    <section id="get-started" ref={root} className="relative py-24 sm:py-32">
+    <section id="get-started" ref={root} className="relative py-24 sm:py-32 overflow-hidden">
+      {/* Top spotlight */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-[480px]"
+        aria-hidden
+        style={{
+          background:
+            "radial-gradient(ellipse 50% 70% at 50% 0%, rgba(200, 215, 245, 0.16) 0%, transparent 70%)",
+        }}
+      />
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <div className="cta-card relative overflow-hidden rounded-[var(--radius-2xl)] border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-10 sm:p-16 text-center">
-          {/* Glow */}
+        <div className="cta-card relative overflow-hidden rounded-3xl card-glass p-10 sm:p-16 text-center">
+          {/* Lens flare behind heading */}
           <div
-            className="pointer-events-none absolute inset-0"
+            className="pointer-events-none absolute left-1/2 top-1/4 -translate-x-1/2 -translate-y-1/2 h-[260px] w-[560px] lens-flare animate-lens-pulse"
             aria-hidden
-            style={{
-              background:
-                "radial-gradient(ellipse 60% 50% at 50% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%)",
-            }}
           />
           <div className="relative">
-            <div className="inline-flex items-center gap-2 rounded-[var(--radius-full)] border border-[color:var(--border)] bg-[color:var(--bg)] px-3 py-1.5 text-xs font-medium text-[color:var(--text-secondary)]">
+            <div className="inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 text-[11px] font-mono uppercase tracking-[0.14em] text-[color:var(--text-secondary)]">
               <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
               MIT licensed · Open source
             </div>
-            <h2 className="font-display mt-6 text-[clamp(2.25rem,5vw,4rem)] leading-[1.05] tracking-tight text-[color:var(--text-primary)]">
-              Ship mobile apps with AI.<br />
-              <em className="not-italic gradient-text">One npx command at a time.</em>
+            <h2 className="headline-display mt-6 text-[clamp(2.25rem,5vw,4rem)] headline-glow">
+              Ship mobile apps with AI.
+              <br />
+              One npx command at a time.
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
               Install production-ready React Native components into any Expo project. Dark-only, AI-optimized, and completely yours to edit.

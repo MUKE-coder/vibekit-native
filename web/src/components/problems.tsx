@@ -70,9 +70,9 @@ export function Problems() {
         {problems.map((p) => (
           <article
             key={p.pain}
-            className="reveal group relative overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-6 transition-all hover:border-[color:var(--border-strong)] hover:shadow-[var(--shadow-md)]"
+            className="reveal group relative overflow-hidden rounded-2xl card-glass p-6 transition-all hover:border-[color:var(--border-focus)] hover:-translate-y-0.5"
           >
-            <div className="text-[11px] font-mono uppercase tracking-wider text-[color:var(--text-tertiary)]">
+            <div className="text-[11px] font-mono uppercase tracking-[0.14em] text-[color:var(--text-tertiary)]">
               Pain
             </div>
             <h3 className="font-display mt-1 text-[22px] leading-tight text-[color:var(--text-primary)]">
@@ -82,7 +82,7 @@ export function Problems() {
               {p.looks}
             </p>
             <div className="my-5 h-px bg-[color:var(--border)]" />
-            <div className="text-[11px] font-mono uppercase tracking-wider text-[color:var(--accent)]">
+            <div className="text-[11px] font-mono uppercase tracking-[0.14em] text-[color:var(--accent)]">
               VibeKit Native fix
             </div>
             <p className="mt-1 text-[14px] leading-relaxed text-[color:var(--text-primary)]">

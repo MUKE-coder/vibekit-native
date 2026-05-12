@@ -26,10 +26,10 @@ export function Stack() {
       title="Locked stack. Zero decisions. Maximum velocity."
       description="Every component ships with the same opinionated stack so AI never has to invent — and you never have to debug a dependency mismatch."
     >
-      <div className="reveal overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--bg-elevated)]">
+      <div className="reveal overflow-hidden rounded-2xl card-glass">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-[color:var(--bg-subtle)] text-[11px] font-mono uppercase tracking-wider text-[color:var(--text-tertiary)]">
+            <thead className="bg-[color:var(--bg-subtle)] text-[11px] font-mono uppercase tracking-[0.14em] text-[color:var(--text-tertiary)]">
               <tr>
                 <th className="px-5 py-3 font-medium">Layer</th>
                 <th className="px-5 py-3 font-medium">Technology</th>

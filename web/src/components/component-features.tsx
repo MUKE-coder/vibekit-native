@@ -51,12 +51,19 @@ export function ComponentFeatures() {
         {features.map(({ Icon, title, body }) => (
           <div
             key={title}
-            className="reveal group rounded-[var(--radius-lg)] border border-[color:var(--border)] bg-[color:var(--bg-elevated)] p-6 transition-all hover:border-[color:var(--border-strong)] hover:shadow-[var(--shadow-md)]"
+            className="reveal group relative rounded-2xl card-glass p-6 transition-all hover:-translate-y-0.5"
           >
-            <span className="grid h-10 w-10 place-items-center rounded-[var(--radius)] bg-[color:var(--accent-soft)] text-[color:var(--accent)]">
-              <Icon className="h-5 w-5" />
-            </span>
-            <h3 className="font-display mt-4 text-[20px] leading-tight text-[color:var(--text-primary)]">
+            <div className="relative inline-grid">
+              <span
+                aria-hidden
+                className="absolute -inset-2 -z-10 rounded-2xl opacity-0 transition-opacity group-hover:opacity-100"
+                style={{ background: "radial-gradient(ellipse at center, var(--accent-glow), transparent 70%)" }}
+              />
+              <span className="grid h-11 w-11 place-items-center rounded-xl border border-[color:var(--border-strong)] bg-[color:var(--bg-elevated)] text-[color:var(--accent)]">
+                <Icon className="h-5 w-5" />
+              </span>
+            </div>
+            <h3 className="font-display mt-5 text-[20px] leading-tight text-[color:var(--text-primary)]">
               {title}
             </h3>
             <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--text-secondary)]">

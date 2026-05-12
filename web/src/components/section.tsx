@@ -66,15 +66,15 @@ export function Section({
       <div className={cn("mx-auto max-w-6xl px-4 sm:px-6", containerClassName)}>
         <div className={cn("max-w-2xl", align === "center" ? "mx-auto text-center" : "")}>
           {eyebrow ? (
-            <div className="reveal inline-flex items-center gap-2 rounded-[var(--radius-full)] border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-3 py-1 text-[11px] font-mono uppercase tracking-wider text-[color:var(--text-tertiary)]">
+            <div className="reveal inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 text-[11px] font-mono uppercase tracking-[0.14em] text-[color:var(--text-secondary)]">
               {eyebrow}
             </div>
           ) : null}
-          <h2 className="reveal font-display mt-4 text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] tracking-tight text-[color:var(--text-primary)]">
+          <h2 className="reveal headline-display mt-5 text-[clamp(2rem,4.5vw,3.25rem)] headline-glow">
             {title}
           </h2>
           {description ? (
-            <p className="reveal mt-5 text-[17px] leading-relaxed text-[color:var(--text-secondary)]">
+            <p className="reveal mt-5 text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
               {description}
             </p>
           ) : null}

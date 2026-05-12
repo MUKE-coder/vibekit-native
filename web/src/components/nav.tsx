@@ -58,7 +58,7 @@ export function Nav() {
             className={cn(
               "flex items-center justify-between gap-3 sm:gap-6 rounded-full px-2 sm:px-3 py-2 transition-all duration-300",
               scrolled
-                ? "glass border border-[color:var(--border)] shadow-[var(--shadow-sm)]"
+                ? "pill-chip shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)]"
                 : "border border-transparent"
             )}
           >

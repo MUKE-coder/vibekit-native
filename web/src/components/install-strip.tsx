@@ -59,29 +59,29 @@ export function InstallStrip() {
     <section
       ref={root}
       id="install"
-      className="relative isolate overflow-hidden border-y border-[color:var(--border)] bg-[color:var(--bg-subtle)] py-20 sm:py-28"
+      className="relative isolate overflow-hidden border-y border-[color:var(--border)] bg-[color:var(--bg)] py-20 sm:py-28"
     >
-      {/* Faded grid background */}
-      <div className="pointer-events-none absolute inset-0 grid-pattern opacity-50" aria-hidden />
-      {/* Soft accent bloom */}
+      {/* Circuit grid background */}
+      <div className="pointer-events-none absolute inset-0 circuit-grid opacity-50" aria-hidden />
+      {/* Top spotlight */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-64"
+        className="pointer-events-none absolute inset-x-0 top-0 h-80"
         aria-hidden
         style={{
           background:
-            "radial-gradient(ellipse 50% 100% at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 80%)",
+            "radial-gradient(ellipse 60% 100% at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 80%)",
         }}
       />
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         {/* Header */}
         <div className="mx-auto max-w-2xl text-center">
-          <div className="install-eyebrow inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-secondary)]">
+          <div className="install-eyebrow inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-secondary)]">
             <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
             38 components · One npx command
           </div>
-          <h2 className="install-headline font-display mt-6 text-[clamp(2rem,4.5vw,3rem)] leading-[1.1] tracking-tight text-[color:var(--text-primary)]">
-            Install any component in <em className="not-italic gradient-text">one command</em>.
+          <h2 className="install-headline headline-display mt-6 text-[clamp(2rem,4.5vw,3rem)] headline-glow">
+            Install any component in one command.
           </h2>
           <p className="install-sub mt-5 text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
             No provider wrappers. No config files. No dependency bloat. Every component is a single editable file that drops into your Expo project.
@@ -89,29 +89,29 @@ export function InstallStrip() {
         </div>
 
         {/* Terminal command */}
-        <div className="install-command mx-auto mt-10 max-w-lg">
-          <div className="flex items-center gap-3 rounded-md border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-4 py-3 text-left font-mono text-[13px] shadow-[var(--shadow-sm)]">
-            <span className="text-[color:var(--text-tertiary)] shrink-0">$</span>
+        <div className="install-command mx-auto mt-10 max-w-xl">
+          <div className="flex items-center gap-3 rounded-full pill-chip px-5 py-3 text-left font-mono text-[13px]">
+            <span className="text-[color:var(--accent)] shrink-0">$</span>
             <code className="flex-1 truncate text-[color:var(--text-primary)]">
               npx vibekit-native install login-screen product-card chat-bubble
             </code>
-            <span className="text-[10px] uppercase tracking-wider text-[color:var(--text-tertiary)] shrink-0">
+            <span className="text-[10px] uppercase tracking-[0.14em] text-[color:var(--text-tertiary)] shrink-0">
               copy
             </span>
           </div>
         </div>
 
         {/* Component grid */}
-        <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-px overflow-hidden rounded-md border border-[color:var(--border)] bg-[color:var(--border)]">
+        <div className="mt-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-px overflow-hidden rounded-lg border border-[color:var(--border)] bg-[color:var(--border)]">
           {popular.map((c) => (
             <div
               key={c.name}
-              className="component-cell group relative flex flex-col items-center justify-center gap-1.5 bg-[color:var(--bg-elevated)] p-5 text-center transition-colors hover:bg-[color:var(--bg-subtle)]"
+              className="component-cell group relative flex flex-col items-center justify-center gap-1.5 bg-[color:var(--bg-elevated)] p-5 text-center transition-colors hover:bg-[color:var(--bg-muted)]"
             >
               <span className="font-mono text-[12px] font-medium text-[color:var(--text-primary)] truncate max-w-full">
                 {c.name}
               </span>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[color:var(--text-tertiary)]">
+              <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-[color:var(--text-tertiary)]">
                 {c.desc}
               </span>
             </div>
@@ -119,7 +119,7 @@ export function InstallStrip() {
         </div>
 
         {/* Footnote */}
-        <p className="mt-8 text-center font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-tertiary)]">
+        <p className="mt-8 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-tertiary)]">
            38 components across 7 categories · Install individually, all compatible together
         </p>
       </div>

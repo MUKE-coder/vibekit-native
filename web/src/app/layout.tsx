@@ -24,10 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FAF8F5" },
-    { media: "(prefers-color-scheme: dark)", color: "#0A0A09" },
-  ],
+  themeColor: "#0A0A09",
   width: "device-width",
   initialScale: 1,
 };
@@ -40,16 +37,16 @@ export const metadata: Metadata = {
   },
   description: SITE.description,
   keywords: [
-    "Claude Code",
-    "Next.js framework",
-    "vibe coding",
-    "AI coding framework",
-    "production SaaS template",
-    "Prisma v7",
-    "Better Auth",
-    "Neon Postgres",
-    "shadcn/ui",
-    "AI app builder",
+    "React Native",
+    "Expo components",
+    "vibekit native",
+    "React Native component library",
+    "Expo CLI registry",
+    "NativeWind",
+    "mobile app development",
+    "AI mobile apps",
+    "npx component installer",
+    "React Native UI kit",
   ],
   authors: [{ name: "JB (Muke Johnbaptist)", url: SITE.authorUrl }],
   creator: "JB (Muke Johnbaptist)",
