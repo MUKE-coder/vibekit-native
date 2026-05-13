@@ -4,7 +4,7 @@ import { Section } from "./section";
 const features = [
   {
     Icon: Box,
-    title: "61 production components",
+    title: "65 production components",
     body: "Auth, commerce, chat, profile, home, UI, and shared — every screen your app needs, available as a single installable file.",
   },
   {

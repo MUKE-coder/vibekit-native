@@ -74,7 +74,7 @@ export function CLIReference() {
 
       <div className="reveal mt-10 rounded-2xl card-glass p-6">
         <div className="text-[11px] font-mono uppercase tracking-wider text-[color:var(--text-tertiary)]">
-          10 categories · 61 components
+          11 categories · 65 components
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((cat) => (

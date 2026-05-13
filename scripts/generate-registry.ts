@@ -227,6 +227,32 @@ const COMPONENT_META: Record<string, {
     dependencies: ['@stripe/stripe-react-native'],
     registryDependencies: ['button'],
   },
+  'payments/stripe-connect-onboarding-screen.tsx': {
+    category: 'payments',
+    description: 'Stripe Connect Express seller onboarding wizard for marketplaces / LMS / multi-vendor apps. 5-step progress, opens Stripe hosted onboarding via expo-web-browser, supports DGateway mobile-money payouts for EA sellers.',
+    dependencies: ['@expo/vector-icons', 'react-native-safe-area-context', 'expo-web-browser', 'expo-haptics'],
+    registryDependencies: ['button', 'screen-header'],
+  },
+
+  // Utility — barcode / signature / biometric
+  'utility/barcode-scanner-screen.tsx': {
+    category: 'utility',
+    description: 'Full-screen barcode + QR scanner with viewfinder cutout, torch toggle, scan cooldown, haptic feedback. Wraps expo-camera CameraView with the new barcodeScannerSettings API.',
+    dependencies: ['@expo/vector-icons', 'react-native-safe-area-context', 'expo-camera', 'expo-haptics'],
+    registryDependencies: ['button', 'screen-header'],
+  },
+  'utility/signature-capture-screen.tsx': {
+    category: 'utility',
+    description: 'Proof-of-delivery signature capture — dark-themed canvas, signer name input, timestamp metadata, base64 PNG output. Wraps react-native-signature-canvas.',
+    dependencies: ['@expo/vector-icons', 'react-native-safe-area-context', 'react-native-signature-canvas', 'expo-haptics'],
+    registryDependencies: ['button', 'input', 'screen-header'],
+  },
+  'utility/biometric-unlock-screen.tsx': {
+    category: 'utility',
+    description: 'Face ID / Touch ID / Fingerprint unlock with PIN fallback. Detects supported biometric type, polite auto-prompt on iOS, hidden TextInput PIN entry. Wraps expo-local-authentication.',
+    dependencies: ['@expo/vector-icons', 'react-native-safe-area-context', 'expo-local-authentication', 'expo-haptics'],
+    registryDependencies: ['button'],
+  },
 
   // Nav
   'nav/bottom-tabs.tsx': {

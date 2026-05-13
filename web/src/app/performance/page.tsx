@@ -34,7 +34,7 @@ const perfFeatures = [
     title: "Hermes Engine",
     desc: "Every component is tested with Hermes, the JavaScript engine optimized for React Native. Hermes compiles JS to bytecode ahead of time, cutting startup time in half and reducing APK/IPA size by 30%.",
     bad: "JSC engine uses JIT compilation — slower startup, larger binary, more memory. Each new screen adds parse time.",
-    good: "Hermes pre-compiles bytecode. Cold start in under 2 seconds. Binary size stays lean even with 61 components installed.",
+    good: "Hermes pre-compiles bytecode. Cold start in under 2 seconds. Binary size stays lean even with 65 components installed.",
   },
   {
     icon: Cpu,
@@ -90,29 +90,33 @@ export default function PerformancePage() {
       <main className="pt-28 pb-24">
         {/* Hero */}
         <section className="relative overflow-hidden border-b border-[color:var(--border)] pb-16 sm:pb-24">
-          <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
-            <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, var(--accent) 1px, transparent 0)", backgroundSize: "24px 24px" }} />
-          </div>
+          <div className="pointer-events-none absolute inset-0 -z-10 circuit-grid opacity-50" aria-hidden />
+          <div
+            className="pointer-events-none absolute inset-0 -z-10"
+            aria-hidden
+            style={{
+              background:
+                "radial-gradient(ellipse 60% 50% at 50% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 65%)",
+            }}
+          />
           <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-16 sm:pt-24 text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)]/60 backdrop-blur px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-[color:var(--text-secondary)]">
+            <div className="inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-secondary)]">
               <Gauge className="h-3 w-3 text-[color:var(--accent)]" />
               React Native performance
             </div>
-            <h1 className="mt-6 font-mono text-[clamp(2.5rem,6vw,4.5rem)] font-bold uppercase leading-[0.95] tracking-tight text-[color:var(--text-primary)]">
-              Smooth at 60fps.
-              <br />
-              <span className="gradient-text">Not by accident.</span>
+            <h1 className="mt-6 headline-display text-[clamp(2.25rem,6vw,4rem)] headline-glow-strong">
+              Smooth at 60fps. Not by accident.
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-[18px] leading-relaxed text-[color:var(--text-secondary)]">
-              Every VibeKit Native component is built with Hermes, reanimated worklets, and FlashList — so your app stays smooth scrolling thousands of items, animating bottom sheets, and loading images.
+            <p className="mx-auto mt-6 max-w-2xl text-[17px] leading-relaxed text-[color:var(--text-secondary)]">
+              Every VibeKit Native component runs on Hermes, animates on the UI thread via Reanimated, recycles list rows via FlashList, and loads images through expo-image with disk cache + blurhash. Your app stays smooth scrolling 10,000 items, animating bottom sheets, and cold-starting under 2s.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Button href="/components" variant="accent" size="lg">
                 Browse components
                 <ArrowUpRight className="ml-1.5 h-4 w-4" />
               </Button>
-              <Button href="/docs/quickstart" variant="outline" size="lg">
-                Read the docs
+              <Button href="/stack" variant="outline" size="lg">
+                The locked stack
               </Button>
             </div>
           </div>

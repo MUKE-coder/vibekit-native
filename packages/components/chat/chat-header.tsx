@@ -6,9 +6,16 @@ import { Avatar } from '../ui/avatar';
 import { cn } from '../lib/utils';
 import { colors } from '../lib/theme';
 
+export type Presence = 'online' | 'away' | 'offline';
+
 interface ChatHeaderProps {
   name: string;
   avatarUrl?: string;
+  /** Presence dot rendered on the avatar. */
+  presence?: Presence;
+  /** Show "typing…" override. Pass a string[] of names for group chats ("Alex and Sam are typing…"). */
+  typing?: boolean | string[];
+  /** Status label override (deprecated — use `presence` + `typing`). */
   status?: 'online' | 'offline' | 'typing';
   lastSeen?: string;
   onBack?: () => void;
@@ -18,15 +25,29 @@ interface ChatHeaderProps {
   className?: string;
 }
 
-const statusText: Record<'online' | 'offline' | 'typing', string> = {
-  online: 'Online',
-  typing: 'Typing…',
-  offline: 'Offline',
-};
+function typingLabel(typing: boolean | string[]): string {
+  if (typing === true) return 'Typing…';
+  if (Array.isArray(typing)) {
+    if (typing.length === 0) return '';
+    if (typing.length === 1) return `${typing[0]} is typing…`;
+    if (typing.length === 2) return `${typing[0]} and ${typing[1]} are typing…`;
+    return `${typing[0]} and ${typing.length - 1} others are typing…`;
+  }
+  return '';
+}
+
+function presenceColor(p: Presence | undefined): string | null {
+  if (p === 'online') return '#22C55E';
+  if (p === 'away') return '#F59E0B';
+  if (p === 'offline') return '#6B7280';
+  return null;
+}
 
 export function ChatHeader({
   name,
   avatarUrl,
+  presence,
+  typing,
   status,
   lastSeen,
   onBack,
@@ -35,7 +56,24 @@ export function ChatHeader({
   onMore,
   className,
 }: ChatHeaderProps) {
-  const subtitle = status === 'offline' && lastSeen ? lastSeen : status ? statusText[status] : undefined;
+  // Resolve subtitle priority: typing > legacy status > presence + lastSeen
+  let subtitle: string | undefined;
+  const isTyping = typing === true || (Array.isArray(typing) && typing.length > 0);
+  if (isTyping) {
+    subtitle = typingLabel(typing!);
+  } else if (status === 'typing') {
+    subtitle = 'Typing…';
+  } else if (presence === 'online') {
+    subtitle = 'Online';
+  } else if (presence === 'away') {
+    subtitle = 'Away';
+  } else if (presence === 'offline' || status === 'offline') {
+    subtitle = lastSeen ? `Last seen ${lastSeen}` : 'Offline';
+  } else if (status === 'online') {
+    subtitle = 'Online';
+  }
+
+  const dotColor = presenceColor(presence);
 
   return (
     <SafeAreaView edges={['top']} className={cn('bg-bg', className)}>
@@ -52,7 +90,15 @@ export function ChatHeader({
           </Pressable>
         ) : null}
 
-        <Avatar source={avatarUrl} name={name} size="md" />
+        <View>
+          <Avatar source={avatarUrl} name={name} size="md" />
+          {dotColor ? (
+            <View
+              className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-bg"
+              style={{ backgroundColor: dotColor }}
+            />
+          ) : null}
+        </View>
 
         <View className="flex-1">
           <Text numberOfLines={1} className="text-[15px] font-semibold text-textPrimary">
@@ -60,10 +106,15 @@ export function ChatHeader({
           </Text>
           {subtitle ? (
             <View className="flex-row items-center gap-1.5 mt-0.5">
-              {status === 'online' ? (
-                <View className="h-2 w-2 rounded-full bg-success" />
-              ) : null}
-              <Text className="text-[12px] text-textTertiary">{subtitle}</Text>
+              <Text
+                className={cn(
+                  'text-[12px]',
+                  isTyping ? 'text-accent' : 'text-textTertiary',
+                )}
+                numberOfLines={1}
+              >
+                {subtitle}
+              </Text>
             </View>
           ) : null}
         </View>

@@ -4,7 +4,7 @@
 
 VibeKit Native is **two things in one repo**:
 
-1. **A registry of 61 production-ready components** for React Native + Expo — auth screens, mobile-money payments (DGateway for UGX / KES / TZS / RWF), Stripe Payment Sheet, charts, dashboards, navigation, chat, commerce, and primitives — installable with a single `npx vibekit-native install <name>` command.
+1. **A registry of 65 production-ready components** for React Native + Expo — auth screens, mobile-money payments (DGateway for UGX / KES / TZS / RWF), Stripe Payment Sheet + Connect onboarding, charts, dashboards, navigation, chat (with delivery ticks + presence + typing), commerce, biometric unlock, barcode scanner, signature capture, and primitives — installable with a single `npx vibekit-native install <name>` command.
 2. **A complete planning + build framework** — a planning prompt for `claude.ai` that interviews you, generates 4 project files, then hands you a `prompt.md` you paste into Claude Code (or Cursor / Codex / Cline / Windsurf / Gemini / Aider) to build phase-by-phase against a locked production stack (Expo SDK 55+ · Neon Postgres · Prisma v7 · Better Auth + Expo plugin · Expo API Routes · EAS Build / Submit / Update / Hosting).
 
 Browse the registry at [native.desishub.com](https://native.desishub.com) · Read the [tutorial](https://native.desishub.com/tutorial) · See [all components](https://native.desishub.com/components).
@@ -116,19 +116,20 @@ Once Phase 5 is done, paste [`pre-deploy-review.md`](./pre-deploy-review.md) int
 
 ---
 
-## Components — 61 across 10 categories
+## Components — 65 across 11 categories
 
 | Category | Count | Components |
 |---|---|---|
-| **UI** | 16 | `button`, `input`, `badge`, `avatar`, `card`, `bottom-sheet`, `toast`, `rating`, `custom-radio`, `divider`, `skeleton`, `searchable-select`, `countdown-timer`, `otp-input`, `empty-state`, `loading-spinner` |
-| **Commerce** | 10 | `product-card`, `cart-item`, `price-display`, `order-card`, `order-timeline`, `product-header`, `wishlist-button`, `review-card`, `order-summary`, `checkout-form` |
-| **Payments** | 7 | `mobile-money-pay-screen`, `payment-status-screen`, `subscription-plan-card`, `subscription-manage-screen`, `stripe-pay-button`, `stripe-subscription-button`, `use-payment-status` |
+| **UI** | 16 | `button` (built-in haptics), `input`, `badge`, `avatar`, `card`, `bottom-sheet`, `toast` (Reanimated), `rating`, `custom-radio`, `divider`, `skeleton` (Reanimated), `searchable-select` (FlashList), `countdown-timer`, `otp-input`, `empty-state`, `loading-spinner` |
+| **Commerce** | 10 | `product-card`, `cart-item`, `price-display`, `order-card`, `order-timeline`, `product-header`, `wishlist-button` (Reanimated + haptic), `review-card`, `order-summary`, `checkout-form` |
+| **Payments** | 8 | `mobile-money-pay-screen`, `payment-status-screen`, `subscription-plan-card`, `subscription-manage-screen`, `stripe-pay-button`, `stripe-subscription-button`, `stripe-connect-onboarding-screen`, `use-payment-status` |
 | **Auth** | 6 | `login-screen`, `register-screen`, `verify-otp-screen`, `forgot-password-screen`, `new-password-screen`, `complete-profile-screen` |
 | **Dashboard** | 6 | `stat-card`, `dashboard-shell`, `data-table`, `chart-line`, `chart-bar`, `chart-pie` |
 | **Home** | 4 | `hero-banner`, `section-header`, `category-circles`, `flash-sale-timer` |
 | **Shared** | 4 | `screen-header`, `filter-sheet`, `filter-sort-bar`, `search-bar` |
-| **Chat** | 4 | `chat-bubble`, `chat-input`, `chat-list`, `chat-header` |
-| **Nav** | 2 | `bottom-tabs`, `app-drawer` |
+| **Chat** | 4 | `chat-bubble` (delivery ticks), `chat-input`, `chat-list` (FlashList + recycling pools), `chat-header` (presence + multi-typer) |
+| **Utility** | 3 | `barcode-scanner-screen`, `signature-capture-screen`, `biometric-unlock-screen` |
+| **Nav** | 2 | `bottom-tabs`, `app-drawer` (Reanimated) |
 | **Profile** | 2 | `points-card`, `coupon-card` |
 
 Plus 7 **library** modules (auto-installed as dependencies of other components, or installable individually):

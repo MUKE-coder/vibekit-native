@@ -113,7 +113,7 @@ export function ComponentRegistry() {
       id="registry"
       eyebrow="Component registry"
       title={<span>Don't write what already exists. <em className="not-italic gradient-text">Install it.</em></span>}
-      description="61 production-ready React Native components across 10 categories. Each one installs with a single npx command and shares the same dark design system."
+      description="65 production-ready React Native components across 11 categories. Each one installs with a single npx command and shares the same dark design system."
     >
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((cat) => (
