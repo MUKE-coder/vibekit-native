@@ -7,9 +7,9 @@ import { Section } from "@/components/section";
 import { SITE } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Documentation — VibeKit Native guides",
+  title: "Documentation — VibeKit Native (the framework for vibe coders)",
   description:
-    "Documentation for VibeKit Native: getting started, component registry reference, CLI commands, and more.",
+    "Documentation for VibeKit Native: the planning + build framework for AI-driven Expo apps. Quickstart, what-is-vibekit, framework files, and the registry reference your AI agent installs from.",
   alternates: { canonical: "/docs" },
   openGraph: { url: `${SITE.url}/docs`, images: ["/vibekit_thumbnail_abstract.png"] },
 };
@@ -18,20 +18,22 @@ const guides = [
   {
     slug: "what-is-vibekit",
     title: "What is VibeKit Native?",
-    blurb: "An overview of the component registry: what problem it solves, how it works, and who it's for.",
+    blurb: "Why a planning + build framework, not just a component library. Who it's for, what problem it solves, how it works.",
   },
   {
     slug: "quickstart",
-    title: "Quickstart",
-    blurb: "From zero to a production React Native component in your Expo project — step by step.",
+    title: "Quickstart — the 8-step framework workflow",
+    blurb: "Plan with claude.ai → 4 generated files → drop in 2 framework files → AI agent builds phase by phase → run pre-deploy review → ship.",
   },
 ];
 
 const externalGuides = [
-  { name: "Component Registry (GitHub)", href: SITE.github, blurb: "Browse all 65 components, see source code, and open issues." },
-  { name: "CLI Documentation", href: `${SITE.github}#usage`, blurb: "Full CLI reference: every command, flag, and category install." },
-  { name: "Contributing", href: `${SITE.github}/blob/main/CONTRIBUTING.md`, blurb: "Add your own components to the registry. Open a PR." },
-  { name: "Design System", href: `${SITE.github}/blob/main/design-style-guide.md`, blurb: "Dark-only design tokens: colors, typography, spacing, radius." },
+  { name: "CLAUDE_PROMPT.md (paste into claude.ai)", href: `${SITE.github}/blob/main/CLAUDE_PROMPT.md`, blurb: "The planning prompt. Pasting it into claude.ai turns the chat into a planning assistant for your specific app." },
+  { name: "master_prompt.md (your AI agent reads this)", href: `${SITE.github}/blob/main/master_prompt.md`, blurb: "Coding standards, tech stack rules, Prisma v7 + Better Auth + Expo Router patterns, performance budget, dependency blocklist. Rename to CLAUDE.md for auto-loading." },
+  { name: "vibekit-native-components.md (registry reference)", href: `${SITE.github}/blob/main/vibekit-native-components.md`, blurb: "The catalog your AI agent installs from. Quick decision matrix mapping needs → 65 components." },
+  { name: "pre-deploy-review.md (run before submitting)", href: `${SITE.github}/blob/main/pre-deploy-review.md`, blurb: "24-section senior-level audit: cold-start TTI, accessibility, EAS Build, store-ready assets, webhook security, env vars." },
+  { name: "Agent rules install (skill/)", href: `${SITE.github}/blob/main/skill/README.md`, blurb: "One-line install per AI agent: Claude Code, Cursor, Codex CLI, Cline, Windsurf, Gemini CLI, Aider." },
+  { name: "Component registry (browse)", href: "/components", blurb: "Browse all 65 components by category. The framework workflow is recommended; manual install via npx vibekit-native install <name> is also supported." },
 ];
 
 export default function DocsHub() {
@@ -41,8 +43,8 @@ export default function DocsHub() {
       <main className="pt-28">
         <Section
           eyebrow="DOCUMENTATION"
-          title={<>Everything you need to ship.</>}
-          description="VibeKit Native lives in two places: this site (guides you can read straight through), and the GitHub repo (component source code, CLI docs, and contribution guide)."
+          title={<>Plan, build, ship — with the framework.</>}
+          description="VibeKit Native is a planning + build framework for AI-driven Expo apps. Read the quickstart for the 8-step workflow, then drop the framework files into your project and let your AI agent build phase by phase."
           containerClassName="max-w-5xl"
         >
           <div className="grid gap-3 sm:grid-cols-2">

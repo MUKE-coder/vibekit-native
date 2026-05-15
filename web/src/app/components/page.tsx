@@ -28,8 +28,8 @@ export default function ComponentsPage() {
       <main className="pt-28">
         <Section
           eyebrow={`THE REGISTRY · ${components.length} COMPONENTS`}
-          title={<>Production-ready primitives. <em className="not-italic gradient-text">One command.</em></>}
-          description="Don't write what already exists. Each component installs as a single editable file in your Expo project with no config, no providers, and no bloat."
+          title={<>The catalog your AI agent <em className="not-italic gradient-text">installs from</em>.</>}
+          description="When you follow the framework workflow, your AI agent reads vibekit-native-components.md and picks the matching component for every screen — installing it instead of writing from scratch. You can also browse here and run npx vibekit-native install <name> directly."
           containerClassName="max-w-6xl"
         >
           <ComponentsBrowser />

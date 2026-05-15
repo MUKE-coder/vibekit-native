@@ -42,35 +42,46 @@ export default function WhatIsVibeKit() {
               What is VibeKit Native?
             </h1>
             <p className="mt-5 text-[18px] leading-relaxed text-[color:var(--text-secondary)]">
-              A registry of 65 production-ready React Native components for Expo apps — installable with a single <span className="font-mono text-[color:var(--accent)]">npx</span> command. Dark-only, AI-optimized, and completely yours to edit.
+              A <strong className="text-[color:var(--text-primary)]">planning + build framework</strong> for vibe coders shipping production-grade Expo apps. Plan with claude.ai, then your AI agent (Claude Code, Cursor, Codex, Cline, Windsurf, Gemini, Aider) builds the app phase by phase — installing the right components from a 65-component registry as it goes.
             </p>
           </header>
 
           <Prose>
             <h2>The short version</h2>
             <p>
-              VibeKit Native gives you a curated registry of React Native components — auth forms, chat UIs, product cards, profile screens, and more — that install directly into your Expo project with <code>npx vibekit-native install</code>. Every component shares a unified dark design system, uses NativeWind v4 for styling, and ships as a plain editable TypeScript file. No provider wrappers, no config changes, no vendor lock-in.
+              VibeKit Native is a <strong>framework</strong>, not just a component library. The workflow:
+            </p>
+            <ol>
+              <li>Paste <code>CLAUDE_PROMPT.md</code> into <a href="https://claude.ai" target="_blank" rel="noopener noreferrer">claude.ai</a> with your app idea.</li>
+              <li>Claude interviews you (6–10 questions: platforms, auth, payments, push, offline, visual reference) and generates 4 customized files.</li>
+              <li>You drop those 4 files plus 2 framework files into your project root.</li>
+              <li>You paste <code>prompt.md</code> into Claude Code (or any AI coding agent).</li>
+              <li>The agent builds the app phase by phase — installing components from the registry instead of writing them from scratch.</li>
+              <li>You confirm between phases. You ship.</li>
+            </ol>
+            <p>
+              The 65-component registry is a <em>tool the agent uses</em>, not the headline product. The framework is what saves you tokens, time, and design decisions.
             </p>
 
             <h2>What problem does it solve?</h2>
             <p>
-              Every React Native project starts the same way — rebuilding the same screens:
+              Three problems compound on every React Native project:
             </p>
             <ol>
-              <li><strong>Boilerplate overhead:</strong> SafeAreaView, StatusBar, navigation containers, theme providers — written from scratch every time.</li>
-              <li><strong>Inconsistent design:</strong> Cards look different on every screen. Font sizes drift. Spacing is a mess.</li>
-              <li><strong>AI agent confusion:</strong> No two projects share the same patterns, so AI agents waste context learning your conventions.</li>
+              <li><strong>Token waste:</strong> AI agents generate the same login form, chat UI, product card, payment screen on every project — burning your Anthropic / OpenAI bill.</li>
+              <li><strong>Time waste:</strong> Even with AI, you spend hours wiring SafeAreaView, navigation, theme tokens, form validation, list virtualization, image caching — every project.</li>
+              <li><strong>Design drift:</strong> Without a coherent design system, your AI agent picks different fonts, colors, spacing, and motion timings on every screen. The app looks AI-generated.</li>
             </ol>
             <p>
-              VibeKit Native removes all three by giving you pre-built, consistent, AI-friendly components that work together out of the box.
+              VibeKit Native fixes all three. The planning step produces a <code>design-style-guide.md</code> tailored to your app + a <code>project-phases.md</code> blueprint. The framework files (<code>master_prompt.md</code> + <code>vibekit-native-components.md</code>) tell your AI agent which 65 production-tested components to install instead of generating, and pin the entire stack (Expo SDK 55+ · Neon Postgres · Prisma v7 · Better Auth · Expo API Routes · EAS).
             </p>
 
             <h2>Who is it for?</h2>
             <ul>
-              <li><strong>React Native developers</strong> who want production-ready screens without writing boilerplate.</li>
-              <li><strong>Indie hackers</strong> shipping Expo apps to the App Store and Play Store fast.</li>
-              <li><strong>AI-powered builders</strong> using Claude Code, Cursor, or Cline to generate mobile apps and need consistent patterns the agent can extend.</li>
-              <li><strong>Freelancers and agencies</strong> delivering multiple client apps who can't rebuild auth and chat every project.</li>
+              <li><strong>Vibe coders</strong> shipping Expo apps with Claude Code, Cursor, Codex, Cline, Windsurf, Gemini, or Aider — who want a framework, not just prompts.</li>
+              <li><strong>Indie hackers</strong> who'd rather spend their token budget on business logic than reinventing login forms.</li>
+              <li><strong>Freelancers and agencies</strong> delivering multiple client apps — same locked stack, same design tokens, no per-project drift.</li>
+              <li><strong>Teams in East Africa</strong> who need DGateway mobile-money payments (UGX/KES/TZS/RWF) baked in instead of bolted on.</li>
             </ul>
 
             <h2>What you get</h2>

@@ -33,8 +33,8 @@ export function CLIReference() {
     <Section
       id="cli"
       eyebrow="CLI reference"
-      title={<span>One CLI. <em className="not-italic gradient-text">All the components.</em></span>}
-      description="npx vibekit-native is the only command you need. Install individual components or entire categories — each one drops into your project as a ready-to-edit file."
+      title={<span>The CLI your AI agent uses. <em className="not-italic gradient-text">And so can you.</em></span>}
+      description="When following the framework workflow, your AI agent runs these commands automatically as it builds. The reference below is for advanced users who want to install manually, debug, or list what's available."
     >
       <div className="reveal overflow-hidden rounded-2xl card-glass">
         <div className="flex items-center gap-2 border-b border-[color:var(--border)] bg-[color:var(--bg-subtle)] px-4 py-2.5">

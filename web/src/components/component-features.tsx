@@ -1,41 +1,46 @@
-import { Smartphone, Palette, Zap, Box, Code, Wifi, Terminal, Database } from "lucide-react";
+import { Coins, Palette, Workflow, Box, Layers, ShieldCheck, Zap, Cpu } from "lucide-react";
 import { Section } from "./section";
 
 const features = [
   {
-    Icon: Box,
-    title: "65 production components",
-    body: "Auth, commerce, chat, profile, home, UI, and shared — every screen your app needs, available as a single installable file.",
+    Icon: Coins,
+    title: "Saves tokens",
+    body: "Your AI agent installs from a 65-component registry instead of generating screens from scratch. The agent reads the registry reference, picks the matching component, runs npx vibekit-native install — done. 60–80% token reduction per build.",
   },
   {
-    Icon: Terminal,
-    title: "CLI-first install",
-    body: "npx vibekit-native install <component> drops a ready-to-use file into your Expo project. No config, no providers, no bloat.",
+    Icon: Workflow,
+    title: "Plan-then-build workflow",
+    body: "Paste the planning prompt into claude.ai, answer 6–10 questions, get 4 customized files (project-description, project-phases, design-style-guide, prompt). Then your AI agent builds phase by phase against that spec.",
   },
   {
     Icon: Palette,
-    title: "Dark-only design system",
-    body: "Every component ships with the same dark palette. Indigo accent, zinc borders, 12px radius — consistent from login to checkout.",
+    title: "Custom design per project",
+    body: "Claude generates a fully tailored design-style-guide.md from your visual reference (Dribbble link, competitor app). Your AI agent enforces it across every screen — fonts, colors, spacing, motion, all consistent.",
   },
   {
-    Icon: Code,
-    title: "Your code, not a black box",
-    body: "Every installed component is a plain TypeScript file. Edit the JSX, tweak the NativeWind classes, wire your API. Zero vendor lock-in.",
+    Icon: Box,
+    title: "65-component registry",
+    body: "Auth, commerce, chat, payments (DGateway + Stripe), dashboards, charts, navigation, biometrics, barcode scanner — every screen your app needs. Each installs as a single editable file. The agent picks; you can also browse manually.",
+  },
+  {
+    Icon: ShieldCheck,
+    title: "Locked production stack",
+    body: "Expo SDK 55+ · Neon Postgres · Prisma v7 · Better Auth + Expo plugin · Expo API Routes · EAS Build/Submit/Update/Hosting. The framework keeps your AI agent on-stack via master_prompt.md + a dependency blocklist.",
+  },
+  {
+    Icon: Cpu,
+    title: "60fps by default",
+    body: "Every component runs on Hermes, animates on the UI thread via Reanimated, recycles list rows via FlashList, and loads images through expo-image with disk cache + blurhash. Cold start under 2s on iPhone 12.",
   },
   {
     Icon: Zap,
-    title: "AI-optimized patterns",
-    body: "Components follow predictable patterns with Zod schemas, react-hook-form wrappers, and TanStack Query hooks. AI agents read and extend them instantly.",
+    title: "Phase-by-phase, with stops",
+    body: "5 phases: Foundation → Core screens → API Routes → Polish → Deploy. Your AI agent stops between phases and waits for your confirmation. You stay in control without writing the boilerplate.",
   },
   {
-    Icon: Wifi,
-    title: "Works offline, ships OTA",
-    body: "Install components without internet. Push updates via EAS OTA. Your users get new features without app store delays. Every component is a local file — no CDN dependency.",
-  },
-  {
-    Icon: Database,
-    title: "Bring your own backend",
-    body: "Components are agnostic to your data layer. Wire TanStack Query to any REST/GraphQL API, use Zustand for local state, or bring Supabase, Firebase, or a custom backend. No assumptions, no lock-in.",
+    Icon: Layers,
+    title: "Works with every AI agent",
+    body: "Claude Code, Cursor, Codex CLI, Cline, Windsurf, Gemini CLI, Aider — one-line install drops the framework rules into your agent's auto-load path. No copy-pasting prompts.",
   },
 ];
 
@@ -44,8 +49,8 @@ export function ComponentFeatures() {
     <Section
       id="features"
       eyebrow="Why VibeKit Native"
-      title={<>Build mobile apps with AI.<br className="hidden sm:block" /> <em className="not-italic gradient-text">Ship in hours.</em></>}
-      description="Every component is designed to work with AI coding agents — predictable patterns, zero boilerplate, and a consistent design system from day one."
+      title={<>Vibe code mobile apps. <em className="not-italic gradient-text">Ship in an afternoon.</em></>}
+      description="VibeKit Native is a planning + build framework for AI-driven mobile development. The component registry is one tool the agent uses; the framework is what saves you the tokens, time, and design decisions."
     >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {features.map(({ Icon, title, body }) => (

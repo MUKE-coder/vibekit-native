@@ -112,8 +112,8 @@ export function ComponentRegistry() {
     <Section
       id="registry"
       eyebrow="Component registry"
-      title={<span>Don't write what already exists. <em className="not-italic gradient-text">Install it.</em></span>}
-      description="65 production-ready React Native components across 11 categories. Each one installs with a single npx command and shares the same dark design system."
+      title={<span>The catalog your AI agent <em className="not-italic gradient-text">installs from</em>.</span>}
+      description="65 production-ready React Native components across 11 categories. Your AI agent reads vibekit-native-components.md and picks the matching component for every screen — instead of writing it from scratch. You can also browse and install manually."
     >
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((cat) => (

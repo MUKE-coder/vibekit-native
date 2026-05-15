@@ -74,13 +74,13 @@ export function InstallStrip() {
         <div className="mx-auto max-w-2xl text-center">
           <div className="install-eyebrow inline-flex items-center gap-2 pill-chip rounded-full px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-secondary)]">
             <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
-            65 components · One npx command
+            The registry your AI agent installs from
           </div>
           <h2 className="install-headline headline-display mt-6 text-[clamp(2rem,4.5vw,3rem)] headline-glow">
-            65 production components. Mobile money, Stripe, charts, and biometrics built in.
+            65 production components — the agent picks the right ones for you.
           </h2>
           <p className="install-sub mt-5 text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
-            No provider wrappers. No config files. No dependency bloat. Every component is a single editable file that drops into your Expo project.
+            The framework hands your AI agent (Claude Code, Cursor, Codex, Cline, Windsurf, Gemini, Aider) a registry reference. As it builds your app phase by phase, it installs the matching components instead of writing screens from scratch — saving you tokens, time, and design decisions. Each component drops in as a single editable file. You can also browse + install manually if you want.
           </p>
         </div>
 

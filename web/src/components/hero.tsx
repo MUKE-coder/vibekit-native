@@ -82,7 +82,7 @@ export function Hero() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--accent)] opacity-50" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
           </span>
-          Mobile money payments · One npx install
+          The framework for vibe coders shipping Expo apps
         </div>
 
         {/* Lens flare behind headline */}
@@ -101,19 +101,21 @@ export function Hero() {
           </h1>
         </div>
 
-        <p className="hero-sub mx-auto mt-7 max-w-xl text-[15px] sm:text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
-          Production-ready Expo components — auth, commerce, chat, dashboards,
-          <br className="hidden sm:inline" /> and DGateway mobile-money payments (UGX, KES, TZS, RWF).
+        <p className="hero-sub mx-auto mt-7 max-w-2xl text-[15px] sm:text-[16px] leading-relaxed text-[color:var(--text-secondary)]">
+          Plan with claude.ai, then your AI agent (Claude Code, Cursor, Codex, Cline, Windsurf, Gemini, Aider) builds the app phase by phase — installing the right components from a 65-component registry as it goes. You save tokens, time, and design decisions. Powered by Expo, Neon, Prisma v7, and Better Auth.
         </p>
 
         <div className="hero-cta mt-9 flex flex-wrap items-center justify-center gap-3">
-          <Button href="/components" variant="accent" size="lg">
-            Browse components
+          <Button href="/docs/quickstart" variant="accent" size="lg">
+            Start the workflow
             <ArrowUpRight className="h-4 w-4" />
+          </Button>
+          <Button href="/components" variant="outline" size="lg">
+            Browse 65 components
           </Button>
           <Button href="https://github.com/MUKE-coder/vibekit-native" variant="outline" size="lg">
             <Github className="h-4 w-4" />
-            View on GitHub
+            GitHub
           </Button>
         </div>
 
