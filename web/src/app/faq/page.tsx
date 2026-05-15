@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description:
     "Frequently asked questions about VibeKit Native: how the CLI works, what components are available, the tech stack, and how to contribute.",
   alternates: { canonical: "/faq" },
-  openGraph: { url: `${SITE.url}/faq`, images: ["/og.png"] },
+  openGraph: { url: `${SITE.url}/faq`, images: ["/vk.png"] },
 };
 
 const faqs: { q: string; a: string }[] = [

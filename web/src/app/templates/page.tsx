@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     title: "VibeKit Templates — clone, customize, ship",
     description: "Production templates for portfolios, blogs, SaaS — with built-in customization guides.",
     url: `${SITE.url}/templates`,
-    images: ["/og.png"],
+    images: ["/vibekit_thumbnail_abstract.png"],
   },
 };
 

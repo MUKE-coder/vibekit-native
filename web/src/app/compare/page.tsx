@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description:
     "Side-by-side comparisons of VibeKit against popular AI coding agents and Next.js starters. See where each approach wins.",
   alternates: { canonical: "/compare" },
-  openGraph: { url: `${SITE.url}/compare`, images: ["/og.png"] },
+  openGraph: { url: `${SITE.url}/compare`, images: ["/vk.png"] },
 };
 
 const comparisons = [

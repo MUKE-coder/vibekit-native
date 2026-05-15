@@ -36,7 +36,7 @@ export async function generateMetadata({
       title,
       description: t.tagline,
       url: `${SITE.url}/templates/${slug}`,
-      images: ["/og.png"],
+      images: ["/vibekit_thumbnail_abstract.png"],
     },
   };
 }

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "React Native performance — VibeKit Native",
     description:
       "Hermes, reanimated, FlashList, expo-image — every VibeKit Native component is production-tested for smooth 60fps performance.",
-    images: ["/og.png"],
+    images: ["/vibekit_thumbnail_cli.png"],
   },
 };
 

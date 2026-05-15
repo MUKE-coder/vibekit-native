@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     title: "The locked tech stack — VibeKit Native",
     description:
       "Expo API Routes + Neon + Prisma v7 + Better Auth — the full production stack VibeKit Native targets, with deploy via EAS Build / Submit / Update / Hosting.",
-    images: ["/og.png"],
+    images: ["/vibekit_thumbnail_cli.png"],
   },
 };
 

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/compare/claude-code-vs-cursor-vs-cline" },
   openGraph: {
     url: `${SITE.url}/compare/claude-code-vs-cursor-vs-cline`,
-    images: ["/og.png"],
+    images: ["/vk.png"],
     type: "article",
   },
 };

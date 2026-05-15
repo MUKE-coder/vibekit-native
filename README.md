@@ -1,5 +1,9 @@
 # VibeKit Native
 
+<p align="center">
+  <img src="./web/public/vk.png" alt="VibeKit Native — 65 components, one npx install, mobile money ready" />
+</p>
+
 **The dark-only React Native / Expo component registry + framework — go from idea to App Store in one afternoon.**
 
 VibeKit Native is **two things in one repo**:

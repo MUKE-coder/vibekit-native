@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/docs/quickstart" },
   openGraph: {
     url: `${SITE.url}/docs/quickstart`,
-    images: ["/og.png"],
+    images: ["/vibekit_thumbnail_cli.png"],
     type: "article",
   },
 };

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "VibeKit Native Resources — curated React Native ecosystem",
     description: "Hand-picked tools, registries, templates, and platforms for Expo and React Native builders.",
     url: `${SITE.url}/resources`,
-    images: ["/og.png"],
+    images: ["/vibekit_thumbnail_abstract.png"],
   },
 };
 

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description:
     "Documentation for VibeKit Native: getting started, component registry reference, CLI commands, and more.",
   alternates: { canonical: "/docs" },
-  openGraph: { url: `${SITE.url}/docs`, images: ["/og.png"] },
+  openGraph: { url: `${SITE.url}/docs`, images: ["/vibekit_thumbnail_abstract.png"] },
 };
 
 const guides = [

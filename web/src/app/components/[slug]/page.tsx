@@ -38,12 +38,12 @@ export async function generateMetadata({
       title,
       description,
       url: `${SITE.url}/components/${slug}`,
-      images: ["/og.png"],
+      images: ["/vibekit_thumbnail_hero.png"],
     },
     twitter: {
       title,
       description,
-      images: ["/og.png"],
+      images: ["/vibekit_thumbnail_hero.png"],
     },
   };
 }

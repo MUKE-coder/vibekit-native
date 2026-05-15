@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "VibeKit Native Setup — pre-flight check",
     description: "Make sure your machine has Node.js, npm, git, and Expo CLI before starting.",
     url: `${SITE.url}/setup`,
-    images: ["/og.png"],
+    images: ["/vk.png"],
   },
 };
 

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description:
     "Add a React Native component to the VibeKit Native registry. Open a pull request — we review and merge weekly.",
   alternates: { canonical: "/contribute" },
-  openGraph: { url: `${SITE.url}/contribute`, images: ["/og.png"] },
+  openGraph: { url: `${SITE.url}/contribute`, images: ["/vibekit_thumbnail_abstract.png"] },
 };
 
 const whyItems = [

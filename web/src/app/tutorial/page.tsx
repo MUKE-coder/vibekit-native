@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/tutorial" },
   openGraph: {
     url: `${SITE.url}/tutorial`,
-    images: ["/og.png"],
+    images: ["/vibekit_thumbnail_cli.png"],
     type: "article",
   },
 };

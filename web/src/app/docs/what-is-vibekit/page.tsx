@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/docs/what-is-vibekit" },
   openGraph: {
     url: `${SITE.url}/docs/what-is-vibekit`,
-    images: ["/og.png"],
+    images: ["/vibekit_thumbnail_abstract.png"],
     type: "article",
   },
 };

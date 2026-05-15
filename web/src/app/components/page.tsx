@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     description:
       "65 production-ready React Native components for Expo apps. Auth, commerce, chat, profile, and UI primitives. Install with npx.",
     url: `${SITE.url}/components`,
-    images: ["/og.png"],
+    images: ["/vibekit_thumbnail_hero.png"],
   },
 };
 
